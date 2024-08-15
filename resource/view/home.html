@@ -59,6 +59,16 @@
         .card-title {
             color: #1e56a6;
         }
+
+        .main-content {
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0px;
+            height: 0px;
+        }
     </style>
 </head>
 <body>
@@ -97,79 +107,11 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <section id="contentSection">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Feature 1">
-                        <div class="card-body">
-                            <h5 class="card-title">Feature 1</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.</p>
-                            <a href="#" class="btn btn-primary">Learn More</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Feature 2">
-                        <div class="card-body">
-                            <h5 class="card-title">Feature 2</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.</p>
-                            <a href="#" class="btn btn-primary">Learn More</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Feature 3">
-                        <div class="card-body">
-                            <h5 class="card-title">Feature 3</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.</p>
-                            <a href="#" class="btn btn-primary">Learn More</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mt-4">
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Feature 4">
-                        <div class="card-body">
-                            <h5 class="card-title">Feature 4</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.</p>
-                            <a href="#" class="btn btn-primary">Learn More</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Feature 5">
-                        <div class="card-body">
-                            <h5 class="card-title">Feature 5</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.</p>
-                            <a href="#" class="btn btn-primary">Learn More</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Feature 6">
-                        <div class="card-body">
-                            <h5 class="card-title">Feature 6</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.</p>
-                            <a href="#" class="btn btn-primary">Learn More</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <iframe class="main-content" id="mainContent" src="" frameborder="0"></iframe>
     <script>
         $(document).ready(function() {
             // loadpage();
+            $('#mainContent').attr('src', '/student_registration');
         });
         
         const logoutMenuItem = $('#logoutMenuItem');
@@ -205,8 +147,7 @@
             $.post(
                 settings
             ).always(function (data, status, xhr) {
-                    console.log(data);
-                    $('#contentSection .container').html(data);
+                    $('#mainContent').src = '/student_registration';
                 }
             );
         }
