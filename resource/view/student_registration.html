@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group label {
+            font-weight: 600;
+        }
+
+        .form-control {
+            border-radius: 0.25rem;
+            box-shadow: none;
+        }
+
+        .btn-custom, .btn-cancel {
+            border-radius: 25px; /* Fully rounded borders */
+            font-weight: 600;
+            border: none;
+            width: 100%; /* Full width */
+            display: block;
+            margin-top: 10px; /* Space between buttons */
+        }
+
+        .btn-custom {
+            background-color: #1e56a6;
+            color: #fff;
+        }
+
+        .btn-custom:hover {
+            background-color: #039BE5;
+        }
+
+        .btn-cancel {
+            background-color: #ffffff;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-cancel:hover {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
+        .gender-group .form-check {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .gender-group .form-check-input {
+            margin-right: 5px;
+        }
+
+        .invalid-feedback {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">Student Registration Form</h2>
+        <form novalidate>
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" class="form-control is-invalid" id="name" placeholder="Enter your full name" required>
+                <div class="invalid-feedback">
+                    Test
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="nrc">NRC Number</label>
+                <input type="text" class="form-control is-invalid" id="nrc" placeholder="Enter your NRC number" required>
+                <div class="invalid-feedback">
+                    Test
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" class="form-control is-invalid" id="email" placeholder="Enter your email address" required>
+                <div class="invalid-feedback">
+                    Test
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control is-invalid" id="password" placeholder="Enter your password" required>
+                <div class="invalid-feedback">
+                    Test
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" class="form-control is-invalid" id="phone" placeholder="Enter your phone number" required>
+                <div class="invalid-feedback">
+                    Test
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Gender</label>
+                <div class="gender-group">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input is-invalid" type="radio" name="gender" id="male" value="male" required>
+                        <label class="form-check-label" for="male">Male</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input is-invalid" type="radio" name="gender" id="female" value="female" required>
+                        <label class="form-check-label" for="female">Female</label>
+                    </div>
+                </div>
+                <div class="invalid-feedback">
+                    Test
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" class="form-control is-invalid" id="dob" required>
+                <div class="invalid-feedback">
+                    Test
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea class="form-control is-invalid" id="address" rows="3" placeholder="Enter your address" required></textarea>
+                <div class="invalid-feedback">
+                    Test
+                </div>
+            </div>
+            <button type="submit" class="btn btn-custom">Register</button>
+            <button type="button" class="btn btn-cancel" onclick="window.location.href='index.html';">Cancel</button>
+        </form>
+    </div>
+</body>
+</html>
