@@ -6,13 +6,13 @@ const app = express();
 const path = require('path');
 const instructorRouter = require('./router/InstructorRouter');
 const viewRouter = require('./router/ViewRouter');
-const homeHtmlPath = path.join(__dirname, 'resource', 'view', 'home.html');
+const authRouter = require('./router/AuthRouter');
 
 app.use(express.json());
+app.use(express.static(__dirname + '/resource/static'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(cors());
-app.use
 
 app.use(
     '/api/instructors',
@@ -22,6 +22,11 @@ app.use(
 app.use(
     ['/', '/home'],
     viewRouter
+);
+
+app.use(
+    ['/api/auth'],
+    authRouter
 );
 
 module.exports = app;
