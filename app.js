@@ -25,10 +25,7 @@ app.use(
     userRouter
 );
 
-app.use(
-    ['/', '/home'],
-    viewRouter
-);
+app.use(viewRouter);
 
 app.use(
     ['/api/auth'],

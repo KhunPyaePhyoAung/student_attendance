@@ -3,12 +3,12 @@ const authService = ({ userRepository, passwordEncryptService} ) => {
     return {
         loginWithEmailAndPassword: async (email, password) => {
             try {
-                const user = await userRepository.findUserByUsername(email);
+                const user = await userRepository.findOneByEmail(email);
                 const error = new Error();
 
                 if (!user) {
-                    error.field = 'username';
-                    error.message = 'Username does not exist';
+                    error.field = 'email';
+                    error.message = 'User does not exist';
                     throw error;
                 }
 
@@ -24,7 +24,7 @@ const authService = ({ userRepository, passwordEncryptService} ) => {
             }
         },
 
-        logout: async (username) => {
+        logout: async (email) => {
             return true;
         }
     };

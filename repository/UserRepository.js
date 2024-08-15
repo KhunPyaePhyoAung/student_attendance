@@ -45,7 +45,7 @@ const userRepository = () => {
                     if (error) {
                         reject(new Error(error.sqlMessage));
                     } else {
-                        resolve(results);
+                        resolve(results[0]);
                     }
                 });
                 connection.release();

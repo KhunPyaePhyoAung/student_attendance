@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/css/fontawesome.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
+    <script type="text/javascript" src="/js/validate.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -77,6 +78,7 @@
             margin-left: 12px;
             margin-bottom: 20px;
             height: 20px;
+            font-size: 0.9em;
         }
 
         .wrapper .form-field input {
@@ -129,6 +131,14 @@
         @media(max-width: 800px) {
             .wrapper {
                 width: 90%;
+                max-width: 400px;
+                padding: 40px 15px;
+            }
+        }
+
+        @media(max-width: 400px) {
+            .wrapper {
+                width: 90%;
                 max-width: 350px;
                 padding: 40px 15px;
             }
@@ -162,15 +172,84 @@
       e.preventDefault();
     });
 
+    const emailInput = $('#email');
+    const passwordInput = $('#password');
     const emailErrorMessage = $('#emailErrorMessage');
     const passwordErrorMessage = $('#passwordErrorMessage');
     const loginBtn = $('#loginBtn');
-    loginBtn.on('click', login);
 
-    function login() {
-      const email = $('#email').val();
-      const password = $('#password').val();
-      
+    const formConstraint = {
+        email: {
+            presence: {
+                allowEmpty: false,
+                message: '^Email is required'
+            },
+            email: {
+                message: '^Invalid email format'
+            }
+        },
+        password: {
+            presence: {
+                allowEmpty: false,
+                message: '^Password is required'
+            }
+        }
+    }
+
+    $('input').on('input', function(e) {
+        clearFormErrorMessages(e.target.id);
+    });
+    
+    
+    loginBtn.on('click', function() {
+        clearFormErrorMessages();
+        if (validateFrom()) {
+            const email = emailInput.val();
+            const password = passwordInput.val();
+            login(email, password);
+        }
+        
+    }); {}
+
+    function validateFrom() {
+        const email = emailInput.val();
+        const password = passwordInput.val();
+        const data = {
+            email: email,
+            password: password
+        };
+        const checkResult = validate(data, formConstraint);
+
+        if (!checkResult) {
+            return true;
+        }
+
+        if (checkResult.email) {
+            emailErrorMessage.text(checkResult.email[0]);
+        }
+
+        if (checkResult.password) {
+            passwordErrorMessage.text(checkResult.password[0]);
+        }
+        
+        return false;
+    }
+
+    function clearFormErrorMessages(sourceId) {
+        if (sourceId) {
+            if (sourceId === 'email') {
+                emailErrorMessage.text('');
+            } else if (sourceId === 'password') {
+                passwordErrorMessage.text('');
+            }
+        } else {
+            emailErrorMessage.text('');
+            passwordErrorMessage.text('');
+        }
+        
+    }
+
+    function login(email, password) {
       const settings = {
         "url": "/api/auth/login",
         "method": "POST",
@@ -194,6 +273,9 @@
                     error.forEach(element => {
                         const field = element.field;
                         const message = element.message;
+
+                        console.log(field);
+                        console.log(message);
 
                         if (field === 'email') {
                             emailErrorMessage.text(message);

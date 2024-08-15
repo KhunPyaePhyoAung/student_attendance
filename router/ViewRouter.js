@@ -6,13 +6,18 @@ const authMiddleware = require('../middleware/AuthMiddleware');
 
 router.get(
     ['/', '/home'],
-    // [authMiddleware.verifyUserToken],
+    [authMiddleware.verifyUserToken],
     viewController.home
 );
 
 router.get(
     ['/login'],
     viewController.login
+);
+
+router.get(
+    ['/student_registration'],
+    viewController.student_registration
 );
 
 module.exports = router;
