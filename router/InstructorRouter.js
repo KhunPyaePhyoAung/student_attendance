@@ -3,8 +3,8 @@ const router = express.Router();
 
 
 const instructorRepository = require('../repository/InstructorRepository')();
-const instructorService = require('../service/InstructorService')(instructorRepository);
-const instructorController = require('../controller/InstructorController')(instructorService);
+const instructorService = require('../service/InstructorService')({instructorRepository});
+const instructorController = require('../controller/InstructorController')({instructorService});
 
 router.get(
     '/',

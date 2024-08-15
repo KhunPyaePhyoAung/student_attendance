@@ -1,4 +1,4 @@
-const instructorController = (instructorService) => {
+const instructorController = ({instructorService}) => {
     return {
         getAll: async (req, res) => {
             try {
