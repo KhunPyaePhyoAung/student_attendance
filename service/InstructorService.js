@@ -1,5 +1,5 @@
 
-const instructorService = (instructorRepository) => {
+const instructorService = ({instructorRepository}) => {
     return {
         getAll: async () => {
             try {

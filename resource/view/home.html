@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
     <link type="image/png" rel="icon" href="/icon/icon.png">
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
-    <script type="text/javascript" src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/js/jQuery.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -21,6 +22,7 @@
 
         .navbar-brand, .nav-link {
             color: #fff !important;
+            cursor: pointer;
         }
 
         .nav-item.dropdown .profile-icon {
@@ -57,6 +59,16 @@
         .card-title {
             color: #1e56a6;
         }
+
+        .main-content {
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0px;
+            height: 0px;
+        }
     </style>
 </head>
 <body>
@@ -70,98 +82,75 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Home</a>
+                        <a class="nav-link active">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Terms</a>
+                        <a class="nav-link">Terms</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Courses</a>
+                        <a class="nav-link">Courses</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Studends</a>
+                        <a class="nav-link">Studends</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Attendance</a>
+                        <a class="nav-link">Attendance</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Profile</a>
+                        <a class="nav-link">Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Logout</a>
+                        <a id="logoutMenuItem" class="nav-link">Logout</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Feature 1">
-                    <div class="card-body">
-                        <h5 class="card-title">Feature 1</h5>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.</p>
-                        <a href="#" class="btn btn-primary">Learn More</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Feature 2">
-                    <div class="card-body">
-                        <h5 class="card-title">Feature 2</h5>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.</p>
-                        <a href="#" class="btn btn-primary">Learn More</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Feature 3">
-                    <div class="card-body">
-                        <h5 class="card-title">Feature 3</h5>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.</p>
-                        <a href="#" class="btn btn-primary">Learn More</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <iframe class="main-content" id="mainContent" src="" frameborder="0"></iframe>
+    <script>
+        $(document).ready(function() {
+            // loadpage();
+            $('#mainContent').attr('src', '/student_registration');
+        });
+        
+        const logoutMenuItem = $('#logoutMenuItem');
 
-        <div class="row mt-4">
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Feature 4">
-                    <div class="card-body">
-                        <h5 class="card-title">Feature 4</h5>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.</p>
-                        <a href="#" class="btn btn-primary">Learn More</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Feature 5">
-                    <div class="card-body">
-                        <h5 class="card-title">Feature 5</h5>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.</p>
-                        <a href="#" class="btn btn-primary">Learn More</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Feature 6">
-                    <div class="card-body">
-                        <h5 class="card-title">Feature 6</h5>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.</p>
-                        <a href="#" class="btn btn-primary">Learn More</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        logoutMenuItem.on('click', logout);
+
+        function logout() {
+            console.log('Logging out');
+            const settings = {
+                "url": "/api/auth/logout",
+                "method": "POST",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                console.log(data);
+                    if (data.status === 204) {
+                        window.location.replace('/login');
+                    }
+                }
+            );
+        }
+
+        function loadpage() {
+            const settings = {
+                "url": "/student_registration",
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                    $('#mainContent').src = '/student_registration';
+                }
+            );
+        }
+    </script>
 </body>
 </html>

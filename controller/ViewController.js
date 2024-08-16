@@ -10,10 +10,9 @@ const viewController = ({tokenService}) => {
         },
 
         login: async (req, res) => {
-            let token = req.headers.authorization;
+            let token = req.cookies.access_token
             try {
                 if (token) {
-                    token = token.split(' ');
                     const decodedToken = tokenService.verifyAccessToken(token)
                     if (!decodedToken) {
                         throw new Error('Unauthorized');
@@ -27,6 +26,11 @@ const viewController = ({tokenService}) => {
                 return res.sendFile(loginHtml);
             }
             
+        },
+
+        student_registration: (req, res) => {
+            const html = path.join(viewFolder, 'student_registration.html');
+            return res.sendFile(html);
         },
     }
 }
