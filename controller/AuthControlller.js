@@ -1,3 +1,5 @@
+const { path } = require("../app");
+
 const authController = ({ authService, userService, tokenService }) => {
     const REFRESH_TOKEN_COOKIE_MAX_AGE = 7 *24 * 60 * 60 * 1000;
 
@@ -9,9 +11,7 @@ const authController = ({ authService, userService, tokenService }) => {
                 let message = 'Incorrect username or password';
                 const user = await authService.loginWithEmailAndPassword(email, password);
                 const accessToken = await tokenService.signAccessToken(user);
-                const refreshToken = await tokenService.signRefreshToken(user);
-                res.cookie('refresh_token', refreshToken, {httpOnly: true, sameSite: 'None', secure: true, maxAge: REFRESH_TOKEN_COOKIE_MAX_AGE});
-                res.cookie('access_token', accessToken, {httpOnly: true, sameSite: 'None', secure: true, maxAge: REFRESH_TOKEN_COOKIE_MAX_AGE});
+                res.cookie('access_token', accessToken);
 
                 return res.status(200).json({
                     status: 200,
@@ -36,8 +36,8 @@ const authController = ({ authService, userService, tokenService }) => {
         logout: async (req, res) => {
             try {
                 const cookies = req.cookies;
-                const refreshToken = cookies.refresh_token;
-                const decodedToken = await tokenService.verifyRefreshToken(refreshToken);
+                const accessToken = cookies.access_token;
+                const decodedToken = await tokenService.verifyAccessToken(accessToken);
                 if (await authService.logout(decodedToken.user.email)) {
                     for (let cookie in cookies) {
                         res.clearCookie(cookie);

@@ -73,6 +73,110 @@ const userController = ({userService}) => {
                 );
             }
         },
+
+        create: async (req, res) => {
+            const newUser = req.body;
+
+            try {
+                const createdUser = await userService.create(newUser);
+                delete createdUser.password;
+                const createdUserUrl = `/api/users/${createdUser.id}`;
+                res.location(createdUserUrl);
+                return res.status(200).json({
+                    status: 201,
+                    data: createdUser,
+                    links: {
+                        user: createdUserUrl
+                    }
+                    
+                });
+            } catch (error) {
+                // if (error instanceof ValidationError) {
+                    return res.status(200).json({
+                        status: 400,
+                        errors: [
+                            {
+                                field: error.fieldName,
+                                message: error.message
+                            }
+                        ]
+                    });
+                // }
+
+                // return res.status(200).json(
+                //     {
+                //         status: 500
+                //     }
+                // );
+            }
+        },
+
+        update: async (req, res) => {
+            const id = req.params.id;
+            const user = req.body;
+
+            try {
+                const updatedUser = await userService.updateById(id, user);
+                if (updatedUser) {
+                    const updatedUserUrl = `/api/users/${updatedUser.id}`;
+                    res.location(updatedUserUrl);
+                    return res.status(200).json({
+                        status: 200,
+                        data: updatedUser,
+                        links: {
+                            user: updatedUserUrl
+                        }
+                    });
+                }
+
+                return res.status(200).json({
+                    status: 404,
+                    message: 'No user found.'
+                });
+                
+            } catch (error) {
+                // if (error instanceof ValidationError) {
+                    return res.status(200).json({
+                        status: 400,
+                        errors: [
+                            {
+                                field: error.fieldName,
+                                message: error.message
+                            }
+                        ]
+                    });
+                // }
+
+                // return res.status(200).json(
+                //     {
+                //         status: 500
+                //     }
+                // );
+            }
+        },
+
+        delete: async (req, res) => {
+            const id = req.params.id;
+            try {
+                const deleted = await userService.deleteById(id);
+                if (deleted) {
+                    return res.status(200).json({
+                        status: 204,
+                    });
+                }
+                
+                return res.status(200).json({
+                    status: 404,
+                    message: 'No User found.'
+                });
+            } catch (error) {
+                return res.status(200).json(
+                    {
+                        status: 500
+                    }
+                );
+            }
+        },
     }
 }
 

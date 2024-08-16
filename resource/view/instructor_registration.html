@@ -131,41 +131,41 @@
 
     <section class="main-content">
         <div class="container">
-            <h2 class="text-center mb-4">Student Registration Form</h2>
+            <h2 class="text-center mb-4">Instructor Registration Form</h2>
             <form novalidate>
                 <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" class="form-control is-invalid" id="name" placeholder="Enter your full name" required>
+                    <label for="fullName">Full Name</label>
+                    <input type="text" class="form-control is-invalid" id="fullName" placeholder="Enter your full name" required>
                     <div class="invalid-feedback">
-                        Test
+                        Please enter your full name.
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="nrc">NRC Number</label>
                     <input type="text" class="form-control is-invalid" id="nrc" placeholder="Enter your NRC number" required>
                     <div class="invalid-feedback">
-                        Test
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" class="form-control is-invalid" id="email" placeholder="Enter your email address" required>
-                    <div class="invalid-feedback">
-                        Test
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control is-invalid" id="password" placeholder="Enter your password" required>
-                    <div class="invalid-feedback">
-                        Test
+                        Please enter your NRC number.
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
                     <input type="tel" class="form-control is-invalid" id="phone" placeholder="Enter your phone number" required>
                     <div class="invalid-feedback">
-                        Test
+                        Please enter your phone number.
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" class="form-control is-invalid" id="email" placeholder="Enter your email address" required>
+                    <div class="invalid-feedback">
+                        Please enter your email address.
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control is-invalid" id="password" placeholder="Enter your password" required>
+                    <div class="invalid-feedback">
+                        Please enter your password.
                     </div>
                 </div>
                 <div class="form-group">
@@ -181,27 +181,27 @@
                         </div>
                     </div>
                     <div class="invalid-feedback">
-                        Test
+                        Please select your gender.
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="dob">Date of Birth</label>
                     <input type="date" class="form-control is-invalid" id="dob" required>
                     <div class="invalid-feedback">
-                        Test
+                        Please enter your date of birth.
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="address">Address</label>
                     <textarea class="form-control is-invalid" id="address" rows="3" placeholder="Enter your address" required></textarea>
                     <div class="invalid-feedback">
-                        Test
+                        Please enter your address.
                     </div>
                 </div>
                 <button type="submit" class="btn btn-custom">Register</button>
                 <button type="button" class="btn btn-cancel" onclick="window.location.href='index.html';">Cancel</button>
             </form>
-        </div>
+        </div>     
     </section>
     <script>
         const logoutMenuItem = $('#logoutMenuItem');

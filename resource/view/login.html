@@ -156,12 +156,12 @@
     <form id="loginForm" class="p-3 mt-3">
         <div class="form-field d-flex align-items-center">
             <span class="fas fa-user"></span>
-            <input type="email" name="email" id="email" placeholder="Email" aria-autocomplete="both" aria-haspopup="false" autocapitalize="off" autocomplete="off" autocorrect="off" autofocus="" role="combobox" spellcheck="false">
+            <input type="email" name="email" id="email" value="admin@gmail.com" placeholder="Email" aria-autocomplete="both" aria-haspopup="false" autocapitalize="off" autocomplete="off" autocorrect="off" autofocus="" role="combobox" spellcheck="false">
         </div>
         <p id="emailErrorMessage" class="text-danger error-message"></p>
         <div class="form-field d-flex align-items-center">
             <span class="fas fa-key"></span>
-            <input type="password" name="password" id="password" placeholder="Password">
+            <input type="password" name="password" id="password" value="admin" placeholder="Password">
         </div>
         <p id="passwordErrorMessage" class="text-danger error-message"></p>
         <button id="loginBtn" class="btn mt-3">Login</button>
@@ -266,6 +266,8 @@
         $.post(
             settings
         ).always(function (data, status, xhr) {
+                // emailErrorMessage.text("finish");
+                // return;
                 if (data.status === 200) {
                     window.location.href = "/home";
                 } else if (data.status === 401) {

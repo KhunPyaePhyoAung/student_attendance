@@ -13,6 +13,7 @@ app.use(express.json());
 app.use(express.static(__dirname + '/resource/static'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
+
 app.use(cors());
 
 app.use(

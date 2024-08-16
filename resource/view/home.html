@@ -24,51 +24,6 @@
             color: #fff !important;
             cursor: pointer;
         }
-
-        .nav-item.dropdown .profile-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px; /* Adjust size as needed */
-            height: 40px; /* Adjust size as needed */
-            border-radius: 50%; /* Circular container */
-            background-color: #fff;
-            color: #1e56a6;
-            margin-left: 1rem;
-            overflow: hidden; /* Ensures content is clipped to fit the circular shape */
-        }
-
-        .profile-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Ensures image covers the container */
-            display: block; /* Ensures image is a block-level element */
-        }
-
-        .card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .card img {
-            border-radius: 15px 15px 0 0;
-        }
-
-        .card-title {
-            color: #1e56a6;
-        }
-
-        .main-content {
-            width: 100%;
-            min-height: 100vh;
-        }
-
-        ::-webkit-scrollbar {
-            width: 0px;
-            height: 0px;
-        }
     </style>
 </head>
 <body>
@@ -82,7 +37,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active">Home</a>
+                        <a class="nav-link active" href="/home">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link">Terms</a>
@@ -91,7 +46,10 @@
                         <a class="nav-link">Courses</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link">Studends</a>
+                        <a class="nav-link" href="/instructor_registration">Instructors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/student_registration">Students</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link">Attendance</a>
@@ -107,13 +65,10 @@
         </div>
     </nav>
 
-    <iframe class="main-content" id="mainContent" src="" frameborder="0"></iframe>
+    <section class="main-content">
+    
+    </section>
     <script>
-        $(document).ready(function() {
-            // loadpage();
-            $('#mainContent').attr('src', '/student_registration');
-        });
-        
         const logoutMenuItem = $('#logoutMenuItem');
 
         logoutMenuItem.on('click', logout);
@@ -133,21 +88,6 @@
                     if (data.status === 204) {
                         window.location.replace('/login');
                     }
-                }
-            );
-        }
-
-        function loadpage() {
-            const settings = {
-                "url": "/student_registration",
-                "method": "GET",
-                "timeout": 0,
-            };
-
-            $.post(
-                settings
-            ).always(function (data, status, xhr) {
-                    $('#mainContent').src = '/student_registration';
                 }
             );
         }

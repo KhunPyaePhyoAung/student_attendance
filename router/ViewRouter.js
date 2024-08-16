@@ -20,4 +20,9 @@ router.get(
     viewController.student_registration
 );
 
+router.get(
+    ['/instructor_registration'],
+    viewController.instructor_registration
+);
+
 module.exports = router;
