@@ -21,6 +21,11 @@ router.get(
 );
 
 router.get(
+    ['/students'],
+    viewController.students
+);
+
+router.get(
     ['/instructor_registration'],
     viewController.instructor_registration
 );

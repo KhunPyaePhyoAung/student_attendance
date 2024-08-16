@@ -6,6 +6,7 @@ const app = express();
 const path = require('path');
 const instructorRouter = require('./router/InstructorRouter');
 const userRouter = require('./router/UserRouter');
+const studentRouter = require('./router/StudentRouter');
 const viewRouter = require('./router/ViewRouter');
 const authRouter = require('./router/AuthRouter');
 
@@ -24,6 +25,11 @@ app.use(
 app.use(
     '/api/users',
     userRouter
+);
+
+app.use(
+    '/api/students',
+    studentRouter
 );
 
 app.use(viewRouter);

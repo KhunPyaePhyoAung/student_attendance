@@ -37,6 +37,11 @@ const viewController = ({tokenService}) => {
             const html = path.join(viewFolder, 'instructor_registration.html');
             return res.sendFile(html);
         },
+
+        students: (req, res) => {
+            const html = path.join(viewFolder, 'students.html');
+            return res.sendFile(html);
+        },
     }
 }
 

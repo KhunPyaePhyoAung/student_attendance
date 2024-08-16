@@ -28,6 +28,15 @@ const userService = ({userRepository, passwordEncryptService}) => {
             }
         },
 
+        getUniqueFields: async (user) => {
+            try {
+                const fields = await userRepository.getUniqueFields(user);
+                return fields;
+            } catch (error) {
+                throw error;
+            }
+        },
+
         create: async (user) => {
             try {
                 user.password = passwordEncryptService.encrypt(user.password);

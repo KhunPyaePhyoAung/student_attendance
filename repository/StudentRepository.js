@@ -1,12 +1,12 @@
 const {getConnection} = require('../tool/MySqlPool');
 
-const userRepository = () => {
+const studentRepository = () => {
     return {
         getAll: async () => {
             const connection = await getConnection();
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT * FROM `user`';
+                const sql = 'SELECT * FROM `student`';
                 connection.query(sql, (error, results, fields) => {
                     if (error) {
                         reject(new Error(error.sqlMessage));
@@ -22,7 +22,7 @@ const userRepository = () => {
             const connection = await getConnection();
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT * FROM `user` WHERE `id` = ?';
+                const sql = 'SELECT * FROM `student` WHERE `id` = ?';
                 const params = [id];
                 connection.query(sql, params, (error, results, fields) => {
                     if (error) {
@@ -39,7 +39,7 @@ const userRepository = () => {
             const connection = await getConnection();
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT * FROM `user` WHERE `email` = ?';
+                const sql = 'SELECT * FROM `student` WHERE `email` = ?';
                 const params = [email];
                 connection.query(sql, params, (error, results, fields) => {
                     if (error) {
@@ -52,25 +52,25 @@ const userRepository = () => {
             });
         },
 
-        getUniqueFields: async (user) => {
+        getUniqueFields: async (student) => {
             const connection = await getConnection();
 
             let sqlCheckId = "";
-            if (user.id) {
+            if (student.id) {
                 sqlCheckId = " and `id` <> ?";
             }
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT * FROM `user` WHERE `email` = ?' + sqlCheckId;
-                const params = [user.email, user.id];
+                const sql = 'SELECT * FROM `student` WHERE `nrc` = ?' + sqlCheckId;
+                const params = [student.nrc, student.id];
                 connection.query(sql, params, (error, results, fields) => {
                     if (error) {
                         resolve([]);
                     } else {
                         const fields = [];
                         results.forEach(element => {
-                            if (element.email == user.email) {
-                                fields.push("email");
+                            if (element.nrc == student.nrc) {
+                                fields.push("nrc");
                             }
                         });
                         resolve(fields);
@@ -80,18 +80,18 @@ const userRepository = () => {
             });
         },
 
-        create: async (user) => {
+        create: async (student) => {
             const connection = await getConnection();
 
             const insertedId = await new Promise((resolve, reject) => {
-                const insertSql = 'INSERT INTO `user` (`id`, `email`, `password`, `role`) VALUES (?, ?, ?)';
-                const insertParams = [user.id, user.email, user.password, user.role];
+                const insertSql = 'INSERT INTO `student` (`name`, `nrc`, `phone`, `gender`, `date_of_birth`, `address`) VALUES (?, ?, ?, ?, ?, ?)';
+                const insertParams = [student.name, student.nrc, student.phone, student.gender, student.date_of_birth, student.address];
                 connection.query(insertSql, insertParams, (error, result) => {
                     if (error) {
                         if (error.code === 'ER_DUP_ENTRY') {
                             const duplicateError = new Error();
-                            duplicateError.field = "email";
-                            duplicateError.message = "This email already used."
+                            duplicateError.field = "nrc";
+                            duplicateError.message = "This NRC NO already used."
                             reject(duplicateError);
                         }  else {
                             reject(error);
@@ -102,11 +102,8 @@ const userRepository = () => {
                 });
             });
 
-            
-            // const createdUser = await this.findOneById(insertedId);
-
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT * FROM `user` WHERE `id` = ?';
+                const sql = 'SELECT * FROM `student` WHERE `id` = ?';
                 const params = [insertedId];
                 connection.query(sql, params, (error, results, fields) => {
                     if (error) {
@@ -118,18 +115,18 @@ const userRepository = () => {
             });;
         },
 
-        updateById: async (id, user) => {
+        updateById: async (id, student) => {
             const connection = await getConnection();
 
             const affectedRows = await new Promise((resolve, reject) => {
-                const updateQuery = 'UPDATE `user` SET `email` = ?, `password` = ?, `role` = ? WHERE `id` = ?';
-                const updateParams = [user.email, user.password, user.role, id];
+                const updateQuery = 'UPDATE `student` SET `name` = ?, `nrc` = ?, `phone` = ?, `gender` = ?, `date_of_birth` = ?, `address` = ? WHERE `id` = ?';
+                const updateParams = [student.name, student.nrc, student.phone, student.gender, student.date_of_birth, student.address, id];
                 connection.query(updateQuery, updateParams, (error, result) => {
                     if (error) {
                         if (error.code === 'ER_DUP_ENTRY') {
                             const duplicateError = new Error();
-                            duplicateError.field = "email";
-                            duplicateError.message = "This email already used."
+                            duplicateError.field = "nrc";
+                            duplicateError.message = "This NRC NO already used."
                             reject(duplicateError);
                         } else {
                             reject(error);
@@ -142,11 +139,11 @@ const userRepository = () => {
         
             // connection.release();
         
-            user.id = id;
+            student.id = id;
 
             if (affectedRows) {
                 return new Promise((resolve, reject) => {
-                    const sql = 'SELECT * FROM `user` WHERE `id` = ?';
+                    const sql = 'SELECT * FROM `student` WHERE `id` = ?';
                     const params = [id];
                     connection.query(sql, params, (error, results, fields) => {
                         if (error) {
@@ -159,14 +156,14 @@ const userRepository = () => {
                 });
             }
 
-            return user;
+            return student;
         },
 
         deleteById: async (id) => {
             const connection = await getConnection();
 
             const affectedRows = await new Promise((resolve, reject) => {
-                const deleteSql = 'DELETE FROM `user` WHERE `id` = ?';
+                const deleteSql = 'DELETE FROM `student` WHERE `id` = ?';
                 const deleteParams = [id];
                 connection.query(deleteSql, deleteParams, (error, result) => {
                     if (error) {
@@ -184,4 +181,4 @@ const userRepository = () => {
     }
 }
 
-module.exports = userRepository;
+module.exports = studentRepository;
