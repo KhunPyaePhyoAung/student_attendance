@@ -12,6 +12,7 @@ const pool = mysql.createPool({
     user: USERNAME,
     password: PASSWORD,
     database: DATABASE,
+    dateStrings: true
 });
 
 pool.on('connection', function (connection) {
@@ -24,6 +25,8 @@ const getConnection = async () => {
             if (error) {
                 if (error.code == 'ER_ACCESS_DENIED_ERROR') {
                     reject(new Error('Access denied for database.'));
+                } else if (error.code == 'ECONNREFUSED') {
+                    reject(new Error('Could not connect to database server'));
                 }
                 reject(error);
             } else {

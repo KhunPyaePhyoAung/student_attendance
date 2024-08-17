@@ -50,7 +50,6 @@ const userService = ({userRepository, passwordEncryptService}) => {
         updateById: async (id, user) => {
             try {
                 const intId = parseInt(id);
-                user.password = passwordEncryptService.encrypt(user.password);
                 const updatedUser = await userRepository.updateById(intId, user);
                 return updatedUser;
             } catch (error) {

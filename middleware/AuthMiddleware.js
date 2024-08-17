@@ -7,17 +7,6 @@ const verifyUserToken = (req, res, next) => {
     let token = req.cookies.access_token;
 
     try {
-        // if (token) {
-        //     token = token.split(' ');
-        //     if (token[0] === 'Bearer') {
-        //         const decoded = jwt.verify(token[1], ACCESS_TOKEN_SECRET);
-        //         if (decoded) {
-        //             req.user = decoded.user;
-        //             next();
-        //             return;
-        //         }
-        //     }
-        // }
 
         if (token) {
             const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET);

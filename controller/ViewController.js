@@ -33,8 +33,8 @@ const viewController = ({tokenService}) => {
             return res.sendFile(html);
         },
 
-        instructor_registration: (req, res) => {
-            const html = path.join(viewFolder, 'instructor_registration.html');
+        student_edit: (req, res) => {
+            const html = path.join(viewFolder, 'student_edit.html');
             return res.sendFile(html);
         },
 
@@ -42,6 +42,22 @@ const viewController = ({tokenService}) => {
             const html = path.join(viewFolder, 'students.html');
             return res.sendFile(html);
         },
+
+        instructors: (req, res) => {
+            const html = path.join(viewFolder, 'instructors.html');
+            return res.sendFile(html);
+        },
+
+        instructor_registration: (req, res) => {
+            const html = path.join(viewFolder, 'instructor_registration.html');
+            return res.sendFile(html);
+        },
+
+        instructor_edit: (req, res) => {
+            const html = path.join(viewFolder, 'instructor_edit.html');
+            return res.sendFile(html);
+        },
+
     }
 }
 

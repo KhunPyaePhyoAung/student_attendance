@@ -4,9 +4,9 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const app = express();
 const path = require('path');
-const instructorRouter = require('./router/InstructorRouter');
 const userRouter = require('./router/UserRouter');
 const studentRouter = require('./router/StudentRouter');
+const instructorRouter = require('./router/InstructorRouter');
 const viewRouter = require('./router/ViewRouter');
 const authRouter = require('./router/AuthRouter');
 
@@ -30,6 +30,11 @@ app.use(
 app.use(
     '/api/students',
     studentRouter
+);
+
+app.use(
+    '/api/instructors',
+    instructorRouter
 );
 
 app.use(viewRouter);

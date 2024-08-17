@@ -6,7 +6,7 @@ const studentRepository = () => {
             const connection = await getConnection();
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT * FROM `student`';
+                const sql = 'SELECT s.*, u.email as `email`, u.role as `role`, u.status as `status`, u.created_at as `created_at` FROM `student` s JOIN `user` u ON s.`id` = u.`id` GROUP BY s.id';
                 connection.query(sql, (error, results, fields) => {
                     if (error) {
                         reject(new Error(error.sqlMessage));
@@ -22,7 +22,7 @@ const studentRepository = () => {
             const connection = await getConnection();
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT * FROM `student` WHERE `id` = ?';
+                const sql = 'SELECT s.*, u.email as `email`, u.role as `role`, u.status as `status`, u.created_at as `created_at` FROM `student` s JOIN `user` u ON s.`id` = u.`id` WHERE `s`.`id` = ? GROUP BY s.id';
                 const params = [id];
                 connection.query(sql, params, (error, results, fields) => {
                     if (error) {
@@ -39,13 +39,37 @@ const studentRepository = () => {
             const connection = await getConnection();
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT * FROM `student` WHERE `email` = ?';
+                const sql = 'SELECT s.*, u.email as `email`, u.role as `role`, u.status as `status`, u.created_at as `created_at` FROM `student` s JOIN `user` u ON s.`id` = u.`id` WHERE `email` = ? GROUP BY s.id';
                 const params = [email];
                 connection.query(sql, params, (error, results, fields) => {
                     if (error) {
                         reject(new Error(error.sqlMessage));
                     } else {
                         resolve(results[0]);
+                    }
+                });
+                connection.release();
+            });
+        },
+
+        searchByKeyword: async (keyword) => {
+            const connection = await getConnection();
+
+            return new Promise((resolve, reject) => {
+                const sql = "SELECT s.*, u.email as `email`, u.role as `role`, u.status as `status`, u.created_at as `created_at` FROM `student` s JOIN `user` u ON s.`id` = u.`id` WHERE u.`email` LIKE ? OR s.`name` LIKE ? OR s.`nrc` LIKE ? OR s.`phone` LIKE ? OR s.`address` LIKE ? GROUP BY s.`id`";
+                // const sql = "SELECT s.*, u.email as `email`, u.role as `role` FROM `student` s JOIN `user` u ON s.`id` = u.`id` WHERE s.`name` LIKE ? GROUP BY s.`id`";
+                const params = [];
+                params.push(`%${keyword}%`);
+                params.push(`%${keyword}%`);
+                params.push(`%${keyword}%`);
+                params.push(`%${keyword}%`);
+                params.push(`%${keyword}%`);
+
+                connection.query(sql, params, (error, results, fields) => {
+                    if (error) {
+                        reject(new Error(error.sqlMessage));
+                    } else {
+                        resolve(results);
                     }
                 });
                 connection.release();
@@ -61,7 +85,7 @@ const studentRepository = () => {
             }
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT * FROM `student` WHERE `nrc` = ?' + sqlCheckId;
+                const sql = 'SELECT s.*, u.email as `email`, u.role as `role`, u.status as `status`, u.created_at as `created_at` FROM `student` s JOIN `user` u ON s.`id` = u.`id` WHERE `nrc` = ?' + sqlCheckId + "  GROUP BY s.id";
                 const params = [student.nrc, student.id];
                 connection.query(sql, params, (error, results, fields) => {
                     if (error) {
@@ -84,8 +108,8 @@ const studentRepository = () => {
             const connection = await getConnection();
 
             const insertedId = await new Promise((resolve, reject) => {
-                const insertSql = 'INSERT INTO `student` (`name`, `nrc`, `phone`, `gender`, `date_of_birth`, `address`) VALUES (?, ?, ?, ?, ?, ?)';
-                const insertParams = [student.name, student.nrc, student.phone, student.gender, student.date_of_birth, student.address];
+                const insertSql = 'INSERT INTO `student` (`id`, `name`, `nrc`, `phone`, `family_phone`, `gender`, `date_of_birth`, `address`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+                const insertParams = [student.id, student.name, student.nrc, student.phone, student.family_phone, student.gender, student.date_of_birth, student.address];
                 connection.query(insertSql, insertParams, (error, result) => {
                     if (error) {
                         if (error.code === 'ER_DUP_ENTRY') {
@@ -103,7 +127,7 @@ const studentRepository = () => {
             });
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT * FROM `student` WHERE `id` = ?';
+                const sql = 'SELECT s.*, u.email as `email`, u.role as `role`, u.status as `status`, u.created_at as `created_at` FROM `student` s JOIN `user` u ON s.`id` = u.`id` WHERE s.`id` = ? GROUP BY s.id';
                 const params = [insertedId];
                 connection.query(sql, params, (error, results, fields) => {
                     if (error) {
@@ -119,8 +143,8 @@ const studentRepository = () => {
             const connection = await getConnection();
 
             const affectedRows = await new Promise((resolve, reject) => {
-                const updateQuery = 'UPDATE `student` SET `name` = ?, `nrc` = ?, `phone` = ?, `gender` = ?, `date_of_birth` = ?, `address` = ? WHERE `id` = ?';
-                const updateParams = [student.name, student.nrc, student.phone, student.gender, student.date_of_birth, student.address, id];
+                const updateQuery = 'UPDATE `student` SET `name` = ?, `nrc` = ?, `phone` = ?, `family_phone` = ?, `gender` = ?, `date_of_birth` = ?, `address` = ? WHERE `id` = ?';
+                const updateParams = [student.name, student.nrc, student.phone, student.family_phone, student.gender, student.date_of_birth, student.address, id];
                 connection.query(updateQuery, updateParams, (error, result) => {
                     if (error) {
                         if (error.code === 'ER_DUP_ENTRY') {
@@ -143,7 +167,7 @@ const studentRepository = () => {
 
             if (affectedRows) {
                 return new Promise((resolve, reject) => {
-                    const sql = 'SELECT * FROM `student` WHERE `id` = ?';
+                    const sql = 'SELECT s.*, u.email as `email`, u.role as `role`, u.status as `status`, u.created_at as `created_at` FROM `student` s JOIN `user` u ON s.`id` = u.`id` WHERE s.`id` = ? GROUP BY s.id';
                     const params = [id];
                     connection.query(sql, params, (error, results, fields) => {
                         if (error) {

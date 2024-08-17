@@ -2,7 +2,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
-const ACCESS_TOKEN_EXPIRES_IN = '10m';
+const ACCESS_TOKEN_EXPIRES_IN = '10d';
 const REFRESH_TOKEN_EXPIRES_IN = '1d';
 
 const accessTokenPayload = (user) => {

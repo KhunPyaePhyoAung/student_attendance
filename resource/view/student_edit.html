@@ -136,8 +136,15 @@
 
     <section class="main-content">
         <div class="container">
-            <h2 class="text-center mb-4">Student Registration Form</h2>
+            <h2 class="text-center mb-4">Student Update Form</h2>
             <form novalidate id="studentForm">
+                <div class="form-group">
+                    <label for="name">ID</label>
+                    <input type="text" class="form-control input" id="id" name="id" placeholder="Enter ID" required readonly>
+                    <div class="invalid-feedback" id="idErrorMessage">
+                        
+                    </div>
+                </div>
                 <div class="form-group">
                     <label for="name">Full Name</label>
                     <input type="text" class="form-control input" id="name" name="name" placeholder="Enter your full name" required>
@@ -160,14 +167,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control input" id="password" name="password" placeholder="Enter your password" required>
-                    <div class="invalid-feedback" id="passwordErrorMessage">
-                        
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="phone">Phone</label>
+                    <label for="phone">Phone Number</label>
                     <input type="tel" class="form-control input" id="phone" name="phone" placeholder="Enter your phone number" required>
                     <div class="invalid-feedback" id="phoneErrorMessage">
                         
@@ -181,21 +181,33 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Gender</label>
-                    <div class="gender-group">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input input" type="radio" name="gender" id="male" value="MALE" required>
-                            <label class="form-check-label" for="male">Male</label>
+                    <div class="row">
+                        <!-- Gender Input -->
+                        <div class="col-md-6">
+                            <label>Gender</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" id="male" value="MALE" required>
+                                <label class="form-check-label" for="male">Male</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" id="female" value="FEMALE" required>
+                                <label class="form-check-label" for="female">Female</label>
+                            </div>
+                            <div class="invalid-feedback" id="genderErrorMessage"></div>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input input" type="radio" name="gender" id="female" value="FEMALE" required>
-                            <label class="form-check-label" for="female">Female</label>
+                
+                        <!-- Status Input -->
+                        <div class="col-md-6">
+                            <label for="status">Status</label>
+                            <select class="form-control" id="status" name="status" required>
+                                <option value="ACTIVE">Active</option>
+                                <option value="INACTIVE">Inactive</option>
+                            </select>
+                            <div class="invalid-feedback" id="statusErrorMessage"></div>
                         </div>
-                    </div>
-                    <div class="invalid-feedback" id="genderErrorMessage">
-                        
                     </div>
                 </div>
+                
                 <div class="form-group">
                     <label for="dob">Date of Birth</label>
                     <input type="date" class="form-control input" id="dateOfBirth" name="date_of_birth" required>
@@ -210,7 +222,7 @@
                         
                     </div>
                 </div>
-                <button type="submit" class="btn btn-custom" id="registerBtn">Register</button>
+                <button type="submit" class="btn btn-custom" id="registerBtn">Update</button>
                 <a class="btn btn-cancel" href="/students">Cancel</a>
             </form>
         </div>
@@ -222,18 +234,18 @@
                 maxDate: new Date(),
             });
 
-
         const logoutMenuItem = $('#logoutMenuItem');
         const studentForm = $('#studentForm');
+        const idInput = $('#id');
         const nameInput = $('#name');
         const nrcInput = $('#nrc');
         const emailInput = $('#email');
-        const passwordInput = $('#password');
         const phoneInput = $('#phone');
-        const familyPhoneInput = $('#familyPhone')
+        const familyPhoneInput = $('#familyPhone');
         const genderInput = $('#gender');
         const genderMaleInput = $('#male');
         const genderFemaleInput = $('#female');
+        const statusInput = $('#status');
         const dobInput = $('#dateOfBirth')
         const addressInput = $('#address');
         const registerBtn = $('#registerBtn');
@@ -241,10 +253,10 @@
         const nameErrorMessage = $('#nameErrorMessage');
         const nrcErrorMessage = $('#nrcErrorMessage');
         const emailErrorMessage = $('#emailErrorMessage');
-        const passwordErrorMessage = $('#passwordErrorMessage');
         const phoneErrorMessage = $('#phoneErrorMessage');
         const familyPhoneErrorMessage = $('#familyPhoneErrorMessage');
         const genderErrorMessage = $('#genderErrorMessage');
+        const statusErrorMessage = $('#statusErrorMessage');
         const dobErrorMessage = $('#dobErrorMessage');
         const addressErrorMessage = $('#addressErrorMessage');
 
@@ -280,21 +292,6 @@
                 length: {
                     maximum: 200,
                     message: '^Email cannot be more than 200 characters'
-                }
-            },
-            password: {
-                presence: {
-                    allowEmpty: false,
-                    message: '^Password is required'
-                },
-                length: {
-                    minimum: 8,
-                    maximum: 30,
-                    message: '^Password must be between 8 and 30 characters'
-                },
-                format: {
-                    pattern: /^\S*$/,
-                    message: '^Password cannot contain spaces'
                 }
             },
             phone: {
@@ -333,6 +330,12 @@
                     message: '^Gender is required'
                 }
             },
+            status: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Status is required'
+                }
+            },
             date_of_birth: {
                 presence: {
                     allowEmpty: false,
@@ -351,9 +354,6 @@
             }
         };
 
-
-
-
         studentForm.on('submit', function(e){
             e.preventDefault();
         });
@@ -365,7 +365,7 @@
         registerBtn.on('click', function() {
             if (validateForm()) {
                 const student = getFormData();
-                createStudent(student);
+                updateStudent(student);
             }
             
         });
@@ -384,13 +384,42 @@
             });
         });
 
+        $(document).ready(function() {
+            let params = new URL(document.location.toString()).searchParams;
+            let studentId = params.get("id");
+            fetchStudentById(studentId);
+        })
+
 
         // ---------------------- Functions ----------------------------------
 
-        function createStudent(student) {
+        function fillStudentForm(student) {
+            idInput.val(student.id);
+            nameInput.val(student.name);
+            nrcInput.val(student.nrc);
+            emailInput.val(student.email);
+            phoneInput.val(student.phone);
+            familyPhoneInput.val(student.family_phone);
+            statusInput.val(student.status);
+            datePicker.setDate(formatDateDMY(new Date(student.date_of_birth)), true);
+            addressInput.val(student.address);
+
+            if (student.gender === 'MALE') {
+                genderMaleInput.prop('checked', true);
+            } else if (student.gender === 'FEMALE') {
+                genderFemaleInput.prop('checked', true);
+            }
+
+            // flatpickr('#dateOfBirth', {
+            //     dateFormat: 'd/m/Y',
+            //     maxDate: new Date(),
+            // });
+        }
+
+        function updateStudent(student) {
             const settings = {
-                "url": "/api/students",
-                "method": "POST",
+                "url": "/api/students/" + student.id,
+                "method": "PUT",
                 "timeout": 0,
                 "headers": {
                 "Content-Type": "application/json"
@@ -401,12 +430,12 @@
             $.post(
                 settings
             ).always(function (data, status, xhr) {
-                    if (data.status === 201) {
-                        clearStudentForm();
+                    if (data.status === 200) {
                         window.scrollTo(0, 0);
-                        swal("Successfully created a new student", {
-                            icon: "success",
+                        swal('Successfully updated the student', {
+                            icon: 'success',
                         });
+                        
                     } else if (data.status === 400) {
                         const errors = data.errors;
                         console.log(data);
@@ -426,9 +455,6 @@
                             } else if (field === 'email') {
                                 emailErrorMessage.text(message);
                                 emailInput.addClass('is-invalid');
-                            } else if (field === 'password') {
-                                passwordErrorMessage.text(message);
-                                passwordInput.addClass('is-invalid');
                             } else if (field === 'phone') {
                                 phoneErrorMessage.text(message);
                                 phoneInput.addClass('is-invalid');
@@ -438,6 +464,9 @@
                             } else if (field === 'gender') {
                                 genderErrorMessage.text(message);
                                 genderInput.addClass('is-invalid');
+                            } else if (field === 'status') {
+                                statusErrorMessage.text(message);
+                                statusInput.addClass('is-invalid');
                             } else if (field === 'date_of_birth') {
                                 dobErrorMessage.text(message);
                                 dobInput.addClass('is-invalid');
@@ -446,6 +475,28 @@
                                 addressInput.addClass('is-invalid');
                             }
                         });
+                    }
+                }
+            );
+        }
+
+        function fetchStudentById(id) {
+            const settings = {
+                "url": "/api/students/" + id,
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                    console.log(data.status);
+                    if (data.status === 200) {
+                        console.log('fetched');
+                        console.log(data.data);
+                        fillStudentForm(data.data);
+                    } else if (data.status === 404) {
+                        console.log(data.message);
                     }
                 }
             );
@@ -472,18 +523,18 @@
                 } else if (sourceId === 'email') {
                     emailErrorMessage.text('');
                     emailInput.removeClass('is-invalid');
-                } else if (sourceId === 'password') {
-                    passwordErrorMessage.text('');
-                    passwordInput.removeClass('is-invalid');
                 } else if (sourceId === 'phone') {
                     phoneErrorMessage.text('');
                     phoneInput.removeClass('is-invalid');
-                } else if (sourceId === 'familyPhone') {
+                } else if (sourceId === 'family_phone') {
                     familyPhoneErrorMessage.text('');
                     familyPhoneInput.removeClass('is-invalid');
                 } else if (sourceId === 'gender' || sourceId === 'male' || sourceId == 'female') {
                     genderErrorMessage.text('');
                     genderInput.removeClass('is-invalid');
+                } else if (sourceId === 'status') {
+                    statusErrorMessage.text('');
+                    statusInput.removeClass('is-invalid');
                 } else if (sourceId === 'dateOfBirth') {
                     dobErrorMessage.text('');
                     dobInput.removeClass('is-invalid');
@@ -495,20 +546,20 @@
                 nameErrorMessage.text('');
                 nrcErrorMessage.text('');
                 emailErrorMessage.text('');
-                passwordErrorMessage.text('');
                 phoneErrorMessage.text('');
                 familyPhoneErrorMessage.text('');
                 genderErrorMessage.text('');
+                statusErrorMessage.text('');
                 dobErrorMessage.text('');
                 addressErrorMessage.text('');
 
                 nameInput.removeClass('is-invalid');
                 nrcInput.removeClass('is-invalid');
                 emailInput.removeClass('is-invalid');
-                passwordInput.removeClass('is-invalid');
                 phoneInput.removeClass('is-invalid');
                 familyPhoneInput.removeClass('is-invalid');
                 genderInput.removeClass('is-invalid');
+                statusInput.removeClass('is-invalid');
                 dobInput.removeClass('is-invalid');
                 addressInput.removeClass('is-invalid');
             }
@@ -542,11 +593,6 @@
                 emailInput.addClass('is-invalid');
             }
 
-            if (checkResult.password) {
-                passwordErrorMessage.text(checkResult.password[0]);
-                passwordInput.addClass('is-invalid');
-            }
-
             if (checkResult.phone) {
                 phoneErrorMessage.text(checkResult.phone[0]);
                 phoneInput.addClass('is-invalid');
@@ -562,6 +608,11 @@
                 genderInput.addClass('is-invalid');
             }
 
+            if (checkResult.status) {
+                statusErrorMessage.text(checkResult.status[0]);
+                statusInput.addClass('is-invalid');
+            }
+
             if (checkResult.date_of_birth) {
                 dobErrorMessage.text(checkResult.date_of_birth[0]);
                 dobInput.addClass('is-invalid');
@@ -572,20 +623,16 @@
                 addressInput.addClass('is-invalid');
             }
             
+            console.log(checkResult);
             return false;
         }
 
-        function clearStudentForm() {
-            nameInput.val('');
-            nrcInput.val('');
-            emailInput.val('');
-            passwordInput.val('');
-            phoneInput.val('');
-            familyPhoneInput.val('');
-            genderMaleInput.prop('checked', false);
-            genderFemaleInput.prop('checked', false);
-            dobInput.val('');
-            addressInput.val('');
+        function formatDateDMY(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const year = date.getFullYear();
+            
+            return `${day}/${month}/${year}`;
         }
 
         function formatDateYMD(dateStr) {

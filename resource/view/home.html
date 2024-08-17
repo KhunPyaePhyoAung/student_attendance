@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
+    <script type="text/javascript" src="/js/sweetAlert.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -46,7 +47,7 @@
                         <a class="nav-link">Courses</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/instructor_registration">Instructors</a>
+                        <a class="nav-link" href="/instructors">Instructors</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/students">Students</a>
@@ -71,7 +72,19 @@
     <script>
         const logoutMenuItem = $('#logoutMenuItem');
 
-        logoutMenuItem.on('click', logout);
+        logoutMenuItem.on('click', function() {
+            swal({
+                title: "Are you sure to logout?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    logout();
+                }
+            });
+        });
 
         function logout() {
             console.log('Logging out');

@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>Instructor Registration</title>
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/flatpickr.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
+    <script type="text/javascript" src="/js/validate.min.js"></script>
+    <script type="text/javascript" src="/js/sweetAlert.js"></script>
+    <script type="text/javascript" src="/js/flatpickr.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -87,6 +91,7 @@
 
         .invalid-feedback {
             display: block;
+            min-height: 20px;
         }
     </style>
 </head>
@@ -110,7 +115,7 @@
                         <a class="nav-link">Courses</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/instructor_registration">Instructors</a>
+                        <a class="nav-link" href="/instructors">Instructors</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/students">Students</a>
@@ -132,81 +137,424 @@
     <section class="main-content">
         <div class="container">
             <h2 class="text-center mb-4">Instructor Registration Form</h2>
-            <form novalidate>
+            <form novalidate id="instructorForm">
                 <div class="form-group">
-                    <label for="fullName">Full Name</label>
-                    <input type="text" class="form-control is-invalid" id="fullName" placeholder="Enter your full name" required>
-                    <div class="invalid-feedback">
-                        Please enter your full name.
+                    <label for="name">Full Name</label>
+                    <input type="text" class="form-control input" id="name" name="name" placeholder="Enter your full name" required>
+                    <div class="invalid-feedback" id="nameErrorMessage">
+                        
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="nrc">NRC Number</label>
-                    <input type="text" class="form-control is-invalid" id="nrc" placeholder="Enter your NRC number" required>
-                    <div class="invalid-feedback">
-                        Please enter your NRC number.
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" class="form-control is-invalid" id="phone" placeholder="Enter your phone number" required>
-                    <div class="invalid-feedback">
-                        Please enter your phone number.
+                    <input type="text" class="form-control input" id="nrc" name="nrc" placeholder="Enter your NRC number" required>
+                    <div class="invalid-feedback" id="nrcErrorMessage">
+                        
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" class="form-control is-invalid" id="email" placeholder="Enter your email address" required>
-                    <div class="invalid-feedback">
-                        Please enter your email address.
+                    <input type="email" class="form-control input" id="email" name="email" placeholder="Enter your email address" required>
+                    <div class="invalid-feedback" id="emailErrorMessage">
+                        
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control is-invalid" id="password" placeholder="Enter your password" required>
-                    <div class="invalid-feedback">
-                        Please enter your password.
+                    <input type="password" class="form-control input" id="password" name="password" placeholder="Enter your password" required>
+                    <div class="invalid-feedback" id="passwordErrorMessage">
+                        
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" class="form-control input" id="phone" name="phone" placeholder="Enter your phone number" required>
+                    <div class="invalid-feedback" id="phoneErrorMessage">
+                        
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Gender</label>
                     <div class="gender-group">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input is-invalid" type="radio" name="gender" id="male" value="male" required>
+                            <input class="form-check-input input" type="radio" name="gender" id="male" value="MALE" required>
                             <label class="form-check-label" for="male">Male</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input is-invalid" type="radio" name="gender" id="female" value="female" required>
+                            <input class="form-check-input input" type="radio" name="gender" id="female" value="FEMALE" required>
                             <label class="form-check-label" for="female">Female</label>
                         </div>
                     </div>
-                    <div class="invalid-feedback">
-                        Please select your gender.
+                    <div class="invalid-feedback" id="genderErrorMessage">
+                        
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="dob">Date of Birth</label>
-                    <input type="date" class="form-control is-invalid" id="dob" required>
-                    <div class="invalid-feedback">
-                        Please enter your date of birth.
+                    <input type="date" class="form-control input" id="dateOfBirth" name="date_of_birth" required>
+                    <div class="invalid-feedback" id="dobErrorMessage">
+                        
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="address">Address</label>
-                    <textarea class="form-control is-invalid" id="address" rows="3" placeholder="Enter your address" required></textarea>
-                    <div class="invalid-feedback">
-                        Please enter your address.
+                    <textarea class="form-control input" id="address" name="address" rows="3" placeholder="Enter your address" required></textarea>
+                    <div class="invalid-feedback" id="addressErrorMessage">
+                        
                     </div>
                 </div>
-                <button type="submit" class="btn btn-custom">Register</button>
-                <button type="button" class="btn btn-cancel" onclick="window.location.href='index.html';">Cancel</button>
+                <button type="submit" class="btn btn-custom" id="registerBtn">Register</button>
+                <a class="btn btn-cancel" href="/instructors">Cancel</a>
             </form>
-        </div>     
+        </div>
     </section>
     <script>
-        const logoutMenuItem = $('#logoutMenuItem');
 
-        logoutMenuItem.on('click', logout);
+        const datePicker = flatpickr('#dateOfBirth', {
+                dateFormat: 'd/m/Y',
+                maxDate: new Date(),
+            });
+
+
+        const logoutMenuItem = $('#logoutMenuItem');
+        const instructorForm = $('#instructorForm');
+        const nameInput = $('#name');
+        const nrcInput = $('#nrc');
+        const emailInput = $('#email');
+        const passwordInput = $('#password');
+        const phoneInput = $('#phone');
+        const genderInput = $('#gender');
+        const genderMaleInput = $('#male');
+        const genderFemaleInput = $('#female');
+        const dobInput = $('#dateOfBirth')
+        const addressInput = $('#address');
+        const registerBtn = $('#registerBtn');
+
+        const nameErrorMessage = $('#nameErrorMessage');
+        const nrcErrorMessage = $('#nrcErrorMessage');
+        const emailErrorMessage = $('#emailErrorMessage');
+        const passwordErrorMessage = $('#passwordErrorMessage');
+        const phoneErrorMessage = $('#phoneErrorMessage');
+        const genderErrorMessage = $('#genderErrorMessage');
+        const dobErrorMessage = $('#dobErrorMessage');
+        const addressErrorMessage = $('#addressErrorMessage');
+
+        const instructorConstraint = {
+            name: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Name is required'
+                },
+                length: {
+                    maximum: 60,
+                    message: '^Name cannot be more than 60 characters'
+                }
+            },
+            nrc: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^NRC NO is required'
+                },
+                format: {
+                    pattern: /^([1-9]|[1][0-4])\/[A-Z]+\(N\)\d{6}$/,
+                    message: '^NRC must be: 1-14/[TOWNSHIP](N) followed by 6 digits'
+                }
+            },
+            email: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Email is required'
+                },
+                email: {
+                    message: '^Invalid email format'
+                },
+                length: {
+                    maximum: 200,
+                    message: '^Email cannot be more than 200 characters'
+                }
+            },
+            password: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Password is required'
+                },
+                length: {
+                    minimum: 8,
+                    maximum: 30,
+                    message: '^Password must be between 8 and 30 characters'
+                },
+                format: {
+                    pattern: /^\S*$/,
+                    message: '^Password cannot contain spaces'
+                }
+            },
+            phone: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Phone is required'
+                },
+                format: {
+                    pattern: /^\d+$/,
+                    message: '^Phone must be a number'
+                },
+                length: {
+                    minimum: 6,
+                    maximum: 12,
+                    message: '^Phone must be between 6 and 12 digits'
+                }
+            },
+            gender: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Gender is required'
+                }
+            },
+            date_of_birth: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Date of birth is required'
+                }
+            },
+            address: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Address is required'
+                },
+                length: {
+                    maximum: 255,
+                    message: '^Address cannot be more than 255 characters'
+                }
+            }
+        };
+
+
+
+
+        instructorForm.on('submit', function(e){
+            e.preventDefault();
+        });
+
+        $('.input').on('input', function(e) {
+            clearFormErrorMessages(e.target.id);
+        });
+
+        registerBtn.on('click', function() {
+            if (validateForm()) {
+                const student = getFormData();
+                createInstructor(student);
+            }
+            
+        });
+
+        logoutMenuItem.on('click', function() {
+            swal({
+                title: "Are you sure to logout?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    logout();
+                }
+            });
+        });
+
+
+        // ---------------------- Functions ----------------------------------
+
+        function createInstructor(instructor) {
+            const settings = {
+                "url": "/api/instructors",
+                "method": "POST",
+                "timeout": 0,
+                "headers": {
+                "Content-Type": "application/json"
+                },
+                "data": JSON.stringify(instructor),
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                    if (data.status === 201) {
+                        clearInstructorForm();
+                        window.scrollTo(0, 0);
+                        swal("Successfully created a new instructor", {
+                            icon: "success",
+                        });
+                    } else if (data.status === 400) {
+                        const errors = data.errors;
+                        console.log(data);
+                        errors.forEach(element => {
+                            const field = element.field;
+                            const message = element.message;
+
+                            console.log(field);
+                            console.log(message);
+
+                            if (field === 'name') {
+                                nameErrorMessage.text(message);
+                                nameInput.addClass('is-invalid');
+                            } else if (field === 'nrc') {
+                                nrcErrorMessage.text(message);
+                                nrcInput.addClass('is-invalid');
+                            } else if (field === 'email') {
+                                emailErrorMessage.text(message);
+                                emailInput.addClass('is-invalid');
+                            } else if (field === 'password') {
+                                passwordErrorMessage.text(message);
+                                passwordInput.addClass('is-invalid');
+                            } else if (field === 'phone') {
+                                phoneErrorMessage.text(message);
+                                phoneInput.addClass('is-invalid');
+                            } else if (field === 'gender') {
+                                genderErrorMessage.text(message);
+                                genderInput.addClass('is-invalid');
+                            } else if (field === 'date_of_birth') {
+                                dobErrorMessage.text(message);
+                                dobInput.addClass('is-invalid');
+                            } else if (field === 'address') {
+                                addressErrorMessage.text(message);
+                                addressInput.addClass('is-invalid');
+                            }
+                        });
+                    }
+                }
+            );
+        }
+
+        function getFormData() {
+            const instructor = {};
+            const dataArray = instructorForm.serializeArray();
+            dataArray.forEach(data => {
+                instructor[data.name] = data.value;
+            });
+            instructor['date_of_birth'] = formatDateYMD(datePicker.input.value);
+            return instructor;
+        }
+
+        function clearFormErrorMessages(sourceId) {
+            if (sourceId) {
+                if (sourceId === 'name') {
+                    nameErrorMessage.text('');
+                    nameInput.removeClass('is-invalid');
+                } else if (sourceId === 'nrc') {
+                    nrcErrorMessage.text('');
+                    nrcInput.removeClass('is-invalid');
+                } else if (sourceId === 'email') {
+                    emailErrorMessage.text('');
+                    emailInput.removeClass('is-invalid');
+                } else if (sourceId === 'password') {
+                    passwordErrorMessage.text('');
+                    passwordInput.removeClass('is-invalid');
+                } else if (sourceId === 'phone') {
+                    phoneErrorMessage.text('');
+                    phoneInput.removeClass('is-invalid');
+                } else if (sourceId === 'gender' || sourceId === 'male' || sourceId == 'female') {
+                    genderErrorMessage.text('');
+                    genderInput.removeClass('is-invalid');
+                } else if (sourceId === 'dateOfBirth') {
+                    dobErrorMessage.text('');
+                    dobInput.removeClass('is-invalid');
+                } else if (sourceId === 'address') {
+                    addressErrorMessage.text('');
+                    addressInput.removeClass('is-invalid');
+                }
+            } else {
+                nameErrorMessage.text('');
+                nrcErrorMessage.text('');
+                emailErrorMessage.text('');
+                passwordErrorMessage.text('');
+                phoneErrorMessage.text('');
+                genderErrorMessage.text('');
+                dobErrorMessage.text('');
+                addressErrorMessage.text('');
+
+                nameInput.removeClass('is-invalid');
+                nrcInput.removeClass('is-invalid');
+                emailInput.removeClass('is-invalid');
+                passwordInput.removeClass('is-invalid');
+                phoneInput.removeClass('is-invalid');
+                genderInput.removeClass('is-invalid');
+                dobInput.removeClass('is-invalid');
+                addressInput.removeClass('is-invalid');
+            }
+            
+        }
+
+
+        function validateForm() {
+            clearFormErrorMessages();
+
+            const instructor = getFormData();
+
+            const checkResult = validate(instructor, instructorConstraint);
+
+            if (!checkResult) {
+                return true;
+            }
+
+            if (checkResult.name) {
+                nameErrorMessage.text(checkResult.name[0]);
+                nameInput.addClass('is-invalid');
+            }
+
+            if (checkResult.nrc) {
+                nrcErrorMessage.text(checkResult.nrc[0]);
+                nrcInput.addClass('is-invalid');
+            }
+
+            if (checkResult.email) {
+                emailErrorMessage.text(checkResult.email[0]);
+                emailInput.addClass('is-invalid');
+            }
+
+            if (checkResult.password) {
+                passwordErrorMessage.text(checkResult.password[0]);
+                passwordInput.addClass('is-invalid');
+            }
+
+            if (checkResult.phone) {
+                phoneErrorMessage.text(checkResult.phone[0]);
+                phoneInput.addClass('is-invalid');
+            }
+
+            if (checkResult.gender) {
+                genderErrorMessage.text(checkResult.gender[0]);
+                genderInput.addClass('is-invalid');
+            }
+
+            if (checkResult.date_of_birth) {
+                dobErrorMessage.text(checkResult.date_of_birth[0]);
+                dobInput.addClass('is-invalid');
+            }
+
+            if (checkResult.address) {
+                addressErrorMessage.text(checkResult.address[0]);
+                addressInput.addClass('is-invalid');
+            }
+            
+            return false;
+        }
+
+        function clearInstructorForm() {
+            nameInput.val('');
+            nrcInput.val('');
+            emailInput.val('');
+            passwordInput.val('');
+            phoneInput.val('');
+            genderMaleInput.prop('checked', false);
+            genderFemaleInput.prop('checked', false);
+            dobInput.val('');
+            addressInput.val('');
+        }
+
+        function formatDateYMD(dateStr) {
+            const [day, month, year] = dateStr.split('/');
+            return `${year}/${month}/${day}`;
+        }
+
 
         function logout() {
             console.log('Logging out');

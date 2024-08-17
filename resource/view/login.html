@@ -202,8 +202,7 @@
     
     
     loginBtn.on('click', function() {
-        clearFormErrorMessages();
-        if (validateFrom()) {
+        if (validateForm()) {
             const email = emailInput.val();
             const password = passwordInput.val();
             login(email, password);
@@ -211,7 +210,9 @@
         
     }); {}
 
-    function validateFrom() {
+    function validateForm() {
+        clearFormErrorMessages();
+
         const email = emailInput.val();
         const password = passwordInput.val();
         const data = {
@@ -250,24 +251,22 @@
     }
 
     function login(email, password) {
-      const settings = {
-        "url": "/api/auth/login",
-        "method": "POST",
-        "timeout": 0,
-        "headers": {
-          "Content-Type": "application/json"
-        },
-        "data": JSON.stringify({
-          "email": email,
-          "password": password
-        }),
-      };
+        const settings = {
+            "url": "/api/auth/login",
+            "method": "POST",
+            "timeout": 0,
+            "headers": {
+            "Content-Type": "application/json"
+            },
+            "data": JSON.stringify({
+            "email": email,
+            "password": password
+            }),
+        };
 
         $.post(
             settings
         ).always(function (data, status, xhr) {
-                // emailErrorMessage.text("finish");
-                // return;
                 if (data.status === 200) {
                     window.location.href = "/home";
                 } else if (data.status === 401) {
@@ -285,6 +284,8 @@
                             passwordErrorMessage.text(message);
                         }
                     });
+                } else if (data.status === 500) {
+                    console.log(data);
                 }
             }
         );

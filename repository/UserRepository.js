@@ -84,8 +84,8 @@ const userRepository = () => {
             const connection = await getConnection();
 
             const insertedId = await new Promise((resolve, reject) => {
-                const insertSql = 'INSERT INTO `user` (`id`, `email`, `password`, `role`) VALUES (?, ?, ?)';
-                const insertParams = [user.id, user.email, user.password, user.role];
+                const insertSql = 'INSERT INTO `user` (`email`, `password`, `role`) VALUES (?, ?, ?)';
+                const insertParams = [user.email, user.password, user.role];
                 connection.query(insertSql, insertParams, (error, result) => {
                     if (error) {
                         if (error.code === 'ER_DUP_ENTRY') {
@@ -122,8 +122,8 @@ const userRepository = () => {
             const connection = await getConnection();
 
             const affectedRows = await new Promise((resolve, reject) => {
-                const updateQuery = 'UPDATE `user` SET `email` = ?, `password` = ?, `role` = ? WHERE `id` = ?';
-                const updateParams = [user.email, user.password, user.role, id];
+                const updateQuery = 'UPDATE `user` SET `email` = ?, `role` = ?, `status` = ? WHERE `id` = ?';
+                const updateParams = [user.email, user.role, user.status, id];
                 connection.query(updateQuery, updateParams, (error, result) => {
                     if (error) {
                         if (error.code === 'ER_DUP_ENTRY') {

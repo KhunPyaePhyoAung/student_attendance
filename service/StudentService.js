@@ -21,8 +21,17 @@ const studentService = ({studentRepository, userService}) => {
 
         findOneByEmail: async (email) => {
             try {
-                const user = await studentRepository.findOneByEmail(email);
-                return user;
+                const student = await studentRepository.findOneByEmail(email);
+                return student;
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        searchByKeyword: async (keyword) => {
+            try {
+                const student = await studentRepository.searchByKeyword(keyword);
+                return student;
             } catch (error) {
                 throw error;
             }
@@ -48,6 +57,7 @@ const studentService = ({studentRepository, userService}) => {
                 name: data.name,
                 nrc: data.nrc,
                 phone: data.phone,
+                family_phone: data.family_phone,
                 gender: data.gender,
                 date_of_birth: data.date_of_birth,
                 address: data.address
@@ -67,20 +77,53 @@ const studentService = ({studentRepository, userService}) => {
                     });
                     throw error;
                 }
-                const createdStudent = await studentRepository.create(student);
-                user.id = createdStudent.id;
                 const createdUser = await userService.create(user);
+                student.id = createdUser.id;
+                const createdStudent = await studentRepository.create(student);
+                
                 return {...createdStudent, ...createdUser};
             } catch (error) {
                 throw error;
             }
         },
 
-        updateById: async (id, student) => {
+        updateById: async (id, data) => {
+            const user = {
+                id: id,
+                email: data.email,
+                status: data.status,
+                role: data.role
+            };
+
+            const student = {
+                id: id,
+                name: data.name,
+                nrc: data.nrc,
+                phone: data.phone,
+                family_phone: data.family_phone,
+                gender: data.gender,
+                date_of_birth: data.date_of_birth,
+                address: data.address
+            };
             try {
+                const userUniqueFields = await userService.getUniqueFields(user);
+                const studentUniqueFields = await studentRepository.getUniqueFields(student);
+                let uniqueFields = [...userUniqueFields, ...studentUniqueFields];
+                if (uniqueFields.length > 0) {
+                    const error = new Error();
+                    error.fields = [];
+                    uniqueFields.forEach(element => {
+                        error.fields.push({
+                            field: element,
+                            message: "Unique field"
+                        })
+                    });
+                    throw error;
+                }
                 const intId = parseInt(id);
+                const updatedUser = await userService.updateById(intId, user);
                 const updatedStudent = await studentRepository.updateById(intId, student);
-                return updatedStudent;
+                return {...updatedUser, ...updatedStudent};
             } catch (error) {
                 throw error;
             }
@@ -90,6 +133,9 @@ const studentService = ({studentRepository, userService}) => {
             try {
                 const intId = parseInt(id);
                 const deleted = await studentRepository.deleteById(intId);
+                if (deleted) {
+                    await userService.deleteById(intId);
+                }
                 return deleted;
             } catch (error) {
                 throw error;

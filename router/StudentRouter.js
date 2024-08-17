@@ -11,7 +11,13 @@ const studentController = require('../controller/StudentController')({studentSer
 router.get(
     '/',
     studentController.getAll
-)
+);
+
+router.get(
+    '/search',
+    studentController.searchByKeyword
+);
+
 router.get(
     '/:id',
     studentController.findOneById
@@ -20,7 +26,7 @@ router.get(
 router.get(
     '/email/:email',
     studentController.findOneByEmail
-)
+);
 
 router.post(
     '/',

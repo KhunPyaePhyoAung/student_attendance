@@ -5,6 +5,7 @@ const studentController = ({studentService}) => {
                 const students = await studentService.getAll();
                 return res.status(200).json(
                     {
+                        status: 200,
                         meta: {
                             total: students.length
                         },
@@ -12,8 +13,9 @@ const studentController = ({studentService}) => {
                     }
                 );
             } catch (error) {
-                return res.status(500).json(
+                return res.status(200).json(
                     {
+                        status: 500,
                         message: error.message
                     }
                 );
@@ -26,8 +28,9 @@ const studentController = ({studentService}) => {
                 const student = await studentService.findOneById(id);
 
                 if (!student) {
-                    return res.status(404).json(
+                    return res.status(200).json(
                         {
+                            status: 404,
                             message: `Student with id of ${id} not found.`
                         }
                     );
@@ -35,12 +38,14 @@ const studentController = ({studentService}) => {
 
                 return res.status(200).json(
                     {
+                        status: 200,
                         data: student
                     }
                 );
             } catch (error) {
-                return res.status(500).json(
+                return res.status(200).json(
                     {
+                        status: 500,
                         message: error.message
                     }
                 );
@@ -53,8 +58,9 @@ const studentController = ({studentService}) => {
                 const student = await studentService.findOneByEmail(email);
 
                 if (!student) {
-                    return res.status(404).json(
+                    return res.status(200).json(
                         {
+                            status: 404,
                             message: `Student with email of ${email} not found.`
                         }
                     );
@@ -62,12 +68,47 @@ const studentController = ({studentService}) => {
 
                 return res.status(200).json(
                     {
+                        status: 200,
                         data: student
                     }
                 );
             } catch (error) {
-                return res.status(500).json(
+                return res.status(200).json(
                     {
+                        status: 500,
+                        message: error.message
+                    }
+                );
+            }
+        },
+
+        searchByKeyword: async (req, res) => {
+            const keyword = req.query.keyword;
+            try {
+                const students = await studentService.searchByKeyword(keyword);
+
+                if (!students) {
+                    return res.status(200).json(
+                        {
+                            status: 404,
+                            message: `No student found`
+                        }
+                    );
+                }
+
+                return res.status(200).json(
+                    {
+                        status: 200,
+                        meta: {
+                            total: students.length
+                        },
+                        data: students
+                    }
+                );
+            } catch (error) {
+                return res.status(200).json(
+                    {
+                        status: 500,
                         message: error.message
                     }
                 );
@@ -76,6 +117,7 @@ const studentController = ({studentService}) => {
 
         create: async (req, res) => {
             const newStudent = req.body;
+            newStudent.role = 'STUDENT';
 
             try {
                 const createdStudent = await studentService.create(newStudent);
@@ -120,6 +162,7 @@ const studentController = ({studentService}) => {
         update: async (req, res) => {
             const id = req.params.id;
             const student = req.body;
+            student.role = 'STUDENT';
 
             try {
                 const updatedStudent = await studentService.updateById(id, student);
@@ -178,7 +221,8 @@ const studentController = ({studentService}) => {
             } catch (error) {
                 return res.status(200).json(
                     {
-                        status: 500
+                        status: 500,
+                        message: 'There is a problem with server'
                     }
                 );
             }
