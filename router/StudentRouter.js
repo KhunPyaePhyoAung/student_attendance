@@ -28,6 +28,11 @@ router.get(
     studentController.findOneByEmail
 );
 
+router.get(
+    '/term/:termId',
+    studentController.findAllByTermId
+);
+
 router.post(
     '/',
     studentController.create

@@ -18,6 +18,23 @@ const studentRepository = () => {
             });
         },
 
+        findAllByTermId: async (termId) => {
+            const connection = await getConnection();
+
+            return new Promise((resolve, reject) => {
+                const sql = 'SELECT s.* FROM student s JOIN term_has_student t ON s.id = t.student_id WHERE t.term_id = ?';
+                const params = [termId];
+                connection.query(sql, params, (error, results, fields) => {
+                    if (error) {
+                        reject(new Error(error.sqlMessage));
+                    } else {
+                        resolve(results);
+                    }
+                });
+                connection.release();
+            });
+        },
+
         findOneById: async (id) => {
             const connection = await getConnection();
 

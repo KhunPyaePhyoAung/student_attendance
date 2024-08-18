@@ -100,9 +100,16 @@ const termRepository = () => {
                             reject(error);
                         }
                     } else {
+                        const insertStudentSql = 'INSERT INTO term_has_student (`term_id`, `student_id`) VALUES (?, ?);';
+                        term.students.forEach(studentId => {
+                            const insertStudentParams = [result.insertId, studentId];
+                            connection.query(insertStudentSql, insertStudentParams);
+                        });
                         resolve(result.insertId);
                     }
                 });
+
+                
             });
 
             return new Promise((resolve, reject) => {
@@ -118,12 +125,12 @@ const termRepository = () => {
             });;
         },
 
-        updateById: async (id, student) => {
+        updateById: async (id, term) => {
             const connection = await getConnection();
 
             const affectedRows = await new Promise((resolve, reject) => {
                 const updateQuery = 'UPDATE `term` SET `name` = ?, `start_date` = ?, `end_date` = ? WHERE `id` = ?';
-                const updateParams = [student.name, student.start_date, student.end_date, id];
+                const updateParams = [term.name, term.start_date, term.end_date, id];
                 connection.query(updateQuery, updateParams, (error, result) => {
                     if (error) {
                         if (error.code === 'ER_DUP_ENTRY') {
@@ -135,6 +142,24 @@ const termRepository = () => {
                             reject(error);
                         }
                     } else {
+                        const deleteQuery = 'DELETE FROM term_has_student WHERE term_id = ?';
+                        const deleteParams = [id];
+                        connection.query(deleteQuery, deleteParams, (error, result) => {
+                            if (!error) {
+                                const insertQuery = 'INSERT INTO term_has_student (`term_id`, `student_id`) VALUES ?';
+                                const insertParams = [];
+                                term.students.forEach(studentId => {
+                                    insertParams.push([id, studentId]);
+                                });
+                                
+                                connection.query(insertQuery, [insertParams], (err, result) => {
+                                    if (error) {
+
+                                    }
+                                });
+                                resolve(result.affectedRows);
+                            }
+                        });
                         resolve(result.affectedRows);
                     }
                 });
@@ -142,7 +167,7 @@ const termRepository = () => {
         
             // connection.release();
         
-            student.id = id;
+            term.id = id;
 
             if (affectedRows) {
                 return new Promise((resolve, reject) => {
@@ -159,7 +184,7 @@ const termRepository = () => {
                 });
             }
 
-            return student;
+            return term;
         },
 
         deleteById: async (id) => {

@@ -7,11 +7,13 @@
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/flatpickr.css">
+    <link rel="stylesheet" href="/css/dataTable.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
     <script type="text/javascript" src="/js/validate.min.js"></script>
     <script type="text/javascript" src="/js/sweetAlert.js"></script>
     <script type="text/javascript" src="/js/flatpickr.js"></script>
+    <script type="text/javascript" src="/js/dataTable.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -114,6 +116,18 @@
             background-color: #e9ecef; /* Background color on hover */
             color: #1e56a6; /* Text color on hover */
         }
+
+        .btn-add {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 0.25rem;
+            padding: 5px 10px;
+        }
+
+        .btn-add:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
@@ -191,12 +205,64 @@
                         
                     </div>
                 </div>
+
+                <!-- Add Student Button -->
+                <div class="form-group text-right mt-3">
+                    <button class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addStudentModal"><i class="fas fa-user-plus"></i> Add Student</button>
+                </div>
+
+                <!-- Student Modal -->
+                <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addStudentModalLabel">Select a Student</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-container">
+                                    <table class="table table-striped display" id="modalStudentTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Sr</th>
+                                                <th>Full Name</th>
+                                                <th>NRC</th>
+                                                <th>Select</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="modalStudentTableBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Student Table -->
+                <div class="form-group mt-3">
+                    <table class="table table-bordered" id="studentTable">
+                        <thead>
+                            <tr>
+                                <th>Sr</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+
                 <button type="submit" class="btn btn-custom" id="registerBtn">Update</button>
                 <a class="btn btn-cancel" href="/terms">Cancel</a>
             </form>
         </div>
     </section>
     <script>
+
+        let selectedStudentIds = [];
 
         const datePicker = flatpickr('#dateOfBirth', {
                 dateFormat: 'd/m/Y',
@@ -270,6 +336,10 @@
             });
         });
 
+        $('#addStudentModal').on('shown.bs.modal', function () {
+            fetchStudentsForModal();
+        });
+
         $(document).ready(function() {
             let params = new URL(document.location.toString()).searchParams;
             let termId = params.get("id");
@@ -278,6 +348,66 @@
 
 
         // ---------------------- Functions ----------------------------------
+
+        function fetchStudentsForModal() {
+            $.ajax({
+                url: "/api/students",
+                method: "GET",
+                timeout: 0,
+            }).done(function (data) {
+                if (data.status === 200) {
+                    populateModalStudentTable(data.data);
+                }
+            });
+        }
+
+        function populateModalStudentTable(students) {
+            $('#modalStudentTable').DataTable().clear().destroy();
+
+            $('#modalStudentTableBody').empty();
+
+            students.forEach((student, i) => {
+                if (!selectedStudentIds.includes(student.id)) { // Check if student is not selected
+                    let row = `<tr id="modalStudent${student.id}">`;
+                    row += `<td>${i + 1}</td>`;
+                    row += `<td>${student.name}</td>`;
+                    row += `<td>${student.nrc}</td>`;
+                    row += `<td><button class="btn btn-primary" onClick="selectStudent(${student.id}, '${student.name}')">Select</button></td>`;
+                    row += `</tr>`;
+
+                    $('#modalStudentTableBody').append(row);
+                }
+            });
+
+            $('#modalStudentTable').DataTable({
+                pageLength: 50
+            });
+        }
+
+        function selectStudent(studentId, studentName) {
+            $(`#modalStudent${studentId}`).remove();
+
+            const studentRow = `
+                <tr id="student${studentId}">
+                    <td>${$('#studentTable tbody tr').length + 1}</td>
+                    <td>${studentName}</td>
+                    <td>--</td> <!-- Placeholder for Phone -->
+                    <td><button class="btn btn-danger" onClick="removeStudent(${studentId})">Remove</button></td>
+                </tr>
+            `;
+            
+            $('#studentTable tbody').append(studentRow);
+
+            selectedStudentIds.push(studentId);
+
+            // $('#addStudentModal').modal('hide');
+        }
+
+        function removeStudent(studentId) {
+            $(`#student${studentId}`).remove();
+
+            selectedStudentIds = selectedStudentIds.filter(id => id !== studentId);
+        }
 
         function fillTermForm(term) {
             idInput.val(term.id);
@@ -342,6 +472,40 @@
                     console.log(data);
                     if (data.status === 200) {
                         fillTermForm(data.data);
+                        fetchAndAddStudentsByTermId(id);
+                    } else if (data.status === 404) {
+                        console.log(data.message);
+                    }
+                }
+            );
+        }
+
+        function fetchAndAddStudentsByTermId(termId) {
+            const settings = {
+                "url": "/api/students/term/" + termId,
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                    console.log(data);
+                    if (data.status === 200) {
+                        data.data.forEach((student, i) => {
+                            let row = `<tr id="student${student.id}">`;
+                            row += `<td>${i + 1}</td>`;
+                            row += `<td>${student.name}</td>`;
+                            row += `<td>${student.nrc}</td>`;
+                            row += `<td><button class="btn btn-danger" onClick="removeStudent(${student.id})">Remove</button></td>`;
+                            row += `</tr>`;
+
+                            $('#studentTable tbody').append(row);
+                            selectedStudentIds.push(student.id);
+                        });
+
+                        
+                        
                     } else if (data.status === 404) {
                         console.log(data.message);
                     }
@@ -355,6 +519,7 @@
             dataArray.forEach(data => {
                 term[data.name] = data.value;
             });
+            term.students = [...selectedStudentIds];
             return term;
         }
 
