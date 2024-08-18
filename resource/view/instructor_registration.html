@@ -136,7 +136,7 @@
 
     <section class="main-content">
         <div class="container">
-            <h2 class="text-center mb-4">Instructor Registration Form</h2>
+            <h2 class="text-center mb-4" id="title">Instructor Registration Form</h2>
             <form novalidate id="instructorForm">
                 <div class="form-group">
                     <label for="name">Full Name</label>
@@ -435,6 +435,7 @@
         }
 
         function clearFormErrorMessages(sourceId) {
+            console.log(sourceId);
             if (sourceId) {
                 if (sourceId === 'name') {
                     nameErrorMessage.text('');
@@ -492,6 +493,7 @@
             const checkResult = validate(instructor, instructorConstraint);
 
             if (!checkResult) {
+                
                 return true;
             }
 
@@ -551,6 +553,9 @@
         }
 
         function formatDateYMD(dateStr) {
+            if (!dateStr) {
+                return '';
+            }
             const [day, month, year] = dateStr.split('/');
             return `${year}/${month}/${day}`;
         }

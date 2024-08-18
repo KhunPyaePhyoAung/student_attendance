@@ -458,6 +458,7 @@
                 student[data.name] = data.value;
             });
             student['date_of_birth'] = formatDateYMD(datePicker.input.value);
+            console.log(student);
             return student;
         }
 
@@ -589,6 +590,9 @@
         }
 
         function formatDateYMD(dateStr) {
+            if (!dateStr) {
+                return '';
+            }
             const [day, month, year] = dateStr.split('/');
             return `${year}/${month}/${day}`;
         }

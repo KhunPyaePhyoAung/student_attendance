@@ -593,6 +593,9 @@
         }
 
         function formatDateYMD(dateStr) {
+            if (!dateStr) {
+                return '';
+            }
             const [day, month, year] = dateStr.split('/');
             return `${year}/${month}/${day}`;
         }
