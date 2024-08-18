@@ -69,4 +69,22 @@ router.get(
     viewController.subject_edit
 );
 
+router.get(
+    ['/terms'],
+    [authMiddleware.verifyUserToken],
+    viewController.terms
+);
+
+router.get(
+    ['/term_registration'],
+    [authMiddleware.verifyUserToken],
+    viewController.term_registration
+);
+
+router.get(
+    ['/term_edit'],
+    [authMiddleware.verifyUserToken],
+    viewController.term_edit
+);
+
 module.exports = router;

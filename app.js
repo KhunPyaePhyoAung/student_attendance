@@ -8,6 +8,7 @@ const userRouter = require('./router/UserRouter');
 const studentRouter = require('./router/StudentRouter');
 const instructorRouter = require('./router/InstructorRouter');
 const subjectRouter = require('./router/SubjectRouter');
+const termRouter = require('./router/TermRouter');
 const viewRouter = require('./router/ViewRouter');
 const authRouter = require('./router/AuthRouter');
 
@@ -41,6 +42,11 @@ app.use(
 app.use(
     '/api/subjects',
     subjectRouter
+);
+
+app.use(
+    '/api/terms',
+    termRouter
 );
 
 app.use(viewRouter);

@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Subject</title>
+    <title>Home Page</title>
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/flatpickr.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
     <script type="text/javascript" src="/js/validate.min.js"></script>
     <script type="text/javascript" src="/js/sweetAlert.js"></script>
+    <script type="text/javascript" src="/js/flatpickr.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -159,8 +161,8 @@
 
     <section class="main-content">
         <div class="container">
-            <h2 class="text-center mb-4">Subject Update Form</h2>
-            <form novalidate id="subjectForm">
+            <h2 class="text-center mb-4">Term Update Form</h2>
+            <form novalidate id="termForm">
                 <div class="form-group">
                     <label for="name">ID</label>
                     <input type="text" class="form-control input" id="id" name="id" placeholder="Enter ID" required readonly>
@@ -170,65 +172,75 @@
                 </div>
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" class="form-control input" id="code" name="code" placeholder="Enter subject code" required>
-                    <div class="invalid-feedback" id="codeErrorMessage">
-                        
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="nrc">Name</label>
-                    <input type="text" class="form-control input" id="name" name="name" placeholder="Enter subject name" required>
+                    <input type="text" class="form-control input" id="name" name="name" placeholder="Enter term name" required>
                     <div class="invalid-feedback" id="nameErrorMessage">
                         
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="dob">Start Date</label>
+                    <input type="date" class="form-control input" id="startDate" name="start_date" required>
+                    <div class="invalid-feedback" id="startDateErrorMessage">
+                        
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="dob">End Date</label>
+                    <input type="date" class="form-control input" id="endDate" name="end_date" required>
+                    <div class="invalid-feedback" id="endDateErrorMessage">
+                        
+                    </div>
+                </div>
                 <button type="submit" class="btn btn-custom" id="registerBtn">Update</button>
-                <a class="btn btn-cancel" href="/subjects">Cancel</a>
+                <a class="btn btn-cancel" href="/terms">Cancel</a>
             </form>
         </div>
     </section>
     <script>
 
+        const datePicker = flatpickr('#dateOfBirth', {
+                dateFormat: 'd/m/Y',
+                maxDate: new Date(),
+            });
 
-        const registerBtn = $('#registerBtn');
         const logoutMenuItem = $('#logoutMenuItem');
-        const subjectForm = $('#subjectForm');
+        const termForm = $('#termForm');
         const idInput = $('#id');
-        const codeInput = $('#code');
         const nameInput = $('#name');
+        const startDateInput = $('#startDate');
+        const endDateInput = $('#endDate');
+        const registerBtn = $('#registerBtn');
 
-        const codeErrorMessage = $('#codeErrorMessage');
         const nameErrorMessage = $('#nameErrorMessage');
+        const startDateErrorMessage = $('#startDateErrorMessage');
+        const endDateErrorMessage = $('#endDateErrorMessage');
 
-        const subjectConstraint = {
-            code: {
-                presence: {
-                    allowEmpty: false,
-                    message: '^Code is required'
-                },
-                format: {
-                    pattern: /^\d+$/,
-                    message: '^Code must be only digits'
-                },
-                length: {
-                    minimum: 4,
-                    maximum: 10,
-                    message: '^Code must be between 4 and 10 characters'
-                },
-            },
+        const termConstraint = {
             name: {
                 presence: {
                     allowEmpty: false,
                     message: '^Name is required'
                 },
                 length: {
-                    maximum: 250,
-                    message: '^Name cannot be more than 250 characters'
+                    maximum: 200,
+                    message: '^Name cannot be more than 200 characters'
+                }
+            },
+            start_date: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Start date of birth is required'
+                }
+            },
+            end_date: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^End date of birth is required'
                 }
             },
         };
 
-        subjectForm.on('submit', function(e){
+        termForm.on('submit', function(e){
             e.preventDefault();
         });
 
@@ -238,8 +250,8 @@
 
         registerBtn.on('click', function() {
             if (validateForm()) {
-                const subject = getFormData();
-                updateSubject(subject);
+                const term = getFormData();
+                updateTerm(term);
             }
             
         });
@@ -260,28 +272,29 @@
 
         $(document).ready(function() {
             let params = new URL(document.location.toString()).searchParams;
-            let subjectId = params.get("id");
-            fetchSubjectById(subjectId);
+            let termId = params.get("id");
+            fetchTermById(termId);
         })
 
 
         // ---------------------- Functions ----------------------------------
 
-        function fillSubjectForm(subject) {
-            idInput.val(subject.id);
-            codeInput.val(subject.code);
-            nameInput.val(subject.name);
+        function fillTermForm(term) {
+            idInput.val(term.id);
+            nameInput.val(term.name);
+            startDateInput.val(term.start_date);
+            endDateInput.val(term.end_date);
         }
 
-        function updateSubject(subject) {
+        function updateTerm(term) {
             const settings = {
-                "url": "/api/subjects/" + subject.id,
+                "url": "/api/terms/" + term.id,
                 "method": "PUT",
                 "timeout": 0,
                 "headers": {
                 "Content-Type": "application/json"
                 },
-                "data": JSON.stringify(subject),
+                "data": JSON.stringify(term),
             };
 
             $.post(
@@ -289,25 +302,26 @@
             ).always(function (data, status, xhr) {
                     if (data.status === 200) {
                         window.scrollTo(0, 0);
-                        swal('Successfully updated the subject', {
+                        swal('Successfully updated the term', {
                             icon: 'success',
                         });
                         
                     } else if (data.status === 400) {
                         const errors = data.errors;
+                        console.log(data);
                         errors.forEach(element => {
                             const field = element.field;
-                            const message = element.message
+                            const message = element.message;
 
-                            console.log(field);
-                            console.log(message);
-
-                            if (field === 'code') {
-                                codeErrorMessage.text(message);
-                                codeInput.addClass('is-invalid');
-                            } else if (field === 'name') {
+                            if (field === 'name') {
                                 nameErrorMessage.text(message);
                                 nameInput.addClass('is-invalid');
+                            } else if (field === 'start_date') {
+                                startDateErrorMessage.text(message);
+                                startDateInput.addClass('is-invalid');
+                            } else if (field === 'end_date') {
+                                endDateErrorMessage.text(message);
+                                endDateInput.addClass('is-invalid');
                             }
                         });
                     }
@@ -315,9 +329,9 @@
             );
         }
 
-        function fetchSubjectById(id) {
+        function fetchTermById(id) {
             const settings = {
-                "url": "/api/subjects/" + id,
+                "url": "/api/terms/" + id,
                 "method": "GET",
                 "timeout": 0,
             };
@@ -325,9 +339,9 @@
             $.post(
                 settings
             ).always(function (data, status, xhr) {
-                    console.log(data.status);
+                    console.log(data);
                     if (data.status === 200) {
-                        fillSubjectForm(data.data);
+                        fillTermForm(data.data);
                     } else if (data.status === 404) {
                         console.log(data.message);
                     }
@@ -336,29 +350,34 @@
         }
 
         function getFormData() {
-            const subject = {};
-            const dataArray = subjectForm.serializeArray();
+            const term = {};
+            const dataArray = termForm.serializeArray();
             dataArray.forEach(data => {
-                subject[data.name] = data.value;
+                term[data.name] = data.value;
             });
-            return subject;
+            return term;
         }
 
         function clearFormErrorMessages(sourceId) {
             if (sourceId) {
-                if (sourceId === 'code') {
-                    codeErrorMessage.text('');
-                    codeInput.removeClass('is-invalid');
-                } else if (sourceId === 'name') {
+                if (sourceId === 'name') {
                     nameErrorMessage.text('');
                     nameInput.removeClass('is-invalid');
+                } else if (sourceId === 'startDate') {
+                    startDateErrorMessage.text('');
+                    startDateInput.removeClass('is-invalid');
+                } else if (sourceId === 'endDate') {
+                    endDateErrorMessage.text('');
+                    endDateInput.removeClass('is-invalid');
                 }
             } else {
-                codeErrorMessage.text('');
                 nameErrorMessage.text('');
+                startDateErrorMessage.text('');
+                endDateErrorMessage.text('');
 
-                codeInput.removeClass('is-invalid');
                 nameInput.removeClass('is-invalid');
+                startDateInput.removeClass('is-invalid');
+                endDateInput.removeClass('is-invalid');
             }
             
         }
@@ -367,17 +386,12 @@
         function validateForm() {
             clearFormErrorMessages();
 
-            const subject = getFormData();
+            const term = getFormData();
 
-            const checkResult = validate(subject, subjectConstraint);
+            const checkResult = validate(term, termConstraint);
 
             if (!checkResult) {
                 return true;
-            }
-
-            if (checkResult.code) {
-                codeErrorMessage.text(checkResult.code[0]);
-                codeInput.addClass('is-invalid');
             }
 
             if (checkResult.name) {
@@ -385,7 +399,33 @@
                 nameInput.addClass('is-invalid');
             }
 
+            if (checkResult.start_date) {
+                startDateErrorMessage.text(checkResult.start_date[0]);
+                startDateInput.addClass('is-invalid');
+            }
+
+            if (checkResult.end_date) {
+                endDateErrorMessage.text(checkResult.end_date[0]);
+                endDateInput.addClass('is-invalid');
+            }
+
             return false;
+        }
+
+        function formatDateDMY(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const year = date.getFullYear();
+            
+            return `${day}/${month}/${year}`;
+        }
+
+        function formatDateYMD(dateStr) {
+            if (!dateStr) {
+                return '';
+            }
+            const [day, month, year] = dateStr.split('/');
+            return `${year}/${month}/${day}`;
         }
 
 

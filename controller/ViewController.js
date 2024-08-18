@@ -73,6 +73,21 @@ const viewController = ({tokenService}) => {
             return res.sendFile(html);
         },
 
+        terms: (req, res) => {
+            const html = path.join(viewFolder, 'terms.html');
+            return res.sendFile(html);
+        },
+
+        term_registration: (req, res) => {
+            const html = path.join(viewFolder, 'term_registration.html');
+            return res.sendFile(html);
+        },
+
+        term_edit: (req, res) => {
+            const html = path.join(viewFolder, 'term_edit.html');
+            return res.sendFile(html);
+        },
+
     }
 }
 
