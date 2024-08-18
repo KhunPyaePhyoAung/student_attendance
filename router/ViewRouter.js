@@ -51,4 +51,22 @@ router.get(
     viewController.instructor_edit
 );
 
+router.get(
+    ['/subjects'],
+    [authMiddleware.verifyUserToken],
+    viewController.subjects
+);
+
+router.get(
+    ['/subject_registration'],
+    [authMiddleware.verifyUserToken],
+    viewController.subject_registration
+);
+
+router.get(
+    ['/subject_edit'],
+    [authMiddleware.verifyUserToken],
+    viewController.subject_edit
+);
+
 module.exports = router;

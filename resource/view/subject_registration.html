@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject Registration</title>
+    <link type="image/png" rel="icon" href="/icon/icon.png">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/js/jQuery.js"></script>
+    <script type="text/javascript" src="/js/validate.min.js"></script>
+    <script type="text/javascript" src="/js/sweetAlert.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ecf0f3;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #1e56a6;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #fff !important;
+            cursor: pointer;
+        }
+
+        .main-content {
+            width: 100%;
+            padding: 20px;
+        }
+
+        .main-content .container {
+            max-width: 800px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group label {
+            font-weight: 600;
+        }
+
+        .form-control {
+            border-radius: 0.25rem;
+            box-shadow: none;
+        }
+
+        .btn-custom, .btn-cancel {
+            border-radius: 25px; /* Fully rounded borders */
+            font-weight: 600;
+            border: none;
+            width: 100%; /* Full width */
+            display: block;
+            margin-top: 10px; /* Space between buttons */
+        }
+
+        .btn-custom {
+            background-color: #1e56a6;
+            color: #fff;
+        }
+
+        .btn-custom:hover {
+            background-color: #039BE5;
+        }
+
+        .btn-cancel {
+            background-color: #ffffff;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-cancel:hover {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
+        .gender-group .form-check {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .gender-group .form-check-input {
+            margin-right: 5px;
+        }
+
+        .invalid-feedback {
+            display: block;
+            min-height: 20px;
+        }
+
+        .navbar-nav {
+            margin-left: auto;
+        }
+
+        .navbar-nav .nav-item.dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu {
+            display: none;
+        }
+
+        .dropdown-menu a {
+            cursor: pointer;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #e9ecef; /* Background color on hover */
+            color: #1e56a6; /* Text color on hover */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Attendance System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">Terms</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/subjects">Subjects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/instructors">Instructors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/students">Students</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">Attendance</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Profile
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="/profile">Your Profile</a></li>
+                            <li><a class="dropdown-item" href="/change-password">Change Password</a></li>
+                            <li><a class="dropdown-item" id="logoutMenuItem">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="main-content">
+        <div class="container">
+            <h2 class="text-center mb-4">Subject Registration Form</h2>
+            <form novalidate id="subjectForm">
+                <div class="form-group">
+                    <label for="nrc">Code</label>
+                    <input type="text" class="form-control input" id="code" name="code" placeholder="Enter subject code" required>
+                    <div class="invalid-feedback" id="codeErrorMessage">
+                        
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control input" id="name" name="name" placeholder="Enter subject name" required>
+                    <div class="invalid-feedback" id="nameErrorMessage">
+                        
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-custom" id="registerBtn">Register</button>
+                <a class="btn btn-cancel" href="/subjects">Cancel</a>
+            </form>
+        </div>
+    </section>
+    <script>
+
+        const logoutMenuItem = $('#logoutMenuItem');
+        const subjectForm = $('#subjectForm');
+        const codeInput = $('#code');
+        const nameInput = $('#name');
+        const registerBtn = $('#registerBtn');
+
+        const codeErrorMessage = $('#codeErrorMessage');
+        const nameErrorMessage = $('#nameErrorMessage');
+
+        const subjectConstraint = {
+            code: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Code is required'
+                },
+                format: {
+                    pattern: /^\d+$/,
+                    message: '^Code must be only digits'
+                },
+                length: {
+                    minimum: 4,
+                    maximum: 10,
+                    message: '^Code must be between 4 and 10 characters'
+                },
+            },
+            name: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Name is required'
+                },
+                length: {
+                    maximum: 250,
+                    message: '^Name cannot be more than 250 characters'
+                }
+            },
+        };
+
+
+
+
+        subjectForm.on('submit', function(e){
+            e.preventDefault();
+        });
+
+        $('.input').on('input', function(e) {
+            clearFormErrorMessages(e.target.id);
+        });
+
+        registerBtn.on('click', function() {
+            if (validateForm()) {
+                const subject = getFormData();
+                createSubject(subject);
+            }
+            
+        });
+
+        logoutMenuItem.on('click', function() {
+            swal({
+                title: "Are you sure to logout?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    logout();
+                }
+            });
+        });
+
+
+        // ---------------------- Functions ----------------------------------
+
+        function createSubject(subject) {
+            const settings = {
+                "url": "/api/subjects",
+                "method": "POST",
+                "timeout": 0,
+                "headers": {
+                "Content-Type": "application/json"
+                },
+                "data": JSON.stringify(subject),
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                    if (data.status === 201) {
+                        clearSubjectForm();
+                        window.scrollTo(0, 0);
+                        swal("Successfully created a new subject", {
+                            icon: "success",
+                        });
+                    } else if (data.status === 400) {
+                        const errors = data.errors;
+                        console.log(data);
+                        errors.forEach(element => {
+                            const field = element.field;
+                            const message = element.message;
+
+                            console.log(field);
+                            console.log(message);
+
+                            if (field === 'code') {
+                                codeErrorMessage.text(message);
+                                codeInput.addClass('is-invalid');
+                            } else if (field === 'name') {
+                                nameErrorMessage.text(message);
+                                nameInput.addClass('is-invalid');
+                            }
+                        });
+                    }
+                }
+            );
+        }
+
+        function getFormData() {
+            const subject = {};
+            const dataArray = subjectForm.serializeArray();
+            dataArray.forEach(data => {
+                subject[data.name] = data.value;
+            });
+            return subject;
+        }
+
+        function clearFormErrorMessages(sourceId) {
+            if (sourceId) {
+                if (sourceId === 'code') {
+                    codeErrorMessage.text('');
+                    codeInput.removeClass('is-invalid');
+                } else if (sourceId === 'name') {
+                    nameErrorMessage.text('');
+                    nameInput.removeClass('is-invalid');
+                }
+            } else {
+                codeErrorMessage.text('');
+                nameErrorMessage.text('');
+
+                codeInput.removeClass('is-invalid');
+                nameInput.removeClass('is-invalid');
+            }
+            
+        }
+
+
+        function validateForm() {
+            clearFormErrorMessages();
+
+            const subject = getFormData();
+
+            const checkResult = validate(subject, subjectConstraint);
+
+            if (!checkResult) {
+                return true;
+            }
+
+            if (checkResult.code) {
+                codeErrorMessage.text(checkResult.code[0]);
+                codeInput.addClass('is-invalid');
+            }
+
+            if (checkResult.name) {
+                nameErrorMessage.text(checkResult.name[0]);
+                nameInput.addClass('is-invalid');
+            }
+            
+            return false;
+        }
+
+        function clearSubjectForm() {
+            codeInput.val('');
+            nameInput.val('');
+        }
+
+        function logout() {
+            console.log('Logging out');
+            const settings = {
+                "url": "/api/auth/logout",
+                "method": "POST",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                console.log(data);
+                    if (data.status === 204) {
+                        window.location.replace('/login');
+                    }
+                }
+            );
+        }
+    </script>
+</body>
+</html>

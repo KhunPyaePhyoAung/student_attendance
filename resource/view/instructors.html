@@ -96,6 +96,27 @@
         .status-inactive {
             color: gray;
         }
+
+        .navbar-nav {
+            margin-left: auto;
+        }
+
+        .navbar-nav .nav-item.dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu {
+            display: none;
+        }
+
+        .dropdown-menu a {
+            cursor: pointer;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #e9ecef; /* Background color on hover */
+            color: #1e56a6; /* Text color on hover */
+        }
     </style>
 </head>
 <body>
@@ -115,7 +136,7 @@
                         <a class="nav-link">Terms</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link">Courses</a>
+                        <a class="nav-link" href="/subjects">Subjects</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/instructors">Instructors</a>
@@ -126,11 +147,15 @@
                     <li class="nav-item">
                         <a class="nav-link">Attendance</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link">Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a id="logoutMenuItem" class="nav-link">Logout</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Profile
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="/profile">Your Profile</a></li>
+                            <li><a class="dropdown-item" href="/change-password">Change Password</a></li>
+                            <li><a class="dropdown-item" id="logoutMenuItem">Logout</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -260,8 +285,18 @@
                 $('#instructorTableBody').append(row);
             });
 
-            $('#instructorTable').DataTable({
+            const dTable = $('#instructorTable').DataTable({
                 pageLength: 50
+            });
+
+            dTable.on('order.dt search.dt', function () {
+                let i = 1;
+        
+                dTable
+                    .cells(null, 0, { search: 'applied', order: 'applied' })
+                    .every(function (cell) {
+                        this.data(i++);
+                    });
             });
         }
 
