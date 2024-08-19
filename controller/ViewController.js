@@ -88,6 +88,11 @@ const viewController = ({tokenService}) => {
             return res.sendFile(html);
         },
 
+        attendance_scan: (req, res) => {
+            const html = path.join(viewFolder, 'attendance_scan.html');
+            return res.sendFile(html);
+        },
+
     }
 }
 

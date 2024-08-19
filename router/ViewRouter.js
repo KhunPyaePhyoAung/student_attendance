@@ -87,4 +87,9 @@ router.get(
     viewController.term_edit
 );
 
+router.get(
+    ['/attendance_scan'],
+    viewController.attendance_scan
+);
+
 module.exports = router;
