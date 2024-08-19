@@ -534,7 +534,13 @@
         }
 
         function selectStudent(studentId, studentName, studentRole) {
+            $('#modalStudentTable').DataTable().destroy();
             $(`#modalStudent${studentId}`).remove();
+            updateModalStudentSerialNumbers();
+            
+            $('#modalStudentTable').DataTable({
+                pageLength: 50
+            });
 
             const studentRow = `
                 <tr id="student${studentId}">
@@ -549,12 +555,18 @@
 
             selectedStudentIds.push(studentId);
             totalStudentLabel.text(`Total students: ${selectedStudentIds.length}`);
-            updateModalStudentSerialNumbers();
             // $('#addStudentModal').modal('hide');
         }
 
         function selectSubject(subjectId, subjectCode, subjectName) {
+            $('#modalSubjectTable').DataTable().destroy();
             $(`#modalSubject${subjectId}`).remove();
+
+            
+            updateModalSubjectSerialNumbers();
+            $('#modalSubjectTable').DataTable({
+                pageLength: 10
+            });
 
             const subjectRow = `
                 <tr id="subject${subjectId}">
@@ -569,7 +581,6 @@
 
             selectedSubjectIds.push(subjectId);
             totalSubjectLabel.text(`Total subjects: ${selectedSubjectIds.length}`);
-            updateModalSubjectSerialNumbers();
             // $('#addStudentModal').modal('hide');
         }
 

@@ -650,12 +650,20 @@
             
 
             $('#modalSubjectTable').DataTable({
-                pageLength: 50
+                pageLength: 10
             });
         }
 
         function selectStudent(studentId, studentName, studentRole) {
+            $('#modalStudentTable').DataTable().destroy();
             $(`#modalStudent${studentId}`).remove();
+
+            
+            updateModalStudentSerialNumbers();
+
+            $('#modalStudentTable').DataTable({
+                pageLength: 50
+            });
 
             const studentRow = `
                 <tr id="student${studentId}">
@@ -670,7 +678,6 @@
 
             selectedStudentIds.push(studentId);
             totalStudentLabel.text(`Total students: ${selectedStudentIds.length}`);
-            updateModalStudentSerialNumbers()
 
             // $('#addStudentModal').modal('hide');
         }
@@ -683,7 +690,7 @@
             updateModalSubjectSerialNumbers();
             
             $('#modalSubjectTable').DataTable({
-                pageLength: 50
+                pageLength: 10
             });
 
             const subjectRow = `
