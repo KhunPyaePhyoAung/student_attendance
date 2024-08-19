@@ -178,6 +178,13 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="name">Role</label>
+                    <input type="text" class="form-control input" id="role" name="role_no" placeholder="Enter role no" required>
+                    <div class="invalid-feedback" id="roleErrorMessage">
+                        
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="nrc">NRC Number</label>
                     <input type="text" class="form-control input" id="nrc" name="nrc" placeholder="Enter your NRC number" required>
                     <div class="invalid-feedback" id="nrcErrorMessage">
@@ -263,6 +270,7 @@
         const studentForm = $('#studentForm');
         const idInput = $('#id');
         const nameInput = $('#name');
+        const roleInput = $('#role');
         const nrcInput = $('#nrc');
         const emailInput = $('#email');
         const phoneInput = $('#phone');
@@ -276,6 +284,7 @@
         const registerBtn = $('#registerBtn');
 
         const nameErrorMessage = $('#nameErrorMessage');
+        const roleErrorMessage = $('#roleErrorMessage');
         const nrcErrorMessage = $('#nrcErrorMessage');
         const emailErrorMessage = $('#emailErrorMessage');
         const phoneErrorMessage = $('#phoneErrorMessage');
@@ -294,6 +303,16 @@
                 length: {
                     maximum: 60,
                     message: '^Name cannot be more than 60 characters'
+                }
+            },
+            role_no: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Role is required'
+                },
+                length: {
+                    maximum: 12,
+                    message: '^Name cannot be more than 12 characters'
                 }
             },
             nrc: {
@@ -421,6 +440,7 @@
         function fillStudentForm(student) {
             idInput.val(student.id);
             nameInput.val(student.name);
+            roleInput.val(student.role_no);
             nrcInput.val(student.nrc);
             emailInput.val(student.email);
             phoneInput.val(student.phone);
@@ -474,6 +494,9 @@
                             if (field === 'name') {
                                 nameErrorMessage.text(message);
                                 nameInput.addClass('is-invalid');
+                            } else if (field === 'role_no') {
+                                roleErrorMessage.text(message);
+                                roleInput.addClass('is-invalid');
                             } else if (field === 'nrc') {
                                 nrcErrorMessage.text(message);
                                 nrcInput.addClass('is-invalid');
@@ -515,10 +538,7 @@
             $.post(
                 settings
             ).always(function (data, status, xhr) {
-                    console.log(data.status);
                     if (data.status === 200) {
-                        console.log('fetched');
-                        console.log(data.data);
                         fillStudentForm(data.data);
                     } else if (data.status === 404) {
                         console.log(data.message);
@@ -542,6 +562,9 @@
                 if (sourceId === 'name') {
                     nameErrorMessage.text('');
                     nameInput.removeClass('is-invalid');
+                } else if (sourceId === 'role') {
+                    roleErrorMessage.text('');
+                    roleInput.removeClass('is-invalid');
                 } else if (sourceId === 'nrc') {
                     nrcErrorMessage.text('');
                     nrcInput.removeClass('is-invalid');
@@ -569,6 +592,7 @@
                 }
             } else {
                 nameErrorMessage.text('');
+                roleErrorMessage.text('');
                 nrcErrorMessage.text('');
                 emailErrorMessage.text('');
                 phoneErrorMessage.text('');
@@ -579,6 +603,7 @@
                 addressErrorMessage.text('');
 
                 nameInput.removeClass('is-invalid');
+                roleInput.removeClass('is-invalid');
                 nrcInput.removeClass('is-invalid');
                 emailInput.removeClass('is-invalid');
                 phoneInput.removeClass('is-invalid');
@@ -606,6 +631,11 @@
             if (checkResult.name) {
                 nameErrorMessage.text(checkResult.name[0]);
                 nameInput.addClass('is-invalid');
+            }
+
+            if (checkResult.role_no) {
+                roleErrorMessage.text(checkResult.role_no[0]);
+                roleInput.addClass('is-invalid');
             }
 
             if (checkResult.nrc) {

@@ -125,8 +125,8 @@ const studentRepository = () => {
             const connection = await getConnection();
 
             const insertedId = await new Promise((resolve, reject) => {
-                const insertSql = 'INSERT INTO `student` (`id`, `name`, `nrc`, `phone`, `family_phone`, `gender`, `date_of_birth`, `address`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-                const insertParams = [student.id, student.name, student.nrc, student.phone, student.family_phone, student.gender, student.date_of_birth, student.address];
+                const insertSql = 'INSERT INTO `student` (`id`, `name`, `role_no`, `nrc`, `phone`, `family_phone`, `gender`, `date_of_birth`, `address`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                const insertParams = [student.id, student.name, student.role_no, student.nrc, student.phone, student.family_phone, student.gender, student.date_of_birth, student.address];
                 connection.query(insertSql, insertParams, (error, result) => {
                     if (error) {
                         if (error.code === 'ER_DUP_ENTRY') {
@@ -160,8 +160,8 @@ const studentRepository = () => {
             const connection = await getConnection();
 
             const affectedRows = await new Promise((resolve, reject) => {
-                const updateQuery = 'UPDATE `student` SET `name` = ?, `nrc` = ?, `phone` = ?, `family_phone` = ?, `gender` = ?, `date_of_birth` = ?, `address` = ? WHERE `id` = ?';
-                const updateParams = [student.name, student.nrc, student.phone, student.family_phone, student.gender, student.date_of_birth, student.address, id];
+                const updateQuery = 'UPDATE `student` SET `name` = ?, `role_no` = ?, `nrc` = ?, `phone` = ?, `family_phone` = ?, `gender` = ?, `date_of_birth` = ?, `address` = ? WHERE `id` = ?';
+                const updateParams = [student.name, student.role_no, student.nrc, student.phone, student.family_phone, student.gender, student.date_of_birth, student.address, id];
                 connection.query(updateQuery, updateParams, (error, result) => {
                     if (error) {
                         if (error.code === 'ER_DUP_ENTRY') {
