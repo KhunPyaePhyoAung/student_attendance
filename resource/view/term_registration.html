@@ -129,6 +129,22 @@
         .btn-add:hover {
             background-color: #218838;
         }
+
+        .student-table-container {
+            max-height: 500px; /* Maximum height for the table container */
+            overflow-y: auto; /* Vertical scrollbar for overflow */
+            width: 100%; /* Make sure the container fills the parent */
+            overflow-x: hidden; /* Hide horizontal overflow if needed */
+            border-radius: 5px; /* Optional: Add rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+            background-color: #fff; /* Ensure background is white or another color */
+            padding: 10px; /* Optional: Add padding around the table */
+            margin-top: 10px; /* Optional: Add margin for spacing */
+        }
+
+        .student-table-container .table {
+            width: 100%; /* Ensure the table width is 100% of its container */
+        }
     </style>
 </head>
 <body>
@@ -199,6 +215,10 @@
                     <button class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addStudentModal"><i class="fas fa-user-plus"></i> Add Student</button>
                 </div>
 
+                <div class="form-group text-right mt-3">
+                    <label id="totalStudentLabel"></label>
+                </div>
+
                 <!-- Student Modal -->
                 <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl">
@@ -214,7 +234,7 @@
                                             <tr>
                                                 <th>Sr</th>
                                                 <th>Full Name</th>
-                                                <th>NRC</th>
+                                                <th>Role</th>
                                                 <th>Select</th>
                                             </tr>
                                         </thead>
@@ -228,19 +248,21 @@
 
                 <!-- Student Table -->
                 <div class="form-group mt-3">
-                    <table class="table table-bordered" id="studentTable">
-                        <thead>
-                            <tr>
-                                <th>Sr</th>
-                                <th>Name</th>
-                                <th>Phone</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Rows will be dynamically added here -->
-                        </tbody>
-                    </table>
+                    <div class="student-table-container">
+                        <table class="table table-bordered" id="studentTable">
+                            <thead>
+                                <tr>
+                                    <th>Sr</th>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-custom" id="registerBtn">Register</button>
@@ -256,6 +278,8 @@
         //     dateFormat: "Y-m-d"
         // });
 
+
+        const totalStudentLabel = $('#totalStudentLabel');
 
         const logoutMenuItem = $('#logoutMenuItem');
         const termForm = $('#termForm');
@@ -452,6 +476,7 @@
             endDateInput.val('');
             $('#studentTable tbody').empty();
             selectedStudentIds = [];
+            totalStudentLabel.text(`Total students: ${selectedStudentIds.length}`);
         }
 
         function formatDateYMD(dateStr) {
@@ -492,8 +517,8 @@
                     let row = `<tr id="modalStudent${student.id}">`;
                     row += `<td>${i + 1}</td>`;
                     row += `<td>${student.name}</td>`;
-                    row += `<td>${student.nrc}</td>`;
-                    row += `<td><button class="btn btn-primary" onClick="selectStudent(${student.id}, '${student.name}')">Select</button></td>`;
+                    row += `<td>${student.role_no}</td>`;
+                    row += `<td><button class="btn btn-primary" onClick="selectStudent(${student.id}, '${student.name}', '${student.role_no}')">Select</button></td>`;
                     row += `</tr>`;
 
                     $('#modalStudentTableBody').append(row);
@@ -505,14 +530,14 @@
             });
         }
 
-        function selectStudent(studentId, studentName) {
+        function selectStudent(studentId, studentName, studentRole) {
             $(`#modalStudent${studentId}`).remove();
 
             const studentRow = `
                 <tr id="student${studentId}">
                     <td>${$('#studentTable tbody tr').length + 1}</td>
                     <td>${studentName}</td>
-                    <td>--</td> <!-- Placeholder for Phone -->
+                    <td>${studentRole}</td> <!-- Placeholder for Phone -->
                     <td><button class="btn btn-danger" onClick="removeStudent(${studentId})">Remove</button></td>
                 </tr>
             `;
@@ -520,6 +545,7 @@
             $('#studentTable tbody').append(studentRow);
 
             selectedStudentIds.push(studentId);
+            totalStudentLabel.text(`Total students: ${selectedStudentIds.length}`);
 
             // $('#addStudentModal').modal('hide');
         }
@@ -528,6 +554,14 @@
             $(`#student${studentId}`).remove();
 
             selectedStudentIds = selectedStudentIds.filter(id => id !== studentId);
+            totalStudentLabel.text(`Total students: ${selectedStudentIds.length}`);
+            updateSerialNumbers();
+        }
+
+        function updateSerialNumbers() {
+            $('#studentTable tbody tr').each(function(index) {
+                $(this).find('td').first().text(index + 1); // Update the serial number
+            });
         }
 
         $('#addStudentModal').on('shown.bs.modal', function () {
