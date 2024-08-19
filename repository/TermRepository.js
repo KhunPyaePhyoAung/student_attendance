@@ -6,7 +6,7 @@ const termRepository = () => {
             const connection = await getConnection();
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT * FROM term';
+                const sql = 'SELECT t.*, COUNT(DISTINCT tsb.subject_id) AS subject_count, COUNT(DISTINCT tst.student_id) AS student_count FROM term t LEFT JOIN term_has_subject tsb ON t.id = tsb.term_id LEFT JOIN term_has_student tst ON t.id = tst.term_id GROUP BY t.id ORDER BY `start_date`, `end_date`, `created_at` DESC';
                 connection.query(sql, (error, results, fields) => {
                     if (error) {
                         reject(new Error(error.sqlMessage));
@@ -100,11 +100,20 @@ const termRepository = () => {
                             reject(error);
                         }
                     } else {
-                        const insertStudentSql = 'INSERT INTO term_has_student (`term_id`, `student_id`) VALUES (?, ?);';
+                        const insertStudentSql = 'INSERT INTO term_has_student (`term_id`, `student_id`) VALUES ?';
+                        const insertStudentParams = [];
                         term.students.forEach(studentId => {
-                            const insertStudentParams = [result.insertId, studentId];
-                            connection.query(insertStudentSql, insertStudentParams);
+                            insertStudentParams.push([result.insertId, studentId]);
                         });
+                        connection.query(insertStudentSql, [insertStudentParams]);
+
+                        const insertSubjectSql = 'INSERT INTO term_has_subject (`term_id`, `subject_id`) VALUES ?';
+                        const insertSubjectParams = [];
+                        term.subjects.forEach(subjectsId => {
+                            insertSubjectParams.push([result.insertId, subjectsId]);
+                        });
+                        connection.query(insertSubjectSql, [insertSubjectParams]);
+
                         resolve(result.insertId);
                     }
                 });
@@ -142,9 +151,9 @@ const termRepository = () => {
                             reject(error);
                         }
                     } else {
-                        const deleteQuery = 'DELETE FROM term_has_student WHERE term_id = ?';
-                        const deleteParams = [id];
-                        connection.query(deleteQuery, deleteParams, (error, result) => {
+                        const deleteStudentQuery = 'DELETE FROM term_has_student WHERE term_id = ?';
+                        const deleteStudentParams = [id];
+                        connection.query(deleteStudentQuery, deleteStudentParams, (error, result) => {
                             if (!error) {
                                 const insertQuery = 'INSERT INTO term_has_student (`term_id`, `student_id`) VALUES ?';
                                 const insertParams = [];
@@ -152,11 +161,22 @@ const termRepository = () => {
                                     insertParams.push([id, studentId]);
                                 });
                                 
-                                connection.query(insertQuery, [insertParams], (err, result) => {
-                                    if (error) {
+                                connection.query(insertQuery, [insertParams]);
+                                resolve(result.affectedRows);
+                            }
+                        });
 
-                                    }
+                        const deleteSubjectQuery = 'DELETE FROM term_has_subject WHERE term_id = ?';
+                        const deleteSubjectParams = [id];
+                        connection.query(deleteSubjectQuery, deleteSubjectParams, (error, result) => {
+                            if (!error) {
+                                const insertQuery = 'INSERT INTO term_has_subject (`term_id`, `subject_id`) VALUES ?';
+                                const insertParams = [];
+                                term.subjects.forEach(subjectId => {
+                                    insertParams.push([id, subjectId]);
                                 });
+                                
+                                connection.query(insertQuery, [insertParams]);
                                 resolve(result.affectedRows);
                             }
                         });

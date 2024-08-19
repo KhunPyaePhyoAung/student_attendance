@@ -22,6 +22,29 @@ const subjectController = ({ subjectService }) => {
             }
         },
 
+        findAllByTermId: async (req, res) => {
+            const termId = req.params.termId;
+            try {
+                const subjects = await subjectService.findAllByTermId(termId);
+                return res.status(200).json(
+                    {
+                        status: 200,
+                        meta: {
+                            total: subjects.length
+                        },
+                        data: subjects
+                    }
+                );
+            } catch (error) {
+                return res.status(200).json(
+                    {
+                        status: 500,
+                        message: error.message
+                    }
+                );
+            }
+        },
+
         findOneById: async (req, res) => {
             const id = req.params.id;
             try {
@@ -176,11 +199,15 @@ const subjectController = ({ subjectService }) => {
                     message: 'No Subject found.'
                 });
             } catch (error) {
-                return res.status(200).json(
-                    {
-                        status: 500
-                    }
-                );
+                return res.status(200).json({
+                    status: 400,
+                    errors: [
+                        {
+                            field: error.fieldName,
+                            message: error.message
+                        }
+                    ]
+                });
             }
         },
     }

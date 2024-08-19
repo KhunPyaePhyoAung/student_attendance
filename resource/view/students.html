@@ -168,7 +168,7 @@
             <h2>Student List</h2>
         </div>
         <div class="search-container">
-            <a class="btn btn-add" href="/student_registration"><i class="fas fa-user-plus"></i></a>
+            <a class="btn btn-add" href="/student_registration"><i class="fas fa-plus"></i> <i class="fas fa-user"></i></a>
         </div>
         <table class="table table-striped display" id="studentTable">
             <thead>
@@ -250,6 +250,10 @@
                         fetchStudents();
                         swal("The student has been deleted!", {
                             icon: "success",
+                        });
+                    } else if (data.status === 400) {
+                        swal(data.errors[0].message, {
+                            icon: "error",
                         });
                     } else if (data.status === 404) {
                         fetchStudents();

@@ -18,6 +18,23 @@ const subjectRepository = () => {
             });
         },
 
+        findAllByTermId: async (termId) => {
+            const connection = await getConnection();
+
+            return new Promise((resolve, reject) => {
+                const sql = 'SELECT s.* FROM subject s JOIN term_has_subject t ON s.id = t.subject_id WHERE t.term_id = ?';
+                const params = [termId];
+                connection.query(sql, params, (error, results, fields) => {
+                    if (error) {
+                        reject(new Error(error.sqlMessage));
+                    } else {
+                        resolve(results);
+                    }
+                });
+                connection.release();
+            });
+        },
+
         findOneById: async (id) => {
             const connection = await getConnection();
 
@@ -149,6 +166,12 @@ const subjectRepository = () => {
                 const deleteParams = [id];
                 connection.query(deleteSql, deleteParams, (error, result) => {
                     if (error) {
+                        if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+                            const deleteError = new Error();
+                            deleteError.message = 'This subject is in use.'
+                            reject(deleteError);
+                            return;
+                        }
                         reject(error);
                     } else {
                         resolve(result.affectedRows);

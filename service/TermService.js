@@ -42,7 +42,8 @@ const termService = ({termRepository}) => {
                 name: data.name,
                 start_date: data.start_date,
                 end_date: data.end_date,
-                students: data.students
+                students: data.students,
+                subjects: data.subjects
             };
 
             try {
@@ -74,7 +75,8 @@ const termService = ({termRepository}) => {
                 name: data.name,
                 start_date: data.start_date,
                 end_date: data.end_date,
-                students: data.students
+                students: data.students,
+                subjects: data.subjects
             };
 
             try {

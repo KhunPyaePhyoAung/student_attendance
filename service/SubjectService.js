@@ -9,6 +9,15 @@ const subjectService = ({subjectRepository}) => {
             }
         },
 
+        findAllByTermId: async (termId) => {
+            try {
+                const subjects = await subjectRepository.findAllByTermId(termId);
+                return subjects;
+            } catch (error) {
+                throw error;
+            }
+        },
+
         findOneById: async (id) => {
             try {
                 id = parseInt(id); // Keeping your original logic intact

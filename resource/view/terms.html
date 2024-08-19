@@ -168,13 +168,15 @@
             <h2>Term List</h2>
         </div>
         <div class="search-container">
-            <a class="btn btn-add" href="/term_registration"><i class="fas fa-user-plus"></i></a>
+            <a class="btn btn-add" href="/term_registration"><i class="fas fa-plus"></i> <i class="fas fa-calendar"></i></a>
         </div>
         <table class="table table-striped display" id="termTable">
             <thead>
                 <tr>
                     <th>Sr</th>
                     <th>Name</th>
+                    <th>Subjects</th>
+                    <th>Students</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Actions</th>
@@ -287,6 +289,8 @@
                 let row = `<tr id="term${term.id}">`;
                 row += `<td>${i + 1}</td>`;
                 row += `<td>${term.name}</td>`;
+                row += `<td>${term.subject_count}</td>`;
+                row += `<td>${term.student_count}</td>`;
                 row += `<td>${term.start_date}</td>`;
                 row += `<td>${term.end_date}</td>`;
                 row += `<td>

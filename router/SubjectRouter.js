@@ -16,6 +16,11 @@ router.get(
     subjectController.findOneById
 );
 
+router.get(
+    '/term/:termId',
+    subjectController.findAllByTermId
+);
+
 router.post(
     '/',
     subjectController.create

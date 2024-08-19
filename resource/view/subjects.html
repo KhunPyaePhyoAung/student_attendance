@@ -168,7 +168,7 @@
             <h2>Subject List</h2>
         </div>
         <div class="search-container">
-            <a class="btn btn-add" href="/subject_registration"><i class="fas fa-user-plus"></i></a>
+            <a class="btn btn-add" href="/subject_registration"><i class="fas fa-plus"></i> <i class="fas fa-book"></i></a>
         </div>
         <table class="table table-striped display" id="subjectTable">
             <thead>
@@ -246,6 +246,10 @@
                         fetchSubjects();
                         swal("The subject has been deleted!", {
                             icon: "success",
+                        });
+                    } else if (data.status === 400) {
+                        swal(data.errors[0].message, {
+                            icon: "error",
                         });
                     } else if (data.status === 404) {
                         fetchSubjects();

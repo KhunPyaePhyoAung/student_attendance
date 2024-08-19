@@ -244,8 +244,12 @@ const studentController = ({studentService}) => {
             } catch (error) {
                 return res.status(200).json(
                     {
-                        status: 500,
-                        message: 'There is a problem with server'
+                        status: 400,
+                        errors: [
+                            {
+                                message: error.message
+                            }
+                        ]
                     }
                 );
             }

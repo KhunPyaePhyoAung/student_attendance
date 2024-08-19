@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>Update Term Information</title>
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/flatpickr.css">
     <link rel="stylesheet" href="/css/dataTable.css">
+    <link rel="stylesheet" href="/css/fontawesome.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
     <script type="text/javascript" src="/js/validate.min.js"></script>
@@ -129,6 +130,21 @@
             background-color: #218838;
         }
 
+        .subject-table-container {
+            overflow-y: auto; /* Vertical scrollbar for overflow */
+            width: 100%; /* Make sure the container fills the parent */
+            overflow-x: hidden; /* Hide horizontal overflow if needed */
+            border-radius: 5px; /* Optional: Add rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+            background-color: #fff; /* Ensure background is white or another color */
+            padding: 10px; /* Optional: Add padding around the table */
+            margin-top: 10px; /* Optional: Add margin for spacing */
+        }
+
+        .subjects-table-container .table {
+            width: 100%; /* Ensure the table width is 100% of its container */
+        }
+
         .student-table-container {
             max-height: 500px; /* Maximum height for the table container */
             overflow-y: auto; /* Vertical scrollbar for overflow */
@@ -192,7 +208,7 @@
 
     <section class="main-content">
         <div class="container">
-            <h2 class="text-center mb-4">Term Update Form</h2>
+            <h2 class="text-center mb-4">Update Term Information</h2>
             <form novalidate id="termForm">
                 <div class="form-group">
                     <label for="name">ID</label>
@@ -223,9 +239,68 @@
                     </div>
                 </div>
 
-                <!-- Add Student Button -->
+                <!-- Add Subject Button -->
                 <div class="form-group text-right mt-3">
-                    <button class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addStudentModal"><i class="fas fa-user-plus"></i> Add Student</button>
+                    <button class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addSubjectModal">
+                        <i class="fas fa-plus"></i> <i class="fas fa-book"></i>
+                    </button>
+                </div>
+
+                <div class="form-group text-right mt-3">
+                    <label id="totalSubjectLabel"></label>
+                </div>
+
+                <!-- Subject Modal -->
+                <div class="modal fade" id="addSubjectModal" tabindex="-1" aria-labelledby="addSubjectModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addSubjectModalLabel">Select the Subjects</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-container">
+                                    <table class="table table-striped display" id="modalSubjectTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Sr</th>
+                                                <th>Code</th>
+                                                <th>Name</th>
+                                                <th>Select</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="modalSubjectTableBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subject Table -->
+                <div class="form-group mt-3">
+                    <div class="subject-table-container">
+                        <table class="table table-bordered" id="subjectTable">
+                            <thead>
+                                <tr>
+                                    <th>Sr</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Add Student Button -->
+                <div class="form-group text-right mt-5">
+                    <button class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+                        <i class="fas fa-plus"></i> <i class="fas fa-user"></i>
+                    </button>
                 </div>
 
                 <div class="form-group text-right mt-3">
@@ -279,7 +354,7 @@
                 </div>
                 
 
-                <button type="submit" class="btn btn-custom mt-3" id="registerBtn">Update</button>
+                <button type="submit" class="btn btn-custom mt-5" id="registerBtn">Update</button>
                 <a class="btn btn-cancel" href="/terms">Cancel</a>
             </form>
         </div>
@@ -287,6 +362,7 @@
     <script>
 
         let selectedStudentIds = [];
+        let selectedSubjectIds = [];
 
         const datePicker = flatpickr('#dateOfBirth', {
                 dateFormat: 'd/m/Y',
@@ -294,6 +370,10 @@
             });
 
         const totalStudentLabel = $('#totalStudentLabel');
+        const totalSubjectLabel = $('#totalSubjectLabel');
+        
+        totalStudentLabel.text(`Total students: ${selectedStudentIds.length}`);
+        totalSubjectLabel.text(`Total subjects: ${selectedSubjectIds.length}`);
 
         const logoutMenuItem = $('#logoutMenuItem');
         const termForm = $('#termForm');
@@ -366,6 +446,10 @@
             fetchStudentsForModal();
         });
 
+        $('#addSubjectModal').on('shown.bs.modal', function () {
+            fetchSubjectsForModal();
+        });
+
         $(document).ready(function() {
             let params = new URL(document.location.toString()).searchParams;
             let termId = params.get("id");
@@ -387,6 +471,18 @@
             });
         }
 
+        function fetchSubjectsForModal() {
+            $.ajax({
+                url: "/api/subjects",
+                method: "GET",
+                timeout: 0,
+            }).done(function (data) {
+                if (data.status === 200) {
+                    populateModalSubjectTable(data.data);
+                }
+            });
+        }
+
         function populateModalStudentTable(students) {
             $('#modalStudentTable').DataTable().clear().destroy();
 
@@ -398,14 +494,41 @@
                     row += `<td>${i + 1}</td>`;
                     row += `<td>${student.name}</td>`;
                     row += `<td>${student.role_no}</td>`;
-                    row += `<td><button class="btn btn-primary" onClick="selectStudent(${student.id}, '${student.name}', '${student.role_no}')">Select</button></td>`;
+                    row += `<td><button class="btn btn-primary" onClick="selectStudent(${student.id}, '${student.name}', '${student.role_no}')"><i class="fas fa-check"></i></button></td>`;
                     row += `</tr>`;
 
                     $('#modalStudentTableBody').append(row);
                 }
             });
+            
+            updateModalStudentSerialNumbers();
 
             $('#modalStudentTable').DataTable({
+                pageLength: 50
+            });
+        }
+
+        function populateModalSubjectTable(subjects) {
+            $('#modalSubjectTable').DataTable().clear().destroy();
+
+            $('#modalSubjectTableBody').empty();
+
+            subjects.forEach((subject, i) => {
+                if (!selectedSubjectIds.includes(subject.id)) { // Check if student is not selected
+                    let row = `<tr id="modalSubject${subject.id}">`;
+                    row += `<td>${i + 1}</td>`;
+                    row += `<td>${subject.code}</td>`;
+                    row += `<td>${subject.name}</td>`;
+                    row += `<td><button class="btn btn-primary" onClick="selectSubject(${subject.id}, '${subject.code}', '${subject.name}')"><i class="fas fa-check"></i></button></td>`;
+                    row += `</tr>`;
+
+                    $('#modalSubjectTableBody').append(row);
+                }
+            });
+            
+            updateModalSubjectSerialNumbers();
+
+            $('#modalSubjectTable').DataTable({
                 pageLength: 50
             });
         }
@@ -418,7 +541,7 @@
                     <td>${$('#studentTable tbody tr').length + 1}</td>
                     <td>${studentName}</td>
                     <td>${studentRole}</td> <!-- Placeholder for Phone -->
-                    <td><button class="btn btn-danger" onClick="removeStudent(${studentId})">Remove</button></td>
+                    <td><button class="btn btn-danger" onClick="removeStudent(${studentId})"><i class="fas fa-minus-circle"></i></button></td>
                 </tr>
             `;
             
@@ -426,6 +549,27 @@
 
             selectedStudentIds.push(studentId);
             totalStudentLabel.text(`Total students: ${selectedStudentIds.length}`);
+            updateModalStudentSerialNumbers();
+            // $('#addStudentModal').modal('hide');
+        }
+
+        function selectSubject(subjectId, subjectCode, subjectName) {
+            $(`#modalSubject${subjectId}`).remove();
+
+            const subjectRow = `
+                <tr id="subject${subjectId}">
+                    <td>${$('#subjectTable tbody tr').length + 1}</td>
+                    <td>${subjectCode}</td>
+                    <td>${subjectName}</td>
+                    <td><button class="btn btn-danger" onClick="removeSubject(${subjectId})"><i class="fas fa-minus-circle"></i></button></td>
+                </tr>
+            `;
+            
+            $('#subjectTable tbody').append(subjectRow);
+
+            selectedSubjectIds.push(subjectId);
+            totalSubjectLabel.text(`Total subjects: ${selectedSubjectIds.length}`);
+            updateModalSubjectSerialNumbers();
             // $('#addStudentModal').modal('hide');
         }
 
@@ -438,8 +582,33 @@
             updateSerialNumbers();
         }
 
+        function removeSubject(subjectId) {
+            $(`#subject${subjectId}`).remove();
+
+            selectedSubjectIds = selectedSubjectIds.filter(id => id !== subjectId);
+            totalSubjectLabel.text(`Total subjects: ${selectedSubjectIds.length}`);
+            updateSerialNumbers();
+        }
+
         function updateSerialNumbers() {
             $('#studentTable tbody tr').each(function(index) {
+                $(this).find('td').first().text(index + 1); // Update the serial number
+            });
+
+            $('#subjectTable tbody tr').each(function(index) {
+                $(this).find('td').first().text(index + 1); // Update the serial number
+            });
+        }
+
+        function updateModalSubjectSerialNumbers() {
+            $('#modalSubjectTable tbody tr').each(function(index) {
+                $(this).find('td').first().text(index + 1); // Update the serial number
+            });
+            
+        }
+
+        function updateModalStudentSerialNumbers() {
+            $('#modalStudentTable tbody tr').each(function(index) {
                 $(this).find('td').first().text(index + 1); // Update the serial number
             });
         }
@@ -508,6 +677,7 @@
                     if (data.status === 200) {
                         fillTermForm(data.data);
                         fetchAndAddStudentsByTermId(id);
+                        fetchAndAddSubjectsByTermId(id);
                     } else if (data.status === 404) {
                         console.log(data.message);
                     }
@@ -525,19 +695,53 @@
             $.post(
                 settings
             ).always(function (data, status, xhr) {
-                    console.log(data);
                     if (data.status === 200) {
                         data.data.forEach((student, i) => {
                             let row = `<tr id="student${student.id}">`;
                             row += `<td>${i + 1}</td>`;
                             row += `<td>${student.name}</td>`;
                             row += `<td>${student.role_no}</td>`;
-                            row += `<td><button class="btn btn-danger" onClick="removeStudent(${student.id})">Remove</button></td>`;
+                            row += `<td><button class="btn btn-danger" onClick="removeStudent(${student.id})"><i class="fas fa-minus-circle"></i></button></td>`;
                             row += `</tr>`;
 
                             $('#studentTable tbody').append(row);
                             selectedStudentIds.push(student.id);
                             totalStudentLabel.text(`Total students: ${selectedStudentIds.length}`);
+                        });
+
+                        
+                        
+                    } else if (data.status === 404) {
+                        console.log(data.message);
+                    }
+                }
+            );
+        }
+
+        function fetchAndAddSubjectsByTermId(termId) {
+            const settings = {
+                "url": "/api/subjects/term/" + termId,
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                    console.log('subjects');
+                    console.log(data);
+                    if (data.status === 200) {
+                        data.data.forEach((subject, i) => {
+                            let row = `<tr id="subject${subject.id}">`;
+                            row += `<td>${i + 1}</td>`;
+                            row += `<td>${subject.code}</td>`;
+                            row += `<td>${subject.name}</td>`;
+                            row += `<td><button class="btn btn-danger" onClick="removeSubject(${subject.id})"><i class="fas fa-minus-circle"></i></button></td>`;
+                            row += `</tr>`;
+
+                            $('#subjectTable tbody').append(row);
+                            selectedSubjectIds.push(subject.id);
+                            totalSubjectLabel.text(`Total subjects: ${selectedSubjectIds.length}`);
                         });
 
                         
@@ -556,6 +760,7 @@
                 term[data.name] = data.value;
             });
             term.students = [...selectedStudentIds];
+            term.subjects = [...selectedSubjectIds];
             return term;
         }
 
