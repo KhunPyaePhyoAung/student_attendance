@@ -207,13 +207,13 @@
                     message: '^Code is required'
                 },
                 format: {
-                    pattern: /^\d+$/,
-                    message: '^Code must be only digits'
+                    pattern: /^[A-Z]{1,4}-\d{4,6}$/,
+                    message: '^Code must be [1-4 capital letters]-[4-6 digits]'
                 },
                 length: {
-                    minimum: 4,
-                    maximum: 10,
-                    message: '^Code must be between 4 and 10 characters'
+                    minimum: 6,
+                    maximum: 11,
+                    message: '^Code must be between 6 and 11 characters'
                 },
             },
             name: {
