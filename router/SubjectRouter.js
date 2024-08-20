@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const subjectRepository = require('../repository/SubjectRepository')();
-const passwordEncryptService = require('../service/Md5PasswordEncryptService'); // Assuming the service remains the same
-const subjectService = require('../service/SubjectService')({ subjectRepository, passwordEncryptService });
+const subjectService = require('../service/SubjectService')({ subjectRepository });
 const subjectController = require('../controller/SubjectController')({ subjectService });
 
 router.get(

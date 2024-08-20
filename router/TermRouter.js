@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
+const subjectRepository = require('../repository/SubjectRepository')();
+const subjectService = require('../service/SubjectService')({ subjectRepository });
 const termRepository = require('../repository/TermRepository')();
-const termService = require('../service/TermService')({termRepository});
+const termService = require('../service/TermService')({termRepository, subjectService});
 const termController = require('../controller/TermController')({termService});
+const authMiddleware = require('../middleware/AuthMiddleware');
 
 router.get(
     '/',
@@ -16,9 +19,17 @@ router.get(
 );
 
 router.get(
+    '/instructor',
+    [authMiddleware.verifyUserToken],
+    termController.getActiveTermsForInstructor
+);
+
+router.get(
     '/:id',
     termController.findOneById
 );
+
+
 
 router.post(
     '/',

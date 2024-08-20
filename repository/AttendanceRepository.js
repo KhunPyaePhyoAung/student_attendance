@@ -126,13 +126,47 @@ const attendanceRepository = () => {
             const connection = await getConnection();
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT t.name as term_name, s.name as subject_name, r.date, r.start_time, r.end_time, r.status FROM roll_call r JOIN term t ON r.term_id = t.id JOIN subject s ON r.subject_id = s.id WHERE r.instructor_id = ? ORDER BY r.created_at DESC';
+                const sql = 'SELECT r.id as id, t.name as term_name, s.name as subject_name, r.date, r.start_time, r.end_time, r.status FROM roll_call r JOIN term t ON r.term_id = t.id JOIN subject s ON r.subject_id = s.id WHERE r.instructor_id = ? ORDER BY r.created_at DESC';
                 const params = [instructorId];
                 connection.query(sql, params, (error, results, fields) => {
                     if (error) {
                         reject(new Error(error.sqlMessage));
                     } else {
                         resolve(results);
+                    }
+                });
+                connection.release();
+            });
+        },
+
+        findOneById: async (id) => {
+            const connection = await getConnection();
+
+            return new Promise((resolve, reject) => {
+                const sql = 'SELECT a.*, t.id as term_id, s.id as subject_id FROM roll_call a JOIN term t ON a.term_id = t.id JOIN subject s ON a.subject_id = s.id WHERE a.id = ?';
+                const params = [id];
+                connection.query(sql, params, (error, results, fields) => {
+                    if (error) {
+                        reject(new Error(error.sqlMessage));
+                    } else {
+                        resolve(results[0]);
+                    }
+                });
+                connection.release();
+            });
+        },
+
+        findOneDetailById: async (id) => {
+            const connection = await getConnection();
+
+            return new Promise((resolve, reject) => {
+                const sql = 'SELECT a.*, t.name as term_name, s.code as subject_code, s.name as subject_name, i.name as instructor_name FROM roll_call a JOIN term t ON a.term_id = t.id JOIN subject s ON a.subject_id = s.id JOIN instructor i ON a.instructor_id = i.id WHERE a.id = ?';
+                const params = [id];
+                connection.query(sql, params, (error, results, fields) => {
+                    if (error) {
+                        reject(new Error(error.sqlMessage));
+                    } else {
+                        resolve(results[0]);
                     }
                 });
                 connection.release();

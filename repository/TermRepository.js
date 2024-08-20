@@ -18,6 +18,22 @@ const termRepository = () => {
             });
         },
 
+        getActiveTermsForInstructor: async (instructorId) => {
+            const connection = await getConnection();
+
+            return new Promise((resolve, reject) => {
+                const sql = 'SELECT * FROM term WHERE start_date <= NOW() AND end_date >= NOW()';
+                connection.query(sql, (error, results, fields) => {
+                    if (error) {
+                        reject(new Error(error.sqlMessage));
+                    } else {
+                        resolve([...results]);
+                    }
+                });
+                connection.release();
+            });
+        },
+
         findOneById: async (id) => {
             const connection = await getConnection();
 

@@ -1,9 +1,25 @@
 
-const termService = ({termRepository}) => {
+const termService = ({termRepository, subjectService}) => {
     return {
         getAll: async () => {
             try {
                 const terms = await termRepository.getAll();
+                return terms;
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        getActiveTermsForInstructor: async (instructorId) => {
+
+            try {
+                const terms = await termRepository.getActiveTermsForInstructor(instructorId);
+                for (let i = 0; i < terms.length; i++) {
+                    const term = terms[i];
+                    const subjects = await subjectService.findAllByTermId(term.id);;
+                    term.subjects = subjects;
+                }
+                
                 return terms;
             } catch (error) {
                 throw error;

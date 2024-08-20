@@ -263,7 +263,7 @@
             );
         }
 
-        function onDeleteTerm(termId) {
+        function onDeleteAttendance(termId) {
             swal({
                 title: "Confirm Deletion",
                 text: `Are you sure you want to delete this term?`,
@@ -301,9 +301,9 @@
                                     <i class="fas fa-cog"></i>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item" href="#">View</a></li>
-                                    <li><a class="dropdown-item" href="/term_edit?id=${attendance.id}">Edit</a></li>
-                                    <li><a class="dropdown-item" onClick="onDeleteTerm(${attendance.id})">Delete</a></li>
+                                    <li><a class="dropdown-item" href="/attendance_detail?id=${attendance.id}">View</a></li>
+                                    <li><a class="dropdown-item" href="/attendance_edit?id=${attendance.id}">Edit</a></li>
+                                    <li><a class="dropdown-item" onClick="onDeleteAttendance(${attendance.id})">Delete</a></li>
                                 </ul>
                             </div>
                         </td>`;

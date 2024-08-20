@@ -67,7 +67,47 @@ const attendanceController = ({attendanceService}) => {
                     }
                 );
             }
-        }
+        },
+
+        findOneById: async (req, res) => {
+            const attendanceId = req.params.id;
+            try {
+                const attendance = await attendanceService.findOneById(attendanceId);
+                return res.status(200).json(
+                    {
+                        status: 200,
+                        data: attendance
+                    }
+                );
+            } catch (error) {
+                return res.status(200).json(
+                    {
+                        status: 400,
+                        message: error.message
+                    }
+                );
+            }
+        },
+
+        findOneDetailById: async (req, res) => {
+            const attendanceId = req.query.id;
+            try {
+                const attendance = await attendanceService.findOneDetailById(attendanceId);
+                return res.status(200).json(
+                    {
+                        status: 200,
+                        data: attendance
+                    }
+                );
+            } catch (error) {
+                return res.status(200).json(
+                    {
+                        status: 400,
+                        message: error.message
+                    }
+                );
+            }
+        },
     };
 
     

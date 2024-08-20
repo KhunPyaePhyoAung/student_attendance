@@ -103,6 +103,16 @@ const viewController = ({tokenService}) => {
             return res.sendFile(html);
         },
 
+        attendance_edit: (req, res) => {
+            const html = path.join(viewFolder, 'attendance_edit.html');
+            return res.sendFile(html);
+        },
+
+        attendance_detail: (req, res) => {
+            const html = path.join(viewFolder, 'attendance_detail.html');
+            return res.sendFile(html);
+        },
+
     }
 }
 

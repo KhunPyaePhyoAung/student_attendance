@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance Registration</title>
+    <title>Update Attendance Information</title>
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/flatpickr.css">
@@ -208,7 +208,7 @@
 
     <section class="main-content">
         <div class="container">
-            <h2 class="text-center mb-4">Attendance Registration</h2>
+            <h2 class="text-center mb-4">Update Attendance Information</h2>
             <form novalidate id="attendanceForm">
                 <div class="row">
                     <div class="col-md-4">
@@ -249,8 +249,17 @@
                     </select>
                     <div class="invalid-feedback" id="subjectErrorMessage"></div>
                 </div>
+
+                <div class="col-12 form-group">
+                    <label for="status">Status</label>
+                    <select class="form-control input" id="status" name="status" required>
+                        <option value="OPENING">Opening</option>
+                        <option value="CLOSED">Closed</option>
+                    </select>
+                    <div class="invalid-feedback" id="statusErrorMessage"></div>
+                </div>
                 
-                <button type="submit" class="btn btn-custom mt-3" id="registerBtn">Register</button>
+                <button type="submit" class="btn btn-custom mt-3" id="registerBtn">Update</button>
                 <a class="btn btn-cancel" href="/attendances">Cancel</a>
             </form>            
         </div>
@@ -258,7 +267,7 @@
 
     <script>
 
-        let terms = [];
+        let attendance = [];
         const logoutMenuItem = $('#logoutMenuItem');
         const attendanceForm = $('#attendanceForm');
 
@@ -267,6 +276,7 @@
         const endTimeInput = $('#endTime');
         const termInput = $('#term');
         const subjectInput = $('#subject');
+        const statusInput = $('#status');
         const registerBtn = $('#registerBtn');
 
         const dateErrorMessage = $('#dateErrorMessage');
@@ -274,6 +284,7 @@
         const endTimeErrorMessage = $('#endTimeErrorMessage');
         const termErrorMessage = $('#termErrorMessage');
         const subjectErrorMessage = $('#subjectErrorMessage');
+        const statusErrorMessage = $('#statusErrorMessage');
 
         const attendanceConstraint = {
             date: {
@@ -306,10 +317,19 @@
                     message: '^Subject is required'
                 }
             },
+            status: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Status is required'
+                }
+            }
         };
 
         $(document).ready(function() {
-            fetcActiveTermsForInstructor();
+            let params = new URL(document.location.toString()).searchParams;
+            let attendanceId = params.get("id");
+            fetchAttendanceById(attendanceId);
+            fetchActiveTermsForInstructor();
         });
 
         attendanceForm.on('submit', function(e){
@@ -326,7 +346,7 @@
             subjectInput.empty();
             subjectInput.append('<option value="">-- select a subject --</option>');
 
-            terms.forEach(term => {
+            attendance.forEach(term => {
                 if (term.id == termId) {
                     const subjects = term.subjects;
                     subjects.forEach(subject => {
@@ -373,7 +393,6 @@
                 settings
             ).always(function (data, status, xhr) {
                     if (data.status === 201) {
-                        clearAttendanceForm();
                         window.scrollTo(0, 0);
                         swal("Successfully created a new attendance", {
                             icon: "success",
@@ -387,7 +406,7 @@
             );
         }
 
-        function fetcActiveTermsForInstructor() {
+        function fetchActiveTermsForInstructor() {
             const settings = {
                 "url": "/api/terms/instructor/",
                 "method": "GET",
@@ -398,11 +417,22 @@
                 settings
             ).always(function (data, status, xhr) {
                     if (data.status === 200) {
-                        terms = data.data;
                         data.data.forEach(term => {
                             termInput.append(`<option value="${term.id}">${term.name}</option>`);
                         });
-                        
+                        termInput.val(attendance.term_id);
+                        subjectInput.empty();
+                        subjectInput.append('<option value="">-- select a subject --</option>');
+
+                        attendance.forEach(term => {
+                            if (term.id == termId) {
+                                const subjects = term.subjects;
+                                subjects.forEach(subject => {
+                                    subjectInput.append(`<option value="${subject.id}">(${subject.code}) ${subject.name}</option>`);
+                                });
+                            }
+                        });
+                        // subjectInput.val(attendance.subject_id);
                     } else if (data.status === 400) {
                         swal(data.message, {
                             icon: "error",
@@ -410,6 +440,38 @@
                     }
                 }
             );
+        }
+
+        function fetchAttendanceById(attendanceId) {
+            const settings = {
+                "url": "/api/attendances/" + attendanceId,
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                    console.log(data);
+                    if (data.status === 200) {
+                        attendance = data.data;
+                        fetchActiveTermsForInstructor();
+                    } else if (data.status === 400) {
+                        swal(data.message, {
+                            icon: "error",
+                        });
+                    }
+                }
+            );
+        }
+
+        function fillAttendanceForm(attendance) {
+            dateInput.val(attendance.date);
+            startTimeInput.val(attendance.start_time);
+            endTimeInput.val(attendance.end_time);
+            termInput.val(attendance.term_id);
+            subjectInput.val(attendance.subject_id);
+            statusInput.val(attendance.status);
         }
 
         function getFormData() {
@@ -438,6 +500,9 @@
                 } else if (sourceId === 'subject') {
                     subjectErrorMessage.text('');
                     subjectInput.removeClass('is-invalid');
+                } else if (sourceId === 'status') {
+                    statusErrorMessage.text('');
+                    statusInput.removeClass('is-invalid');
                 }
             } else {
                 dateErrorMessage.text('');
@@ -445,12 +510,14 @@
                 endTimeErrorMessage.text('');
                 termErrorMessage.text('');
                 subjectErrorMessage.text('');
+                statusErrorMessage.text('');
 
                 dateInput.removeClass('is-invalid');
                 startTimeInput.removeClass('is-invalid');
                 endTimeInput.removeClass('is-invalid');
                 termInput.removeClass('is-invalid');
                 subjectInput.removeClass('is-invalid');
+                statusInput.removeClass('is-invalid');
             }
             
         }
@@ -482,25 +549,22 @@
                 endTimeInput.addClass('is-invalid');
             }
 
-            if (checkResult.term) {
+            if (checkResult.term_it) {
                 termErrorMessage.text(checkResult.term_id[0]);
                 termInput.addClass('is-invalid');
             }
 
-            if (checkResult.subject) {
+            if (checkResult.subject_id) {
                 subjectErrorMessage.text(checkResult.subject_id[0]);
                 subjectInput.addClass('is-invalid');
             }
 
-            return false;
-        }
+            if (checkResult.status) {
+                statusErrorMessage.text(checkResult.status[0]);
+                statusInput.addClass('is-invalid');
+            }
 
-        function clearAttendanceForm() {
-            dateInput.val('');
-            startTimeInput.val('');
-            endTimeInput.val('');
-            termInput.val('');
-            subjectInput.val('');
+            return false;
         }
 
         function logout() {

@@ -48,7 +48,25 @@ const attendanceService = ({attendanceRepository}) => {
             } catch (error) {
                 throw error;
             }
-        }
+        },
+
+        findOneById: async (id) => {
+            try {
+                const attendance = await attendanceRepository.findOneById(id);
+                return attendance;
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        findOneDetailById: async (id) => {
+            try {
+                const attendance = await attendanceRepository.findOneDetailById(id);
+                return attendance;
+            } catch (error) {
+                throw error;
+            }
+        },
     };
 }
 

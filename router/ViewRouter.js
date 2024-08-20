@@ -89,17 +89,32 @@ router.get(
 
 router.get(
     ['/attendance_scan'],
+    [authMiddleware.verifyUserToken],
     viewController.attendance_scan
 );
 
 router.get(
     ['/attendances'],
+    [authMiddleware.verifyUserToken],
     viewController.attendance
 );
 
 router.get(
     ['/attendance_registration'],
+    [authMiddleware.verifyUserToken],
     viewController.attendance_registration
+);
+
+router.get(
+    ['/attendance_edit'],
+    [authMiddleware.verifyUserToken],
+    viewController.attendance_edit
+);
+
+router.get(
+    ['/attendance_detail'],
+    [authMiddleware.verifyUserToken],
+    viewController.attendance_detail
 );
 
 module.exports = router;

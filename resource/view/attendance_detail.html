@@ -12,6 +12,7 @@
     <script type="text/javascript" src="/js/jQuery.js"></script>
     <script type="text/javascript" src="/js/dataTable.js"></script>
     <script type="text/javascript" src="/js/sweetAlert.js"></script>
+    <script type="text/javascript" src="/js/qrcode.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -162,13 +163,18 @@
         </div>
     </nav>
 
+    <h3 class="mb-4 text-center mt-3">Scan Attendance QR Code</h3>
+    <div class="container mt-4" style="max-width: 400px;">
+        
+        <div class="card shadow-sm p-3 text-center">
+            <div id="qrCode" class="border"></div>
+        </div>
+    </div>
+
     <!-- Student List -->
     <div class="table-container">
         <div class="header-container">
-            <h2>Student List</h2>
-        </div>
-        <div class="search-container">
-            <a class="btn btn-add" href="/student_registration"><i class="fas fa-plus"></i> <i class="fas fa-user"></i></a>
+            <h2>Attendance List</h2>
         </div>
         <table class="table table-striped display" id="studentTable">
             <thead>
@@ -176,11 +182,8 @@
                     <th>Sr</th>
                     <th>Role</th>
                     <th>Full Name</th>
-                    <th>NRC</th>
                     <th>Phone</th>
                     <th>Email</th>
-                    <th>Status</th>
-                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="studentTableBody">
@@ -194,6 +197,9 @@
         let dataTable = null;
 
         $(document).ready(function() {
+            let params = new URL(document.location.toString()).searchParams;
+            let attendanceId = params.get("id");
+            fetchAttendanceDetailById(attendanceId);
             fetchStudents();
         });
 
@@ -235,6 +241,34 @@
             );
         }
 
+        function fetchAttendanceDetailById(attendanceId) {
+            const settings = {
+                "url": "/api/attendances/detail?id=" + attendanceId,
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                    console.log(data);
+                    if (data.status === 200) {
+                        const attendance = data.data;
+                        makeQRCode(`${attendance.term_id},${attendance.attendance_code}`);
+                    }
+                }
+            );
+        }
+
+        function makeQRCode(text) {
+            const qrcode = new QRCode("qrCode", {
+                text: text,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        }
+
         function deleteStudentById(studentId) {
             const settings = {
                 "url": "/api/students/" + studentId,
@@ -269,20 +303,7 @@
             );
         }
 
-        function onDeleteStudent(studentId) {
-            swal({
-                title: "Confirm Deletion",
-                text: `Are you sure you want to delete this student?`,
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    deleteStudentById(studentId);
-                }
-            });
-        }
+        
 
         function showStudentData(students) {
             // Clear the existing data
@@ -297,22 +318,8 @@
                 row += `<td class="text-right">${i + 1}</td>`;
                 row += `<td>${student.role_no}</td>`;
                 row += `<td>${student.name}</td>`;
-                row += `<td>${student.nrc}</td>`;
                 row += `<td>${student.phone}</td>`;
                 row += `<td>${student.email}</td>`;
-                row += `<td class="text-center">${student.status == 'ACTIVE' ? '<i class="fa fa-circle status-active"></i>' : '<i class="fa fa-circle status-inactive"></i>'}</td>`;
-                row += `<td class="text-center">
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-cog"></i>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item" href="#">View</a></li>
-                                    <li><a class="dropdown-item" href="/student_edit?id=${student.id}">Edit</a></li>
-                                    <li><a class="dropdown-item" onClick="onDeleteStudent(${student.id})">Delete</a></li>
-                                </ul>
-                            </div>
-                        </td>`;
                 row += `</tr>`;
 
                 $('#studentTableBody').append(row);

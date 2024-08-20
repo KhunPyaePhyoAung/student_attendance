@@ -19,6 +19,18 @@ router.post(
 );
 
 router.get(
+    ['/:id(\\d+)'],
+    [authMiddleware.verifyUserToken],
+    attendanceController.findOneById
+);
+
+router.get(
+    ['/detail'],
+    [authMiddleware.verifyUserToken],
+    attendanceController.findOneDetailById
+);
+
+router.get(
     ['/instructor'],
     [authMiddleware.verifyUserToken],
     attendanceController.getAllAttendancesByInstructorId
