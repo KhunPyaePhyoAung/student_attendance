@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Registration</title>
+    <link type="image/png" rel="icon" href="/icon/icon.png">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/flatpickr.css">
+    <link rel="stylesheet" href="/css/dataTable.css">
+    <link rel="stylesheet" href="/css/fontawesome.css">
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/jQuery.js"></script>
+    <script type="text/javascript" src="/js/validate.min.js"></script>
+    <script type="text/javascript" src="/js/sweetAlert.js"></script>
+    <script type="text/javascript" src="/js/flatpickr.js"></script>
+    <script type="text/javascript" src="/js/dataTable.js"></script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ecf0f3;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #1e56a6;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #fff !important;
+            cursor: pointer;
+        }
+
+        .main-content {
+            width: 100%;
+            padding: 20px;
+        }
+
+        .main-content .container {
+            max-width: 800px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group label {
+            font-weight: 600;
+        }
+
+        .form-control {
+            border-radius: 0.25rem;
+            box-shadow: none;
+        }
+
+        .btn-custom, .btn-cancel {
+            border-radius: 25px;
+            font-weight: 600;
+            border: none;
+            width: 100%;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .btn-custom {
+            background-color: #1e56a6;
+            color: #fff;
+        }
+
+        .btn-custom:hover {
+            background-color: #039BE5;
+        }
+
+        .btn-cancel {
+            background-color: #ffffff;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-cancel:hover {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
+        .gender-group .form-check {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .gender-group .form-check-input {
+            margin-right: 5px;
+        }
+
+        .invalid-feedback {
+            display: block;
+            min-height: 20px;
+        }
+
+        .navbar-nav {
+            margin-left: auto;
+        }
+
+        .navbar-nav .nav-item.dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu {
+            display: none;
+        }
+
+        .dropdown-menu a {
+            cursor: pointer;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #e9ecef;
+            color: #1e56a6;
+        }
+
+        .btn-add {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 0.25rem;
+            padding: 5px 10px;
+        }
+
+        .btn-add:hover {
+            background-color: #218838;
+        }
+
+        .subject-table-container {
+            overflow-y: auto; /* Vertical scrollbar for overflow */
+            width: 100%; /* Make sure the container fills the parent */
+            overflow-x: hidden; /* Hide horizontal overflow if needed */
+            border-radius: 5px; /* Optional: Add rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+            background-color: #fff; /* Ensure background is white or another color */
+            padding: 10px; /* Optional: Add padding around the table */
+            margin-top: 10px; /* Optional: Add margin for spacing */
+        }
+
+        .subjects-table-container .table {
+            width: 100%; /* Ensure the table width is 100% of its container */
+        }
+
+        .student-table-container {
+            max-height: 500px; /* Maximum height for the table container */
+            overflow-y: auto; /* Vertical scrollbar for overflow */
+            width: 100%; /* Make sure the container fills the parent */
+            overflow-x: hidden; /* Hide horizontal overflow if needed */
+            border-radius: 5px; /* Optional: Add rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+            background-color: #fff; /* Ensure background is white or another color */
+            padding: 10px; /* Optional: Add padding around the table */
+            margin-top: 10px; /* Optional: Add margin for spacing */
+        }
+
+        .student-table-container .table {
+            width: 100%; /* Ensure the table width is 100% of its container */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Attendance System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/terms">Terms</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/subjects">Subjects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/instructors">Instructors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/students">Students</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/attendances">Attendance</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Profile
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="/profile">Your Profile</a></li>
+                            <li><a class="dropdown-item" href="/change-password">Change Password</a></li>
+                            <li><a class="dropdown-item" id="logoutMenuItem">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="main-content">
+        <div class="container">
+            <h2 class="text-center mb-4">Attendance Registration</h2>
+            <form novalidate id="attendanceForm">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="date">Start Date</label>
+                            <input type="date" class="form-control" id="date" name="start_date" required>
+                            <div class="invalid-feedback" id="dateErrorMessage"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="startTime">Start Time</label>
+                            <input type="time" class="form-control" id="startTime" name="start_time" required>
+                            <div class="invalid-feedback" id="startTimeErrorMessage"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="endTime">End Time</label>
+                            <input type="time" class="form-control" id="endTime" name="end_time" required>
+                            <div class="invalid-feedback" id="endTimeErrorMessage"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 form-group">
+                    <label for="term">Term</label>
+                    <select class="form-control" id="term" name="term" required>
+                        <option value="ACTIVE">Active</option>
+                        <option value="INACTIVE">Inactive</option>
+                    </select>
+                    <div class="invalid-feedback" id="termErrorMessage"></div>
+                </div>
+
+                <div class="col-12 form-group">
+                    <label for="subject">Subject</label>
+                    <select class="form-control" id="subject" name="subject" required>
+                        <option value="ACTIVE">Active</option>
+                        <option value="INACTIVE">Inactive</option>
+                    </select>
+                    <div class="invalid-feedback" id="subjectErrorMessage"></div>
+                </div>
+                
+                <button type="submit" class="btn btn-custom mt-3" id="registerBtn">Register</button>
+                <a class="btn btn-cancel" href="/attendances">Cancel</a>
+            </form>            
+        </div>
+    </section>
+
+    <script>
+
+        const logoutMenuItem = $('#logoutMenuItem');
+        const attendanceForm = $('#attendanceForm');
+        const dateInput = $('#date');
+        const startTimeInput = $('#startTime');
+        const endTimeInput = $('#endTime');
+        const termInput = $('#term');
+        const subjectInput = $('#subject');
+        const registerBtn = $('#registerBtn');
+
+        const dateErrorMessage = $('#dateErrorMessage');
+        const startTimeErrorMessage = $('#startTimeErrorMessage');
+        const endTimeErrorMessage = $('#endTimeErrorMessage');
+        const termErrorMessage = $('#termErrorMessage');
+        const subjectErrorMessage = $('#subjectErrorMessage');
+
+        const attendanceConstraint = {
+            date: {
+                presence: {
+                    message: '^Date is required'
+                }
+            },
+            start_time: {
+                presence: {
+                    message: '^Start time is required'
+                }
+            },
+            end_time: {
+                presence: {
+                    message: '^End time is required'
+                }
+            },
+            term: {
+                presence: {
+                    message: '^Term is required'
+                }
+            },
+            subject: {
+                presence: {
+                    message: '^Subject is required'
+                }
+            },
+        };
+
+
+        attendanceForm.on('submit', function(e){
+            e.preventDefault();
+        });
+
+        $('.input').on('input', function(e) {
+            clearFormErrorMessages(e.target.id);
+        });
+
+        registerBtn.on('click', function() {
+            if (validateForm()) {
+                const attendance = getFormData();
+                createAttendance(attendance);
+            }
+            
+        });
+
+        logoutMenuItem.on('click', function() {
+            swal({
+                title: "Are you sure to logout?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    logout();
+                }
+            });
+        });
+
+        function createAttendance(attendance) {
+            const settings = {
+                "url": "/api/attendances/roll_call",
+                "method": "POST",
+                "timeout": 0,
+                "headers": {
+                "Content-Type": "application/json"
+                },
+                "data": JSON.stringify(attendance),
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                    if (data.status === 201) {
+                        clearAttendanceForm();
+                        window.scrollTo(0, 0);
+                        swal("Successfully created a new attendance", {
+                            icon: "success",
+                        });
+                    } else if (data.status === 400) {
+                        swal(data.message, {
+                            icon: "error",
+                        });
+                    }
+                }
+            );
+        }
+
+        function getFormData() {
+            const attendance = {};
+            const dataArray = attendanceForm.serializeArray();
+            dataArray.forEach(data => {
+                attendance[data.name] = data.value;
+            });
+            return attendance;
+        }
+
+        function clearFormErrorMessages(sourceId) {
+            if (sourceId) {
+                if (sourceId === 'date') {
+                    dateErrorMessage.text('');
+                    dateInput.removeClass('is-invalid');
+                } else if (sourceId === 'startTime') {
+                    startTimeErrorMessage.text('');
+                    startTimeInput.removeClass('is-invalid');
+                } else if (sourceId === 'endDate') {
+                    endTimeErrorMessage.text('');
+                    endTimeInput.removeClass('is-invalid');
+                } else if (sourceId === 'term') {
+                    termErrorMessage.text('');
+                    termInput.removeClass('is-invalid');
+                }
+            } else {
+                dateErrorMessage.text('');
+                startTimeErrorMessage.text('');
+                endTimeErrorMessage.text('');
+                termErrorMessage.text('');
+                subjectErrorMessage.text('');
+
+                dateInput.removeClass('is-invalid');
+                startTimeInput.removeClass('is-invalid');
+                endTimeInput.removeClass('is-invalid');
+                termInput.removeClass('is-invalid');
+                subjectInput.removeClass('is-invalid');
+            }
+            
+        }
+
+
+        function validateForm() {
+            clearFormErrorMessages();
+
+            const term = getFormData();
+
+            const checkResult = validate(term, attendanceConstraint);
+
+            if (!checkResult) {
+                return true;
+            }
+
+            if (checkResult.date) {
+                dateErrorMessage.text(checkResult.date[0]);
+                dateInput.addClass('is-invalid');
+            }
+
+            if (checkResult.start_time) {
+                startTimeErrorMessage.text(checkResult.start_time[0]);
+                startTimeInput.addClass('is-invalid');
+            }
+
+            if (checkResult.end_time) {
+                endTimeErrorMessage.text(checkResult.end_time[0]);
+                endTimeInput.addClass('is-invalid');
+            }
+
+            if (checkResult.term) {
+                termErrorMessage.text(checkResult.term[0]);
+                termInput.addClass('is-invalid');
+            }
+
+            if (checkResult.subject) {
+                subjectErrorMessage.text(checkResult.subject[0]);
+                subjectInput.addClass('is-invalid');
+            }
+
+            return false;
+        }
+
+        function clearAttendanceForm() {
+            dateInput.val('');
+            startTimeInput.val('');
+            endTimeInput.val('');
+            termInput.val('');
+            subjectInput.val('');
+        }
+
+        function logout() {
+            console.log('Logging out');
+            const settings = {
+                "url": "/api/auth/logout",
+                "method": "POST",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                console.log(data);
+                    if (data.status === 204) {
+                        window.location.replace('/login');
+                    }
+                }
+            );
+        }
+    </script>
+</body>
+</html>

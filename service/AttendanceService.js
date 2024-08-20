@@ -24,6 +24,30 @@ const attendanceService = ({attendanceRepository}) => {
             } catch (error) {
                 throw error;
             }
+        },
+
+        createRollCall: async (rollCall) => {
+            try {
+                const hasOpenRollCall = await attendanceRepository.checkInstructorHasOpeningRollCall(rollCall.instructor_id);
+                if (hasOpenRollCall) {
+                    const error = new Error();
+                    error.message = 'You have an opening roll call.';
+                    throw error;
+                }
+                const createdRollCall = await attendanceRepository.createRollCall(rollCall);
+                return createdRollCall;
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        getAllAttendancesByInstructorId: async (instructorId) => {
+            try {
+                const attendances = await attendanceRepository.getAllAttendancesByInstructorId(instructorId);
+                return attendances;
+            } catch (error) {
+                throw error;
+            }
         }
     };
 }

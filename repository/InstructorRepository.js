@@ -135,7 +135,7 @@ const instructorRepository = () => {
                         resolve(results[0]);
                     }
                 });
-            });;
+            });
         },
 
         updateById: async (id, instructor) => {

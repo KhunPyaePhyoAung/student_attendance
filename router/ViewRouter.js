@@ -92,4 +92,14 @@ router.get(
     viewController.attendance_scan
 );
 
+router.get(
+    ['/attendances'],
+    viewController.attendance
+);
+
+router.get(
+    ['/attendance_registration'],
+    viewController.attendance_registration
+);
+
 module.exports = router;

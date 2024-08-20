@@ -12,4 +12,16 @@ router.post(
     attendanceController.recordAttendanceQR
 );
 
+router.post(
+    ['/roll_call'],
+    [authMiddleware.verifyUserToken],
+    attendanceController.createRollCall
+);
+
+router.get(
+    ['/instructor'],
+    [authMiddleware.verifyUserToken],
+    attendanceController.getAllAttendancesByInstructorId
+);
+
 module.exports = router;
