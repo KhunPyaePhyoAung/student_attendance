@@ -51,7 +51,7 @@ app.use(
 );
 
 app.use(
-    '/api/attendance',
+    '/api/attendances',
     attendanceRouter
 );
 

@@ -1,4 +1,7 @@
+TRUNCATE TABLE `user`;
+
 INSERT INTO user (id, email, password, role, status) VALUES
+(1, 'admin@gmail.com', '21232f297a57a5a743894a0e4a801fc3', 'ADMIN', 'ACTIVE'),
 (2, 'mathinyanantsoe1@gmail.com', 'e2e4d4b4aa8721c7f49a44e1f0a93fdc', 'STUDENT', 'ACTIVE'),
 (3, 'ayeyuaung2@gmail.com', 'e2e4d4b4aa8721c7f49a44e1f0a93fdc', 'STUDENT', 'ACTIVE'),
 (4, 'mgzawhtetaung3@gmail.com', 'e2e4d4b4aa8721c7f49a44e1f0a93fdc', 'STUDENT', 'ACTIVE'),
@@ -57,6 +60,7 @@ INSERT INTO user (id, email, password, role, status) VALUES
 (57, 'paingheinkyaw61@gmail.com', 'e2e4d4b4aa8721c7f49a44e1f0a93fdc', 'STUDENT', 'ACTIVE'),
 (58, 'mathidaayemin62@gmail.com', 'e2e4d4b4aa8721c7f49a44e1f0a93fdc', 'STUDENT', 'ACTIVE');
 
+TRUNCATE TABLE `student`;
 
 INSERT INTO student (id, name, nrc, role_no, phone, family_phone, gender, date_of_birth, address) VALUES
 (2, 'Ma Thin Yanant Soe', '12/KAMA(N)348726', 'II IT-1', '09123456789', '09123456789', 'FEMALE', '2003-05-14', '123 Main St, Yangon'),
@@ -116,3 +120,15 @@ INSERT INTO student (id, name, nrc, role_no, phone, family_phone, gender, date_o
 (56, 'Bhone Myat Thu', '7/BAGO(N)529348', 'II IT-60', '09999999956', '09123456768', 'MALE', '2003-06-25', '6465 Pine St, Yangon'),
 (57, 'Paing Hein Kyaw', '1/MONY(N)368294', 'II IT-ext 2', '09999999957', '09123456767', 'MALE', '2004-03-15', '6667 Elm St, Yangon'),
 (58, 'Ma Thida Aye Min', '1/SHWE(N)491837', 'II IT-Ext 3', '09999999958', '09123456766', 'FEMALE', '2004-02-20', '6869 Birch St, Yangon');
+
+TRUNCATE TABLE `subject`;
+
+INSERT INTO `subject` (`id`, `code`, `name`, `created_at`) VALUES
+(1, '1111', 'Java', '2024-08-19 08:38:12'),
+(2, '2222', 'C++', '2024-08-19 08:38:20'),
+(3, '3333', 'Software Engineering', '2024-08-19 08:38:34'),
+(4, '4444', 'Maths', '2024-08-19 08:38:47'),
+(5, '5555', 'English', '2024-08-19 08:38:55'),
+(6, '6666', 'Physics', '2024-08-19 08:39:01'),
+(7, '7777', 'Drawing', '2024-08-19 08:39:07'),
+(8, '8888', 'Networking', '2024-08-19 08:39:20');

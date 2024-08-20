@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const authMiddleware = require('../middleware/AuthMiddleware');
-const attendanceController = require('../controller/AttendanceController')({});
+const attendanceRepository = require('../repository/AttendanceRepository')();
+const attendanceService = require('../service/AttendanceService')({attendanceRepository});
+const attendanceController = require('../controller/AttendanceController')({attendanceService});
 
 router.post(
     ['/attendance_scan'],
