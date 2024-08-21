@@ -5,7 +5,15 @@ const viewController = ({tokenService}) => {
 
     return {
         home: async (req, res) => {
-            const homeHtml = path.join(viewFolder, 'home.html');
+            const role = req.user.role;
+            let homeHtml;
+            if (role === 'ADMIN') {
+                homeHtml = path.join(viewFolder, 'admin_home.html');
+            } else if (role === 'INSTRUCTOR') {
+                homeHtml = path.join(viewFolder, 'instructor_home.html');
+            } else if (role === 'STUDENT') {
+                homeHtml = path.join(viewFolder, 'student_home.html');
+            }
             return res.sendFile(homeHtml);
         },
 
@@ -39,12 +47,28 @@ const viewController = ({tokenService}) => {
         },
 
         students: (req, res) => {
-            const html = path.join(viewFolder, 'students.html');
+            const role = req.user.role;
+            let html;
+            if (role === 'ADMIN') {
+                html = path.join(viewFolder, 'admin_students.html');
+            } else if (role === 'INSTRUCTOR') {
+                html = path.join(viewFolder, 'instructor_students.html');
+            } else if (role === 'STUDENT') {
+                html = path.join(viewFolder, 'student_students.html');
+            }
             return res.sendFile(html);
         },
 
         instructors: (req, res) => {
-            const html = path.join(viewFolder, 'instructors.html');
+            const role = req.user.role;
+            let html;
+            if (role === 'ADMIN') {
+                html = path.join(viewFolder, 'admin_instructors.html');
+            } else if (role === 'INSTRUCTOR') {
+                html = path.join(viewFolder, 'instructor_instructors.html');
+            } else if (role === 'STUDENT') {
+                html = path.join(viewFolder, 'student_instructors.html');
+            }
             return res.sendFile(html);
         },
 
@@ -59,7 +83,15 @@ const viewController = ({tokenService}) => {
         },
 
         subjects: (req, res) => {
-            const html = path.join(viewFolder, 'subjects.html');
+            const role = req.user.role;
+            let html;
+            if (role === 'ADMIN') {
+                html = path.join(viewFolder, 'admin_subjects.html');
+            } else if (role === 'INSTRUCTOR') {
+                html = path.join(viewFolder, 'instructor_subjects.html');
+            } else if (role === 'STUDENT') {
+                html = path.join(viewFolder, 'student_subjects.html');
+            }
             return res.sendFile(html);
         },
 
@@ -74,7 +106,15 @@ const viewController = ({tokenService}) => {
         },
 
         terms: (req, res) => {
-            const html = path.join(viewFolder, 'terms.html');
+            const role = req.user.role;
+            let html;
+            if (role === 'ADMIN') {
+                html = path.join(viewFolder, 'admin_terms.html');
+            } else if (role === 'INSTRUCTOR') {
+                html = path.join(viewFolder, 'instructor_terms.html');
+            } else if (role === 'STUDENT') {
+                html = path.join(viewFolder, 'student_terms.html');
+            }
             return res.sendFile(html);
         },
 
@@ -89,12 +129,20 @@ const viewController = ({tokenService}) => {
         },
 
         attendance_scan: (req, res) => {
-            const html = path.join(viewFolder, 'attendance_scan.html');
+            const html = path.join(viewFolder, 'student_attendance_scan.html');
             return res.sendFile(html);
         },
 
-        attendance: (req, res) => {
-            const html = path.join(viewFolder, 'attendance.html');
+        attendances: (req, res) => {
+            const role = req.user.role;
+            let html;
+            if (role === 'ADMIN') {
+                html = path.join(viewFolder, 'admin_attendances.html');
+            } else if (role === 'INSTRUCTOR') {
+                html = path.join(viewFolder, 'instructor_attendances.html');
+            } else if (role === 'STUDENT') {
+                html = path.join(viewFolder, 'student_attendances.html');
+            }
             return res.sendFile(html);
         },
 

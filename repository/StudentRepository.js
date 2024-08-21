@@ -35,6 +35,23 @@ const studentRepository = () => {
             });
         },
 
+        findAllForAttendance: async (attendanceId) => {
+            const connection = await getConnection();
+
+            return new Promise((resolve, reject) => {
+                const sql = 'SELECT stu.*, IF(att.student_id IS NOT NULL, "PRESENT", "ABSENT") AS status FROM student stu JOIN term_has_student ths ON ths.student_id = stu.id JOIN term t ON t.id = ths.term_id JOIN roll_call rc ON rc.term_id = t.id LEFT JOIN attendance att ON att.roll_call_id = rc.id AND att.student_id = stu.id WHERE rc.id = ? GROUP BY stu.id ORDER BY stu.role_no;';
+                const params = [attendanceId];
+                connection.query(sql, params, (error, results, fields) => {
+                    if (error) {
+                        reject(new Error(error.sqlMessage));
+                    } else {
+                        resolve(results);
+                    }
+                });
+                connection.release();
+            });
+        },
+
         findOneById: async (id) => {
             const connection = await getConnection();
 

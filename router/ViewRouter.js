@@ -94,9 +94,9 @@ router.get(
 );
 
 router.get(
-    ['/attendances'],
+    ['/sessions'],
     [authMiddleware.verifyUserToken],
-    viewController.attendance
+    viewController.attendances
 );
 
 router.get(

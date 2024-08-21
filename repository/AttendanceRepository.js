@@ -143,7 +143,8 @@ const attendanceRepository = () => {
             const connection = await getConnection();
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT a.*, t.id as term_id, s.id as subject_id FROM roll_call a JOIN term t ON a.term_id = t.id JOIN subject s ON a.subject_id = s.id WHERE a.id = ?';
+                // const sql = 'SELECT a.*, t.id as term_id, s.id as subject_id FROM roll_call a JOIN term t ON a.term_id = t.id JOIN subject s ON a.subject_id = s.id WHERE a.id = ?';
+                const sql = 'SELECT a.id, a.date,a.start_time, a.end_time, a.created_at, a.instructor_id, a.attendance_code, t.id as term_id, s.id as subject_id, CASE WHEN CONCAT(a.date, " ", a.end_time) < NOW() THEN "CLOSED" ELSE a.status END as status FROM roll_call a JOIN term t ON a.term_id = t.id JOIN subject s ON a.subject_id = s.id WHERE a.id = ?;';
                 const params = [id];
                 connection.query(sql, params, (error, results, fields) => {
                     if (error) {
@@ -160,7 +161,7 @@ const attendanceRepository = () => {
             const connection = await getConnection();
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT a.*, t.name as term_name, s.code as subject_code, s.name as subject_name, i.name as instructor_name FROM roll_call a JOIN term t ON a.term_id = t.id JOIN subject s ON a.subject_id = s.id JOIN instructor i ON a.instructor_id = i.id WHERE a.id = ?';
+                const sql = 'SELECT a.id, a.date,a.start_time, a.end_time, a.created_at, a.instructor_id, a.attendance_code, CASE WHEN CONCAT(a.date, " ", a.end_time) < NOW() THEN "CLOSED" ELSE a.status END as status, t.name as term_name, s.code as subject_code, s.name as subject_name, i.name as instructor_name FROM roll_call a JOIN term t ON a.term_id = t.id JOIN subject s ON a.subject_id = s.id JOIN instructor i ON a.instructor_id = i.id WHERE a.id = ?';
                 const params = [id];
                 connection.query(sql, params, (error, results, fields) => {
                     if (error) {

@@ -33,6 +33,11 @@ router.get(
     studentController.findAllByTermId
 );
 
+router.get(
+    '/of_attendance/:attendanceId',
+    studentController.findAllForAttendance
+);
+
 router.post(
     '/',
     studentController.create
@@ -47,5 +52,7 @@ router.delete(
     '/:id',
     studentController.delete
 );
+
+
 
 module.exports = router;

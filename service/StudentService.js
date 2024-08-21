@@ -10,6 +10,15 @@ const studentService = ({studentRepository, userService}) => {
             }
         },
 
+        findAllForAttendance: async (attendanceId) => {
+            try {
+                const students = await studentRepository.findAllForAttendance(attendanceId);
+                return students;
+            } catch (error) {
+                throw error;
+            }
+        },
+
         findAllByTermId: async (termId) => {
             try {
                 const students = await studentRepository.findAllByTermId(termId);

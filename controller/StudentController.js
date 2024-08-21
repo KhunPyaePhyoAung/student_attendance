@@ -22,6 +22,29 @@ const studentController = ({studentService}) => {
             }
         },
 
+        findAllForAttendance: async (req, res) => {
+            const attendanceId = req.params.attendanceId;
+            try {
+                const students = await studentService.findAllForAttendance(attendanceId);
+                return res.status(200).json(
+                    {
+                        status: 200,
+                        meta: {
+                            total: students.length
+                        },
+                        data: students
+                    }
+                );
+            } catch (error) {
+                return res.status(200).json(
+                    {
+                        status: 500,
+                        message: error.message
+                    }
+                );
+            }
+        },
+
         findAllByTermId: async (req, res) => {
             const termId = req.params.termId;
             try {

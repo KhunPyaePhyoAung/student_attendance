@@ -12,6 +12,12 @@ const authController = ({ authService, userService, tokenService }) => {
                 const user = await authService.loginWithEmailAndPassword(email, password);
                 const accessToken = await tokenService.signAccessToken(user);
                 res.cookie('access_token', accessToken);
+                res.cookie('user', `{
+                    id: ${user.id},
+                    name: ${user.name},
+                    email: ${user.email},
+                    role: ${user.role}
+                }`);
 
                 return res.status(200).json({
                     status: 200,
