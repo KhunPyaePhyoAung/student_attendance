@@ -6,7 +6,7 @@ const subjectRepository = () => {
             const connection = await getConnection();
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT * FROM `subject`';
+                const sql = 'SELECT s.*, i.id AS instructor_id, i.name AS instructor_name FROM `subject` s JOIN instructor i ON s.instructor_id = i.id';
                 connection.query(sql, (error, results, fields) => {
                     if (error) {
                         reject(new Error(error.sqlMessage));
@@ -39,7 +39,7 @@ const subjectRepository = () => {
             const connection = await getConnection();
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT * FROM `subject` WHERE `id` = ?';
+                const sql = 'SELECT s.*, i.id AS instructor_id, i.name AS instructor_name FROM `subject` s JOIN instructor i ON s.instructor_id = i.id WHERE s.`id` = ?';
                 const params = [id];
                 connection.query(sql, params, (error, results, fields) => {
                     if (error) {
@@ -85,8 +85,8 @@ const subjectRepository = () => {
             const connection = await getConnection();
 
             const insertedId = await new Promise((resolve, reject) => {
-                const insertSql = 'INSERT INTO `subject` (`code`, `name`) VALUES (?, ?)';
-                const insertParams = [subject.code, subject.name];
+                const insertSql = 'INSERT INTO `subject` (`code`, `name`, `instructor_id`) VALUES (?, ?, ?)';
+                const insertParams = [subject.code, subject.name, subject.instructor_id];
                 connection.query(insertSql, insertParams, (error, result) => {
                     if (error) {
                         if (error.code === 'ER_DUP_ENTRY') {
@@ -120,8 +120,8 @@ const subjectRepository = () => {
             const connection = await getConnection();
 
             const affectedRows = await new Promise((resolve, reject) => {
-                const updateQuery = 'UPDATE `subject` SET `code` = ?, `name` = ? WHERE `id` = ?';
-                const updateParams = [subject.code, subject.name, id];
+                const updateQuery = 'UPDATE `subject` SET `code` = ?, `name` = ?, `instructor_id` = ? WHERE `id` = ?';
+                const updateParams = [subject.code, subject.name, subject.instructor_id, id];
                 connection.query(updateQuery, updateParams, (error, result) => {
                     if (error) {
                         if (error.code === 'ER_DUP_ENTRY') {

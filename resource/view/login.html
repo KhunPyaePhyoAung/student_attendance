@@ -10,6 +10,7 @@
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
     <script type="text/javascript" src="/js/validate.min.js"></script>
+    <script type="text/javascript" src="/js/sweetAlert.js"></script>
     <style>
         * {
             margin: 0;
@@ -283,6 +284,10 @@
                         } else if (field === 'password') {
                             passwordErrorMessage.text(message);
                         }
+                    });
+                } else if (data.status === 403) {
+                    swal(data.message, {
+                        icon: "error",
                     });
                 } else if (data.status === 500) {
                     console.log(data);

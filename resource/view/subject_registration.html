@@ -175,6 +175,13 @@
                         
                     </div>
                 </div>
+                
+                <div class="col-12 form-group">
+                    <label for="instructor">Instructor</label>
+                    <select class="form-control input" id="instructor" name="instructor_id" required>
+                    </select>
+                    <div class="invalid-feedback" id="instructorErrorMessage"></div>
+                </div>
                 <button type="submit" class="btn btn-custom" id="registerBtn">Register</button>
                 <a class="btn btn-cancel" href="/subjects">Cancel</a>
             </form>
@@ -186,10 +193,12 @@
         const subjectForm = $('#subjectForm');
         const codeInput = $('#code');
         const nameInput = $('#name');
+        const instructorInput = $('#instructor');
         const registerBtn = $('#registerBtn');
 
         const codeErrorMessage = $('#codeErrorMessage');
         const nameErrorMessage = $('#nameErrorMessage');
+        const instructorErrorMessage = $('#instructorErrorMessage');
 
         const subjectConstraint = {
             code: {
@@ -198,13 +207,13 @@
                     message: '^Code is required'
                 },
                 format: {
-                    pattern: /^[A-Z]{1,4}-\d{4,6}$/,
-                    message: '^Code must be [1-4 capital letters]-[4-6 digits]'
+                    pattern: /^[A-Z]{2,4}-\d{4,6}$/,
+                    message: '^Code must be [2-4 capital letters]-[4-6 digits]'
                 },
                 length: {
-                    minimum: 6,
+                    minimum: 7,
                     maximum: 11,
-                    message: '^Code must be between 6 and 11 characters'
+                    message: '^Code must be between 7 and 11 characters'
                 },
             },
             name: {
@@ -216,10 +225,12 @@
                     maximum: 250,
                     message: '^Name cannot be more than 250 characters'
                 }
-            },
+            }
         };
 
-
+        $(document).ready(function() {
+            fetchAndAddInstructors();
+        });
 
 
         subjectForm.on('submit', function(e){
@@ -274,6 +285,45 @@
                         window.scrollTo(0, 0);
                         swal("Successfully created a new subject", {
                             icon: "success",
+                        });
+                    } else if (data.status === 400) {
+                        const errors = data.errors;
+                        console.log(data);
+                        errors.forEach(element => {
+                            const field = element.field;
+                            const message = element.message;
+
+                            console.log(field);
+                            console.log(message);
+
+                            if (field === 'code') {
+                                codeErrorMessage.text(message);
+                                codeInput.addClass('is-invalid');
+                            } else if (field === 'name') {
+                                nameErrorMessage.text(message);
+                                nameInput.addClass('is-invalid');
+                            }
+                        });
+                    }
+                }
+            );
+        }
+
+        function fetchAndAddInstructors() {
+            const settings = {
+                "url": "/api/instructors",
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                console.log(data);
+                    if (data.status === 200) {
+                        instructorInput.append(`<option value="">-- select an instructor --</option>`);
+                        data.data.forEach(instructor => {
+                            instructorInput.append(`<option value="${instructor.id}">${instructor.name}</option>`);
                         });
                     } else if (data.status === 400) {
                         const errors = data.errors;

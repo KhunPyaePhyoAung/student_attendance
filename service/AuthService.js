@@ -12,6 +12,12 @@ const authService = ({ userRepository, passwordEncryptService} ) => {
                     throw error;
                 }
 
+                if (user.status === 'INACTIVE') {
+                    error.field = 'account';
+                    error.message = 'Your account is inactive.';
+                    throw error;
+                }
+
                 if (!passwordEncryptService.match(password, user.password)) {
                     error.field = 'password';
                     error.message = 'Incorrect password';

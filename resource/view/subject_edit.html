@@ -182,6 +182,12 @@
                         
                     </div>
                 </div>
+                <div class="col-12 form-group">
+                    <label for="instructor">Instructor</label>
+                    <select class="form-control input" id="instructor" name="instructor_id" required>
+                    </select>
+                    <div class="invalid-feedback" id="instructorErrorMessage"></div>
+                </div>
                 <button type="submit" class="btn btn-custom" id="registerBtn">Update</button>
                 <a class="btn btn-cancel" href="/subjects">Cancel</a>
             </form>
@@ -195,10 +201,12 @@
         const subjectForm = $('#subjectForm');
         const idInput = $('#id');
         const codeInput = $('#code');
+        const instructorInput = $('#instructor');
         const nameInput = $('#name');
 
         const codeErrorMessage = $('#codeErrorMessage');
         const nameErrorMessage = $('#nameErrorMessage');
+        const instructorErrorMessage = $('#instructorErrorMessage');
 
         const subjectConstraint = {
             code: {
@@ -207,13 +215,13 @@
                     message: '^Code is required'
                 },
                 format: {
-                    pattern: /^[A-Z]{1,4}-\d{4,6}$/,
-                    message: '^Code must be [1-4 capital letters]-[4-6 digits]'
+                    pattern: /^[A-Z]{2,4}-\d{4,6}$/,
+                    message: '^Code must be [2-4 capital letters]-[4-6 digits]'
                 },
                 length: {
-                    minimum: 6,
+                    minimum: 7,
                     maximum: 11,
-                    message: '^Code must be between 6 and 11 characters'
+                    message: '^Code must be between 7 and 11 characters'
                 },
             },
             name: {
@@ -227,6 +235,10 @@
                 }
             },
         };
+
+        $(document).ready(function() {
+            fetchAndAddInstructors();
+        });
 
         subjectForm.on('submit', function(e){
             e.preventDefault();
@@ -258,12 +270,6 @@
             });
         });
 
-        $(document).ready(function() {
-            let params = new URL(document.location.toString()).searchParams;
-            let subjectId = params.get("id");
-            fetchSubjectById(subjectId);
-        })
-
 
         // ---------------------- Functions ----------------------------------
 
@@ -271,6 +277,7 @@
             idInput.val(subject.id);
             codeInput.val(subject.code);
             nameInput.val(subject.name);
+            instructorInput.val(subject.instructor_id);
         }
 
         function updateSubject(subject) {
@@ -298,6 +305,49 @@
                         errors.forEach(element => {
                             const field = element.field;
                             const message = element.message
+
+                            console.log(field);
+                            console.log(message);
+
+                            if (field === 'code') {
+                                codeErrorMessage.text(message);
+                                codeInput.addClass('is-invalid');
+                            } else if (field === 'name') {
+                                nameErrorMessage.text(message);
+                                nameInput.addClass('is-invalid');
+                            }
+                        });
+                    }
+                }
+            );
+        }
+
+        function fetchAndAddInstructors() {
+            const settings = {
+                "url": "/api/instructors",
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                console.log(data);
+                    if (data.status === 200) {
+                        instructorInput.append(`<option value="">-- select an instructor --</option>`);
+                        data.data.forEach(instructor => {
+                            instructorInput.append(`<option value="${instructor.id}">${instructor.name}</option>`);
+                        });
+                        
+                        let params = new URL(document.location.toString()).searchParams;
+                        let subjectId = params.get("id");
+                        fetchSubjectById(subjectId);
+                    } else if (data.status === 400) {
+                        const errors = data.errors;
+                        console.log(data);
+                        errors.forEach(element => {
+                            const field = element.field;
+                            const message = element.message;
 
                             console.log(field);
                             console.log(message);

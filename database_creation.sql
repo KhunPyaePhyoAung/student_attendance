@@ -1,293 +1,205 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Aug 20, 2024 at 05:20 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- MySQL Workbench Forward Engineering
 
-SET FOREIGN_KEY_CHECKS=0;
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
+-- -----------------------------------------------------
+-- Schema student_attendance
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `student_attendance` ;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+-- -----------------------------------------------------
+-- Schema student_attendance
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `student_attendance` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
+USE `student_attendance` ;
 
---
--- Database: `student_attendance`
---
-CREATE DATABASE IF NOT EXISTS `student_attendance` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-USE `student_attendance`;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `instructor`
---
-
-DROP TABLE IF EXISTS `instructor`;
-CREATE TABLE `instructor` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `name` varchar(100) DEFAULT NULL,
-  `nrc` varchar(45) NOT NULL,
-  `gender` enum('MALE','FEMALE') NOT NULL,
-  `date_of_birth` date NOT NULL,
-  `phone` varchar(45) NOT NULL,
-  `address` varchar(500) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Truncate table before insert `instructor`
---
-
-TRUNCATE TABLE `instructor`;
--- --------------------------------------------------------
-
---
--- Table structure for table `roll_call`
---
-
-DROP TABLE IF EXISTS `roll_call`;
-CREATE TABLE `roll_call` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `date` date NOT NULL,
-  `start_time` time NOT NULL,
-  `end_time` time NOT NULL,
-  `status` enum('OPENING','CLOSED') NOT NULL DEFAULT 'OPENING',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `instructor_id` int(10) UNSIGNED NOT NULL,
-  `subject_id` int(11) NOT NULL,
-  `attendance_code` varchar(500) NOT NULL,
-  `term_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Truncate table before insert `roll_call`
---
-
-TRUNCATE TABLE `roll_call`;
--- --------------------------------------------------------
-
---
--- Table structure for table `student`
---
-
-DROP TABLE IF EXISTS `student`;
-CREATE TABLE `student` (
-  `id` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `nrc` varchar(45) NOT NULL,
-  `role_no` varchar(45) NOT NULL,
-  `phone` varchar(45) NOT NULL,
-  `family_phone` varchar(45) NOT NULL,
-  `gender` enum('MALE','FEMALE') NOT NULL,
-  `date_of_birth` date NOT NULL,
-  `address` varchar(500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `subject`
---
-
-DROP TABLE IF EXISTS `subject`;
-CREATE TABLE `subject` (
-  `id` int(11) NOT NULL,
-  `code` varchar(45) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+-- -----------------------------------------------------
+-- Table `student_attendance`.`instructor`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `student_attendance`.`instructor` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NULL,
+  `nrc` VARCHAR(45) NOT NULL,
+  `gender` ENUM('MALE', 'FEMALE') NOT NULL,
+  `date_of_birth` DATE NOT NULL,
+  `phone` VARCHAR(45) NOT NULL,
+  `address` VARCHAR(500) NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `nrc_UNIQUE` (`nrc` ASC))
+ENGINE = InnoDB;
 
 
--- --------------------------------------------------------
+-- -----------------------------------------------------
+-- Table `student_attendance`.`user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `student_attendance`.`user` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(100) NOT NULL,
+  `role` ENUM('ADMIN', 'INSTRUCTOR', 'STUDENT') NOT NULL,
+  `status` ENUM('ACTIVE', 'INACTIVE') NOT NULL DEFAULT 'ACTIVE',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC))
+ENGINE = InnoDB;
 
---
--- Table structure for table `term`
---
 
-DROP TABLE IF EXISTS `term`;
-CREATE TABLE `term` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+-- -----------------------------------------------------
+-- Table `student_attendance`.`student`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `student_attendance`.`student` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(50) NOT NULL,
+  `nrc` VARCHAR(45) NOT NULL,
+  `role_no` VARCHAR(45) NOT NULL,
+  `phone` VARCHAR(45) NOT NULL,
+  `family_phone` VARCHAR(45) NOT NULL,
+  `gender` ENUM('MALE', 'FEMALE') NOT NULL,
+  `date_of_birth` DATE NOT NULL,
+  `address` VARCHAR(500) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `nrc_UNIQUE` (`nrc` ASC))
+ENGINE = InnoDB;
 
 
-DROP TABLE IF EXISTS `term_has_student`;
-CREATE TABLE `term_has_student` (
-  `term_id` int(11) NOT NULL,
-  `student_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+-- -----------------------------------------------------
+-- Table `student_attendance`.`subject`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `student_attendance`.`subject` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `code` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `instructor_id` INT UNSIGNED NULL,
+  PRIMARY KEY (`id`, `instructor_id`),
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC),
+  INDEX `fk_subject_instructor1_idx` (`instructor_id` ASC),
+  CONSTRAINT `fk_subject_instructor1`
+    FOREIGN KEY (`instructor_id`)
+    REFERENCES `student_attendance`.`instructor` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
--- --------------------------------------------------------
 
---
--- Table structure for table `term_has_subject`
---
+-- -----------------------------------------------------
+-- Table `student_attendance`.`term`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `student_attendance`.`term` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `start_date` DATE NOT NULL,
+  `end_date` DATE NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC))
+ENGINE = InnoDB;
 
-DROP TABLE IF EXISTS `term_has_subject`;
-CREATE TABLE `term_has_subject` (
-  `term_id` int(11) NOT NULL,
-  `subject_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- --------------------------------------------------------
+-- -----------------------------------------------------
+-- Table `student_attendance`.`term_has_subject`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `student_attendance`.`term_has_subject` (
+  `term_id` INT NOT NULL,
+  `subject_id` INT NOT NULL,
+  PRIMARY KEY (`term_id`, `subject_id`),
+  INDEX `fk_term_has_subject_subject1_idx` (`subject_id` ASC),
+  INDEX `fk_term_has_subject_term_idx` (`term_id` ASC),
+  CONSTRAINT `fk_term_has_subject_term`
+    FOREIGN KEY (`term_id`)
+    REFERENCES `student_attendance`.`term` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_term_has_subject_subject1`
+    FOREIGN KEY (`subject_id`)
+    REFERENCES `student_attendance`.`subject` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
---
--- Table structure for table `user`
---
 
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(100) NOT NULL,
-  `role` enum('ADMIN','INSTRUCTOR','STUDENT') NOT NULL,
-  `status` enum('ACTIVE','INACTIVE') NOT NULL DEFAULT 'ACTIVE',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+-- -----------------------------------------------------
+-- Table `student_attendance`.`term_has_student`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `student_attendance`.`term_has_student` (
+  `term_id` INT NOT NULL,
+  `student_id` INT NOT NULL,
+  PRIMARY KEY (`term_id`, `student_id`),
+  INDEX `fk_term_has_student_student1_idx` (`student_id` ASC),
+  INDEX `fk_term_has_student_term1_idx` (`term_id` ASC),
+  CONSTRAINT `fk_term_has_student_term1`
+    FOREIGN KEY (`term_id`)
+    REFERENCES `student_attendance`.`term` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_term_has_student_student1`
+    FOREIGN KEY (`student_id`)
+    REFERENCES `student_attendance`.`student` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
---
--- Indexes for dumped tables
---
 
---
--- Indexes for table `instructor`
---
-ALTER TABLE `instructor`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `nrc_UNIQUE` (`nrc`);
+-- -----------------------------------------------------
+-- Table `student_attendance`.`roll_call`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `student_attendance`.`roll_call` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `date` DATE NOT NULL,
+  `start_time` TIME NOT NULL,
+  `end_time` TIME NOT NULL,
+  `status` ENUM('OPENING', 'CLOSED') NOT NULL DEFAULT 'OPENING',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `instructor_id` INT UNSIGNED NOT NULL,
+  `subject_id` INT NOT NULL,
+  `attendance_code` VARCHAR(500) NOT NULL,
+  `term_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_roll_call_instructor1_idx` (`instructor_id` ASC),
+  INDEX `fk_roll_call_subject1_idx` (`subject_id` ASC),
+  INDEX `fk_roll_call_term1_idx` (`term_id` ASC),
+  CONSTRAINT `fk_roll_call_instructor1`
+    FOREIGN KEY (`instructor_id`)
+    REFERENCES `student_attendance`.`instructor` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_roll_call_subject1`
+    FOREIGN KEY (`subject_id`)
+    REFERENCES `student_attendance`.`subject` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_roll_call_term1`
+    FOREIGN KEY (`term_id`)
+    REFERENCES `student_attendance`.`term` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
---
--- Indexes for table `roll_call`
---
-ALTER TABLE `roll_call`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_roll_call_instructor1_idx` (`instructor_id`),
-  ADD KEY `fk_roll_call_subject1_idx` (`subject_id`),
-  ADD KEY `fk_roll_call_term1_idx` (`term_id`);
 
---
--- Indexes for table `student`
---
-ALTER TABLE `student`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `nrc_UNIQUE` (`nrc`);
+-- -----------------------------------------------------
+-- Table `student_attendance`.`attendance`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `student_attendance`.`attendance` (
+  `roll_call_id` INT UNSIGNED NOT NULL,
+  `student_id` INT NOT NULL,
+  INDEX `fk_attendance_roll_call1_idx` (`roll_call_id` ASC),
+  PRIMARY KEY (`student_id`, `roll_call_id`),
+  CONSTRAINT `fk_attendance_roll_call1`
+    FOREIGN KEY (`roll_call_id`)
+    REFERENCES `student_attendance`.`roll_call` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_attendance_student1`
+    FOREIGN KEY (`student_id`)
+    REFERENCES `student_attendance`.`student` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
---
--- Indexes for table `subject`
---
-ALTER TABLE `subject`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `code_UNIQUE` (`code`);
 
---
--- Indexes for table `term`
---
-ALTER TABLE `term`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name_UNIQUE` (`name`);
-
---
--- Indexes for table `term_has_student`
---
-ALTER TABLE `term_has_student`
-  ADD PRIMARY KEY (`term_id`,`student_id`),
-  ADD KEY `fk_term_has_student_student1_idx` (`student_id`),
-  ADD KEY `fk_term_has_student_term1_idx` (`term_id`);
-
---
--- Indexes for table `term_has_subject`
---
-ALTER TABLE `term_has_subject`
-  ADD PRIMARY KEY (`term_id`,`subject_id`),
-  ADD KEY `fk_term_has_subject_subject1_idx` (`subject_id`),
-  ADD KEY `fk_term_has_subject_term_idx` (`term_id`);
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email_UNIQUE` (`email`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `instructor`
---
-ALTER TABLE `instructor`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `roll_call`
---
-ALTER TABLE `roll_call`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `student`
---
-ALTER TABLE `student`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
-
---
--- AUTO_INCREMENT for table `subject`
---
-ALTER TABLE `subject`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT for table `term`
---
-ALTER TABLE `term`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `user`
---
-ALTER TABLE `user`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `roll_call`
---
-ALTER TABLE `roll_call`
-  ADD CONSTRAINT `fk_roll_call_instructor1` FOREIGN KEY (`instructor_id`) REFERENCES `instructor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_roll_call_subject1` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_roll_call_term1` FOREIGN KEY (`term_id`) REFERENCES `term` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `term_has_student`
---
-ALTER TABLE `term_has_student`
-  ADD CONSTRAINT `fk_term_has_student_student1` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_term_has_student_term1` FOREIGN KEY (`term_id`) REFERENCES `term` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-
---
--- Constraints for table `term_has_subject`
---
-ALTER TABLE `term_has_subject`
-  ADD CONSTRAINT `fk_term_has_subject_subject1` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_term_has_subject_term` FOREIGN KEY (`term_id`) REFERENCES `term` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=1;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+SET UNIQUE_CHECKS=1;

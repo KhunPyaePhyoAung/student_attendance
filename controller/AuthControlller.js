@@ -25,6 +25,13 @@ const authController = ({ authService, userService, tokenService }) => {
                 });
             } catch (error) {
                 if (error.field) {
+                    if (error.field === 'account') {
+                        return res.status(200).json({
+                            status: 403,
+                            message: error.message
+                        });
+                    }
+
                     return res.status(200).json({
                         status: 401,
                         error: [
