@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subject Registration</title>
+    <title>Update Subject Information</title>
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -159,42 +159,50 @@
 
     <section class="main-content">
         <div class="container">
-            <h2 class="text-center mb-4">Subject Registration</h2>
+            <h2 class="text-center mb-4">Update Subject Information</h2>
             <form novalidate id="subjectForm">
                 <div class="form-group">
-                    <label for="nrc">Code</label>
+                    <label for="name">ID</label>
+                    <input type="text" class="form-control input" id="id" name="id" placeholder="Enter ID" required readonly>
+                    <div class="invalid-feedback" id="idErrorMessage">
+                        
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name</label>
                     <input type="text" class="form-control input" id="code" name="code" placeholder="Enter subject code" required>
                     <div class="invalid-feedback" id="codeErrorMessage">
                         
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="name">Name</label>
+                    <label for="nrc">Name</label>
                     <input type="text" class="form-control input" id="name" name="name" placeholder="Enter subject name" required>
                     <div class="invalid-feedback" id="nameErrorMessage">
                         
                     </div>
                 </div>
-                
                 <div class="col-12 form-group">
                     <label for="instructor">Instructor</label>
                     <select class="form-control input" id="instructor" name="instructor_id" required>
                     </select>
                     <div class="invalid-feedback" id="instructorErrorMessage"></div>
                 </div>
-                <button type="submit" class="btn btn-custom" id="registerBtn">Register</button>
+                <button type="submit" class="btn btn-custom" id="registerBtn">Update</button>
                 <a class="btn btn-cancel" href="/subjects">Cancel</a>
             </form>
         </div>
     </section>
     <script>
 
+
+        const registerBtn = $('#registerBtn');
         const logoutMenuItem = $('#logoutMenuItem');
         const subjectForm = $('#subjectForm');
+        const idInput = $('#id');
         const codeInput = $('#code');
-        const nameInput = $('#name');
         const instructorInput = $('#instructor');
-        const registerBtn = $('#registerBtn');
+        const nameInput = $('#name');
 
         const codeErrorMessage = $('#codeErrorMessage');
         const nameErrorMessage = $('#nameErrorMessage');
@@ -225,13 +233,18 @@
                     maximum: 250,
                     message: '^Name cannot be more than 250 characters'
                 }
-            }
+            },
+            instructor_id: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Instructor is required'
+                },
+            },
         };
 
         $(document).ready(function() {
             fetchAndAddInstructors();
         });
-
 
         subjectForm.on('submit', function(e){
             e.preventDefault();
@@ -244,7 +257,7 @@
         registerBtn.on('click', function() {
             if (validateForm()) {
                 const subject = getFormData();
-                createSubject(subject);
+                updateSubject(subject);
             }
             
         });
@@ -266,10 +279,17 @@
 
         // ---------------------- Functions ----------------------------------
 
-        function createSubject(subject) {
+        function fillSubjectForm(subject) {
+            idInput.val(subject.id);
+            codeInput.val(subject.code);
+            nameInput.val(subject.name);
+            instructorInput.val(subject.instructor_id);
+        }
+
+        function updateSubject(subject) {
             const settings = {
-                "url": "/api/subjects",
-                "method": "POST",
+                "url": "/api/subjects/" + subject.id,
+                "method": "PUT",
                 "timeout": 0,
                 "headers": {
                 "Content-Type": "application/json"
@@ -280,18 +300,17 @@
             $.post(
                 settings
             ).always(function (data, status, xhr) {
-                    if (data.status === 201) {
-                        clearSubjectForm();
+                    if (data.status === 200) {
                         window.scrollTo(0, 0);
-                        swal("Successfully created a new subject", {
-                            icon: "success",
+                        swal('Successfully updated the subject', {
+                            icon: 'success',
                         });
+                        
                     } else if (data.status === 400) {
                         const errors = data.errors;
-                        console.log(data);
                         errors.forEach(element => {
                             const field = element.field;
-                            const message = element.message;
+                            const message = element.message
 
                             console.log(field);
                             console.log(message);
@@ -302,6 +321,9 @@
                             } else if (field === 'name') {
                                 nameErrorMessage.text(message);
                                 nameInput.addClass('is-invalid');
+                            } else if (field === 'instructor_id') {
+                                instructorErrorMessage.text(message);
+                                instructorInput.addClass('is-invalid');
                             }
                         });
                     }
@@ -325,6 +347,10 @@
                         data.data.forEach(instructor => {
                             instructorInput.append(`<option value="${instructor.id}">${instructor.name}</option>`);
                         });
+                        
+                        let params = new URL(document.location.toString()).searchParams;
+                        let subjectId = params.get("id");
+                        fetchSubjectById(subjectId);
                     } else if (data.status === 400) {
                         const errors = data.errors;
                         console.log(data);
@@ -341,8 +367,31 @@
                             } else if (field === 'name') {
                                 nameErrorMessage.text(message);
                                 nameInput.addClass('is-invalid');
+                            } else if (field === 'instructor_id') {
+                                instructorErrorMessage.text(message);
+                                instructorInput.addClass('is-invalid');
                             }
                         });
+                    }
+                }
+            );
+        }
+
+        function fetchSubjectById(id) {
+            const settings = {
+                "url": "/api/subjects/" + id,
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                    console.log(data.status);
+                    if (data.status === 200) {
+                        fillSubjectForm(data.data);
+                    } else if (data.status === 404) {
+                        console.log(data.message);
                     }
                 }
             );
@@ -365,13 +414,18 @@
                 } else if (sourceId === 'name') {
                     nameErrorMessage.text('');
                     nameInput.removeClass('is-invalid');
+                } else if (sourceId === 'instructor') {
+                    instructorErrorMessage.text('');
+                    instructorInput.removeClass('is-invalid');
                 }
             } else {
                 codeErrorMessage.text('');
                 nameErrorMessage.text('');
+                instructorErrorMessage.text('');
 
                 codeInput.removeClass('is-invalid');
                 nameInput.removeClass('is-invalid');
+                instructorInput.removeClass('is-invalid');
             }
             
         }
@@ -397,14 +451,15 @@
                 nameErrorMessage.text(checkResult.name[0]);
                 nameInput.addClass('is-invalid');
             }
-            
+
+            if (checkResult.instructor_id) {
+                instructorErrorMessage.text(checkResult.instructor_id[0]);
+                instructorInput.addClass('is-invalid');
+            }
+
             return false;
         }
 
-        function clearSubjectForm() {
-            codeInput.val('');
-            nameInput.val('');
-        }
 
         function logout() {
             console.log('Logging out');

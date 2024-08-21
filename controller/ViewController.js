@@ -37,12 +37,12 @@ const viewController = ({tokenService}) => {
         },
 
         student_registration: (req, res) => {
-            const html = path.join(viewFolder, 'student_registration.html');
+            const html = path.join(viewFolder, 'admin_student_registration.html');
             return res.sendFile(html);
         },
 
         student_edit: (req, res) => {
-            const html = path.join(viewFolder, 'student_edit.html');
+            const html = path.join(viewFolder, 'admin_student_edit.html');
             return res.sendFile(html);
         },
 
@@ -73,12 +73,12 @@ const viewController = ({tokenService}) => {
         },
 
         instructor_registration: (req, res) => {
-            const html = path.join(viewFolder, 'instructor_registration.html');
+            const html = path.join(viewFolder, 'admin_instructor_registration.html');
             return res.sendFile(html);
         },
 
         instructor_edit: (req, res) => {
-            const html = path.join(viewFolder, 'instructor_edit.html');
+            const html = path.join(viewFolder, 'admin_instructor_edit.html');
             return res.sendFile(html);
         },
 
@@ -96,12 +96,12 @@ const viewController = ({tokenService}) => {
         },
 
         subject_registration: (req, res) => {
-            const html = path.join(viewFolder, 'subject_registration.html');
+            const html = path.join(viewFolder, 'admin_subject_registration.html');
             return res.sendFile(html);
         },
 
         subject_edit: (req, res) => {
-            const html = path.join(viewFolder, 'subject_edit.html');
+            const html = path.join(viewFolder, 'admin_subject_edit.html');
             return res.sendFile(html);
         },
 
@@ -119,12 +119,12 @@ const viewController = ({tokenService}) => {
         },
 
         term_registration: (req, res) => {
-            const html = path.join(viewFolder, 'term_registration.html');
+            const html = path.join(viewFolder, 'admin_term_registration.html');
             return res.sendFile(html);
         },
 
         term_edit: (req, res) => {
-            const html = path.join(viewFolder, 'term_edit.html');
+            const html = path.join(viewFolder, 'admin_term_edit.html');
             return res.sendFile(html);
         },
 
@@ -133,31 +133,31 @@ const viewController = ({tokenService}) => {
             return res.sendFile(html);
         },
 
-        attendances: (req, res) => {
+        sessions: (req, res) => {
             const role = req.user.role;
             let html;
             if (role === 'ADMIN') {
-                html = path.join(viewFolder, 'admin_attendances.html');
+                html = path.join(viewFolder, 'admin_sessions.html');
             } else if (role === 'INSTRUCTOR') {
-                html = path.join(viewFolder, 'instructor_attendances.html');
+                html = path.join(viewFolder, 'instructor_sessions.html');
             } else if (role === 'STUDENT') {
-                html = path.join(viewFolder, 'student_attendances.html');
+                html = path.join(viewFolder, 'student_sessions.html');
             }
             return res.sendFile(html);
         },
 
-        attendance_registration: (req, res) => {
-            const html = path.join(viewFolder, 'attendance_registration.html');
+        session_registration: (req, res) => {
+            const html = path.join(viewFolder, 'instructor_session_registration.html');
             return res.sendFile(html);
         },
 
-        attendance_edit: (req, res) => {
-            const html = path.join(viewFolder, 'attendance_edit.html');
+        session_edit: (req, res) => {
+            const html = path.join(viewFolder, 'instructor_session_edit.html');
             return res.sendFile(html);
         },
 
-        attendance_detail: (req, res) => {
-            const html = path.join(viewFolder, 'attendance_detail.html');
+        session_detail: (req, res) => {
+            const html = path.join(viewFolder, 'instructor_session_detail.html');
             return res.sendFile(html);
         },
 

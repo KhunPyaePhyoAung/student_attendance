@@ -17,7 +17,9 @@ const termService = ({termRepository, subjectService}) => {
                 for (let i = 0; i < terms.length; i++) {
                     const term = terms[i];
                     const subjects = await subjectService.findAllByTermId(term.id);;
-                    term.subjects = subjects;
+                    term.subjects = subjects.filter(sub => {
+                        return sub.instructor_id == instructorId;
+                    });
                 }
                 
                 return terms;

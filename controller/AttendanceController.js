@@ -46,6 +46,28 @@ const attendanceController = ({attendanceService}) => {
             }
         },
 
+        updateRollCallById: async (req, res) => {
+            const rollCall = req.body;
+            rollCall.instructor_id = req.user.id;
+
+            try {
+                const createdRollCall = await attendanceService.updateRollCallById(rollCall.id, rollCall);
+                return res.status(200).json(
+                    {
+                        status: 200,
+                        data: createdRollCall
+                    }
+                );
+            } catch (error) {
+                return res.status(200).json(
+                    {
+                        status: 400,
+                        message: error.message
+                    }
+                );
+            }
+        },
+
         getAllAttendancesByInstructorId: async (req, res) => {
             const instructorId = req.user.id;
             try {

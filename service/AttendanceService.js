@@ -28,13 +28,28 @@ const attendanceService = ({attendanceRepository}) => {
 
         createRollCall: async (rollCall) => {
             try {
-                const hasOpenRollCall = await attendanceRepository.checkInstructorHasOpeningRollCall(rollCall.instructor_id);
+                const hasOpenRollCall = await attendanceRepository.checkInstructorHasOpeningRollCall(rollCall.id, rollCall.instructor_id);
                 if (hasOpenRollCall) {
                     const error = new Error();
-                    error.message = 'You have an opening roll call.';
+                    error.message = 'You have an opening session.';
                     throw error;
                 }
                 const createdRollCall = await attendanceRepository.createRollCall(rollCall);
+                return createdRollCall;
+            } catch (error) {
+                throw error;
+            }
+        },
+
+        updateRollCallById: async (id, rollCall) => {
+            try {
+                const hasOpenRollCall = await attendanceRepository.checkInstructorHasOpeningRollCall(id, rollCall.instructor_id);
+                if (hasOpenRollCall) {
+                    const error = new Error();
+                    error.message = 'You have an opening session.';
+                    throw error;
+                }
+                const createdRollCall = await attendanceRepository.updateRollCallById(id, rollCall);
                 return createdRollCall;
             } catch (error) {
                 throw error;

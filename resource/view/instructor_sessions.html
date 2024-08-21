@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance List</title>
+    <title>Attendance Sessions</title>
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/css/fontawesome.css">
     <link rel="stylesheet" href="/css/dataTable.css">
@@ -145,7 +145,7 @@
                         <a class="nav-link" href="/students">Students</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/attendances">Attendance</a>
+                        <a class="nav-link" href="/sessions">Sessions</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -165,10 +165,10 @@
     <!-- Term List -->
     <div class="table-container">
         <div class="header-container">
-            <h2>Attendance List</h2>
+            <h2>Attendance Sessions</h2>
         </div>
         <div class="search-container">
-            <a class="btn btn-add" href="/attendance_registration"><i class="fas fa-plus"></i> <i class="fas fa-file"></i></a>
+            <a class="btn btn-add" href="/session_registration"><i class="fas fa-plus"></i> <i class="fas fa-file"></i></a>
         </div>
         <table class="table table-striped display" id="termTable">
             <thead>
@@ -301,8 +301,8 @@
                                     <i class="fas fa-cog"></i>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item" href="/attendance_detail?id=${attendance.id}">View</a></li>
-                                    <li><a class="dropdown-item" href="/attendance_edit?id=${attendance.id}">Edit</a></li>
+                                    <li><a class="dropdown-item" href="/session_detail?id=${attendance.id}">View</a></li>
+                                    <li><a class="dropdown-item" href="/session_edit?id=${attendance.id}">Edit</a></li>
                                     <li><a class="dropdown-item" onClick="onDeleteAttendance(${attendance.id})">Delete</a></li>
                                 </ul>
                             </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Attendance Information</title>
+    <title>Update Session Information</title>
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/flatpickr.css">
@@ -189,7 +189,7 @@
                         <a class="nav-link" href="/students">Students</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/attendances">Attendance</a>
+                        <a class="nav-link" href="/sessions">Sessions</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -208,8 +208,16 @@
 
     <section class="main-content">
         <div class="container">
-            <h2 class="text-center mb-4">Update Attendance Information</h2>
+            <h2 class="text-center mb-4">Update Session Information</h2>
             <form novalidate id="attendanceForm">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="id">ID</label>
+                            <input type="text" class="form-control input" id="id" name="id" readonly>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
@@ -260,17 +268,21 @@
                 </div>
                 
                 <button type="submit" class="btn btn-custom mt-3" id="registerBtn">Update</button>
-                <a class="btn btn-cancel" href="/attendances">Cancel</a>
+                <a class="btn btn-cancel" href="/sessions">Cancel</a>
             </form>            
         </div>
     </section>
 
     <script>
 
-        let attendance = [];
+        let terms = [];
+        let params = new URL(document.location.toString()).searchParams;
+        let attendanceId = params.get("id");
+
         const logoutMenuItem = $('#logoutMenuItem');
         const attendanceForm = $('#attendanceForm');
 
+        const idInput = $('#id');
         const dateInput = $('#date');
         const startTimeInput = $('#startTime');
         const endTimeInput = $('#endTime');
@@ -326,10 +338,7 @@
         };
 
         $(document).ready(function() {
-            let params = new URL(document.location.toString()).searchParams;
-            let attendanceId = params.get("id");
-            fetchAttendanceById(attendanceId);
-            fetchActiveTermsForInstructor();
+            fetcActiveTermsForInstructor();
         });
 
         attendanceForm.on('submit', function(e){
@@ -342,11 +351,12 @@
 
         termInput.on('input', function() {
             const termId = termInput.val();
+            console.log(termId);
             
             subjectInput.empty();
             subjectInput.append('<option value="">-- select a subject --</option>');
 
-            attendance.forEach(term => {
+            terms.forEach(term => {
                 if (term.id == termId) {
                     const subjects = term.subjects;
                     subjects.forEach(subject => {
@@ -359,7 +369,7 @@
         registerBtn.on('click', function() {
             if (validateForm()) {
                 const attendance = getFormData();
-                createAttendance(attendance);
+                updateAttendance(attendance);
             }
             
         });
@@ -378,10 +388,10 @@
             });
         });
 
-        function createAttendance(attendance) {
+        function updateAttendance(attendance) {
             const settings = {
                 "url": "/api/attendances/roll_call",
-                "method": "POST",
+                "method": "PUT",
                 "timeout": 0,
                 "headers": {
                 "Content-Type": "application/json"
@@ -392,9 +402,10 @@
             $.post(
                 settings
             ).always(function (data, status, xhr) {
-                    if (data.status === 201) {
+                console.log(data);
+                    if (data.status === 200) {
                         window.scrollTo(0, 0);
-                        swal("Successfully created a new attendance", {
+                        swal("Successfully updated the session", {
                             icon: "success",
                         });
                     } else if (data.status === 400) {
@@ -406,7 +417,7 @@
             );
         }
 
-        function fetchActiveTermsForInstructor() {
+        function fetcActiveTermsForInstructor() {
             const settings = {
                 "url": "/api/terms/instructor/",
                 "method": "GET",
@@ -417,22 +428,13 @@
                 settings
             ).always(function (data, status, xhr) {
                     if (data.status === 200) {
-                        data.data.forEach(term => {
+                        terms = data.data;
+                        termInput.empty();
+                        termInput.append(`<option value="">-- select a term --</option>`);
+                        terms.forEach(term => {
                             termInput.append(`<option value="${term.id}">${term.name}</option>`);
                         });
-                        termInput.val(attendance.term_id);
-                        subjectInput.empty();
-                        subjectInput.append('<option value="">-- select a subject --</option>');
-
-                        attendance.forEach(term => {
-                            if (term.id == termId) {
-                                const subjects = term.subjects;
-                                subjects.forEach(subject => {
-                                    subjectInput.append(`<option value="${subject.id}">(${subject.code}) ${subject.name}</option>`);
-                                });
-                            }
-                        });
-                        // subjectInput.val(attendance.subject_id);
+                        fetchAttendanceById(attendanceId);
                     } else if (data.status === 400) {
                         swal(data.message, {
                             icon: "error",
@@ -454,8 +456,20 @@
             ).always(function (data, status, xhr) {
                     console.log(data);
                     if (data.status === 200) {
-                        attendance = data.data;
-                        fetchActiveTermsForInstructor();
+                        fillAttendanceForm(data.data);
+                        const termId = termInput.val();
+                        subjectInput.empty();
+                        subjectInput.append('<option value="">-- select a subject --</option>');
+
+                        terms.forEach(term => {
+                            if (term.id == termId) {
+                                const subjects = term.subjects;
+                                subjects.forEach(subject => {
+                                    const select = subject.id == data.data.id ? 'selected' : '';
+                                    subjectInput.append(`<option value="${subject.id}" ${select}>(${subject.code}) ${subject.name}</option>`);
+                                });
+                            }
+                        });
                     } else if (data.status === 400) {
                         swal(data.message, {
                             icon: "error",
@@ -466,6 +480,7 @@
         }
 
         function fillAttendanceForm(attendance) {
+            idInput.val(attendance.id);
             dateInput.val(attendance.date);
             startTimeInput.val(attendance.start_time);
             endTimeInput.val(attendance.end_time);

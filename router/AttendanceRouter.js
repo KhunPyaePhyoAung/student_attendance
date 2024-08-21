@@ -18,6 +18,12 @@ router.post(
     attendanceController.createRollCall
 );
 
+router.put(
+    ['/roll_call'],
+    [authMiddleware.verifyUserToken],
+    attendanceController.updateRollCallById
+);
+
 router.get(
     ['/:id(\\d+)'],
     [authMiddleware.verifyUserToken],

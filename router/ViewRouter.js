@@ -96,25 +96,25 @@ router.get(
 router.get(
     ['/sessions'],
     [authMiddleware.verifyUserToken],
-    viewController.attendances
+    viewController.sessions
 );
 
 router.get(
-    ['/attendance_registration'],
+    ['/session_registration'],
     [authMiddleware.verifyUserToken],
-    viewController.attendance_registration
+    viewController.session_registration
 );
 
 router.get(
-    ['/attendance_edit'],
+    ['/session_edit'],
     [authMiddleware.verifyUserToken],
-    viewController.attendance_edit
+    viewController.session_edit
 );
 
 router.get(
-    ['/attendance_detail'],
+    ['/session_detail'],
     [authMiddleware.verifyUserToken],
-    viewController.attendance_detail
+    viewController.session_detail
 );
 
 module.exports = router;

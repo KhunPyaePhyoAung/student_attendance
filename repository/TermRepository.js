@@ -22,8 +22,9 @@ const termRepository = () => {
             const connection = await getConnection();
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT * FROM term WHERE start_date <= NOW() AND end_date >= NOW()';
-                connection.query(sql, (error, results, fields) => {
+                const sql = 'SELECT t.*, s.id as sub_id, i.id as instructor_id FROM term t JOIN term_has_subject tsub ON t.id = tsub.term_id JOIN subject s ON tsub.subject_id = s.id JOIN instructor i ON s.instructor_id = i.id WHERE start_date <= NOW() AND end_date >= NOW() AND i.id = ? GROUP BY t.id ORDER BY t.start_date, t.end_date, t.created_at;';
+                const params = [instructorId];
+                connection.query(sql, instructorId, (error, results, fields) => {
                     if (error) {
                         reject(new Error(error.sqlMessage));
                     } else {
