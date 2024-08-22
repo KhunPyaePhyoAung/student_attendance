@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>Subject Details</title>
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/main.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
     <script type="text/javascript" src="/js/jQuery-cookie.js"></script>
-    <script type="text/javascript" src="/js/sweetAlert.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -28,28 +27,57 @@
             cursor: pointer;
         }
 
-        .navbar-nav {
-            margin-left: auto;
+        .main-content {
+            width: 100%;
+            padding: 20px;
         }
 
-        .navbar-nav .nav-item.dropdown:hover .dropdown-menu {
+        .main-content .container {
+            max-width: 800px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: #1e56a6;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .btn-custom, .btn-cancel {
+            border-radius: 25px; /* Fully rounded borders */
+            font-weight: 600;
+            border: none;
+            width: 100%; /* Full width */
             display: block;
+            margin-top: 10px; /* Space between buttons */
         }
 
-        .dropdown-menu {
-            display: none;
+        .btn-custom {
+            background-color: #1e56a6;
+            color: #fff;
         }
 
-        .dropdown-menu a {
-            cursor: pointer;
+        .btn-custom:hover {
+            background-color: #039BE5;
         }
 
-        .dropdown-menu a:hover {
-            background-color: #e9ecef; /* Background color on hover */
-            color: #1e56a6; /* Text color on hover */
+        .btn-cancel {
+            background-color: #ffffff;
+            color: #333;
+            border: 1px solid #ddd;
         }
 
-        
+        .btn-cancel:hover {
+            background-color: #f1f1f1;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -63,10 +91,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/home">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/sessions">Sessions</a>
+                        <a class="nav-link" href="/home">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/attendances">Attendances</a>
@@ -88,56 +113,64 @@
                             Profile
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                            <li><a id="usernameMenuItem" class="dropdown-item" href="/profile">Your Profile</a></li>
+                            <li><a class="dropdown-item" href="/profile">Your Profile</a></li>
                             <li><a class="dropdown-item" href="/change-password">Change Password</a></li>
                             <li><a class="dropdown-item" id="logoutMenuItem">Logout</a></li>
                         </ul>
                     </li>
                 </ul>
             </div>
-            
         </div>
     </nav>
 
     <section class="main-content">
-    
+        <div class="container">
+            <h2 class="text-center mb-4">Subject Details</h2>
+            <div class="card">
+                <div class="card-header">
+                    Subject Information
+                </div>
+                <div class="card-body">
+                    <p><strong>ID:</strong> <span id="subjectId">12345</span></p>
+                    <p><strong>Code:</strong> <span id="subjectCode">CS-1234</span></p>
+                    <p><strong>Name:</strong> <span id="subjectName">Computer Science</span></p>
+                    <p><strong>Instructor:</strong> <span id="subjectInstructor">John Doe</span></p>
+                    <a class="btn btn-custom" href="/subjects">Back to Subjects</a>
+                </div>
+            </div>
+        </div>
     </section>
     <script>
         $('#usernameMenuItem').text($.cookie('username'));
-        const logoutMenuItem = $('#logoutMenuItem');
+        $(document).ready(function() {
+            // Fetch subject details by ID (assuming ID is passed as a URL parameter)
+            let params = new URL(document.location.toString()).searchParams;
+            let subjectId = params.get("id");
 
-        logoutMenuItem.on('click', function() {
-            swal({
-                title: "Are you sure to logout?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    logout();
-                }
-            });
-        });
+            if (subjectId) {
+                fetchSubjectById(subjectId);
+            }
 
-        function logout() {
-            console.log('Logging out');
-            const settings = {
-                "url": "/api/auth/logout",
-                "method": "POST",
-                "timeout": 0,
-            };
+            function fetchSubjectById(id) {
+                const settings = {
+                    "url": "/api/subjects/" + id,
+                    "method": "GET",
+                    "timeout": 0,
+                };
 
-            $.post(
-                settings
-            ).always(function (data, status, xhr) {
-                console.log(data);
-                    if (data.status === 204) {
-                        window.location.replace('/login');
+                $.get(settings.url)
+                .done(function(data) {
+                    if (data.status === 200) {
+                        $('#subjectId').text(data.data.id);
+                        $('#subjectCode').text(data.data.code);
+                        $('#subjectName').text(data.data.name);
+                        $('#subjectInstructor').text(data.data.instructor_name);
+                    } else {
+                        console.log(data.message);
                     }
-                }
-            );
-        }
+                });
+            }
+        });
     </script>
 </body>
 </html>

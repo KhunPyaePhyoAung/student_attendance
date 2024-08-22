@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Student Information</title>
+    <title>Profile</title>
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/flatpickr.css">
@@ -163,101 +163,21 @@
 
     <section class="main-content">
         <div class="container">
-            <h2 class="text-center mb-4">Update Student Information</h2>
+            <h2 class="text-center mb-4">Profile</h2>
             <form novalidate id="studentForm">
-                <div class="form-group">
-                    <label for="name">ID</label>
-                    <input type="text" class="form-control input" id="id" name="id" placeholder="Enter ID" required readonly>
-                    <div class="invalid-feedback" id="idErrorMessage">
-                        
-                    </div>
+                <div class="form-group mt-3">
+                    <label for="name">Email</label>
+                    <input type="text" class="form-control input" readonly>
                 </div>
-                <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" class="form-control input" id="name" name="name" placeholder="Enter your full name" required>
-                    <div class="invalid-feedback" id="nameErrorMessage">
-                        
-                    </div>
+                <div class="form-group mt-3">
+                    <label for="name">Role</label>
+                    <input type="text" class="form-control input" readonly>
                 </div>
-                <div class="form-group">
-                    <label for="name">Roll</label>
-                    <input type="text" class="form-control input" id="role" name="role_no" placeholder="Enter roll no" required>
-                    <div class="invalid-feedback" id="roleErrorMessage">
-                        
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="nrc">NRC Number</label>
-                    <input type="text" class="form-control input" id="nrc" name="nrc" placeholder="Enter your NRC number" required>
-                    <div class="invalid-feedback" id="nrcErrorMessage">
-                        
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" class="form-control input" id="email" name="email" placeholder="Enter your email address" required>
-                    <div class="invalid-feedback" id="emailErrorMessage">
-                        
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" class="form-control input" id="phone" name="phone" placeholder="Enter your phone number" required>
-                    <div class="invalid-feedback" id="phoneErrorMessage">
-                        
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="familyPhone">Family Phone</label>
-                    <input type="tel" class="form-control input" id="familyPhone" name="family_phone" placeholder="Enter family phone number" required>
-                    <div class="invalid-feedback" id="familyPhoneErrorMessage">
-                        
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <!-- Gender Input -->
-                        <div class="col-md-6">
-                            <label>Gender</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="gender" id="male" value="MALE" required>
-                                <label class="form-check-label" for="male">Male</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="gender" id="female" value="FEMALE" required>
-                                <label class="form-check-label" for="female">Female</label>
-                            </div>
-                            <div class="invalid-feedback" id="genderErrorMessage"></div>
-                        </div>
-                
-                        <!-- Status Input -->
-                        <div class="col-md-6">
-                            <label for="status">Status</label>
-                            <select class="form-control" id="status" name="status" required>
-                                <option value="ACTIVE">Active</option>
-                                <option value="INACTIVE">Inactive</option>
-                            </select>
-                            <div class="invalid-feedback" id="statusErrorMessage"></div>
-                        </div>
-                    </div>
+                <div class="form-group mt-3">
+                    <label for="name">Status</label>
+                    <input type="text" class="form-control input" readonly>
                 </div>
                 
-                <div class="form-group">
-                    <label for="dob">Date of Birth</label>
-                    <input type="date" class="form-control input" id="dateOfBirth" name="date_of_birth" required>
-                    <div class="invalid-feedback" id="dobErrorMessage">
-                        
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="address">Address</label>
-                    <textarea class="form-control input" id="address" name="address" rows="3" placeholder="Enter your address" required></textarea>
-                    <div class="invalid-feedback" id="addressErrorMessage">
-                        
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-custom" id="registerBtn">Update</button>
-                <a class="btn btn-cancel" href="/students">Cancel</a>
             </form>
         </div>
     </section>
@@ -310,11 +230,11 @@
             role_no: {
                 presence: {
                     allowEmpty: false,
-                    message: '^Roll is required'
+                    message: '^Role is required'
                 },
                 length: {
                     maximum: 12,
-                    message: '^Roll cannot be more than 12 characters'
+                    message: '^Name cannot be more than 12 characters'
                 }
             },
             nrc: {

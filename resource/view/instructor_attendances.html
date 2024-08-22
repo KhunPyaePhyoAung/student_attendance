@@ -7,9 +7,11 @@
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/css/fontawesome.css">
     <link rel="stylesheet" href="/css/dataTable.css">
+    <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
+    <script type="text/javascript" src="/js/jQuery-cookie.js"></script>
     <script type="text/javascript" src="/js/dataTable.js"></script>
     <script type="text/javascript" src="/js/sweetAlert.js"></script>
     <style>
@@ -139,7 +141,7 @@
                             Profile
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                            <li><a class="dropdown-item" href="/profile">Your Profile</a></li>
+                            <li><a id="usernameMenuItem" class="dropdown-item" href="/profile">Your Profile</a></li>
                             <li><a class="dropdown-item" href="/change-password">Change Password</a></li>
                             <li><a class="dropdown-item" id="logoutMenuItem">Logout</a></li>
                         </ul>
@@ -192,7 +194,7 @@
         </table>
     </div>
     <script>
-
+        $('#usernameMenuItem').text($.cookie('username'));
         let terms = [];
         let subjectsTotalSessions = {};
         // let fromDate = dateformat(new Date(), 'mm/dd/yyyy');
@@ -339,7 +341,7 @@
                             const className = getRollCallPercentClass(percent);
                             $(`#${key}`).text(value);
                             $(`#${key}`).addClass(className);
-                            $(`#percent_${key}`).text(percent + '%%');
+                            $(`#percent_${key}`).text(percent + '%');
                             $(`#percent_${key}`).addClass(className);
                         });
                         
@@ -377,8 +379,8 @@
                         data.data.forEach((student, i) => {
                             let row = '<tr>';
                             row += `<th class="text-center">${i + 1}</th>`;
-                            row += `<th>${student.role_no}</th>`;
-                            row += `<th>${student.name}</th>`;
+                            row += `<th class="text-nowrap">${student.role_no}</th>`;
+                            row += `<th class="text-nowrap">${student.name}</th>`;
                             row += `<th id="all_${student.id}" class="text-center bg-gray"></th>`;
                             row += `<th id="percent_all_${student.id}" class="text-center bg-gray"></th>`;
                             subjects.forEach(subject => {
@@ -416,7 +418,7 @@
                         row += `<th rowspan="2" class="text-center align-middle">Sr</th>`;
                         row += `<th rowspan="2" class="text-center align-middle">Roll</th>`;
                         row += `<th rowspan="2" class="text-center align-middle">Name</th>`;
-                        row += `<th colspan="2" class="text-center align-middle bg-gray">All</th>`;
+                        row += `<th colspan="2" class="text-center align-middle bg-gray">Overall</th>`;
                         data.data.forEach((subject, i) => {
                             row += `<th colspan="2" class="text-center align-middle">${subject.name}</th>`;
                         });

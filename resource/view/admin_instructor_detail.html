@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructor Details</title>
+    <link type="image/png" rel="icon" href="/icon/icon.png">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/js/jQuery.js"></script>
+    <script type="text/javascript" src="/js/jQuery-cookie.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ecf0f3;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #1e56a6;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #fff !important;
+            cursor: pointer;
+        }
+
+        .main-content {
+            width: 100%;
+            padding: 20px;
+        }
+
+        .main-content .container {
+            max-width: 800px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: #1e56a6;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .btn-custom, .btn-cancel {
+            border-radius: 25px;
+            font-weight: 600;
+            border: none;
+            width: 100%;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .btn-custom {
+            background-color: #1e56a6;
+            color: #fff;
+        }
+
+        .btn-custom:hover {
+            background-color: #039BE5;
+        }
+
+        .btn-cancel {
+            background-color: #ffffff;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-cancel:hover {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Attendance System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/attendances">Attendances</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/terms">Terms</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/students">Students</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/instructors">Instructors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/subjects">Subjects</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Profile
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                            <li><a id="usernameMenuItem" class="dropdown-item" href="/profile">Your Profile</a></li>
+                            <li><a class="dropdown-item" href="/change-password">Change Password</a></li>
+                            <li><a class="dropdown-item" id="logoutMenuItem">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="main-content">
+        <div class="container">
+            <h2 class="text-center mb-4">Instructor Details</h2>
+            <div class="card">
+                <div class="card-header">
+                    Instructor Information
+                </div>
+                <div class="card-body">
+                    <p><strong>ID:</strong> <span id="instructorId">12345</span></p>
+                    <p><strong>Full Name:</strong> <span id="instructorName">John Doe</span></p>
+                    <p><strong>NRC Number:</strong> <span id="instructorNrc">12/ABC(N)345678</span></p>
+                    <p><strong>Email Address:</strong> <span id="instructorEmail">john.doe@example.com</span></p>
+                    <p><strong>Phone Number:</strong> <span id="instructorPhone">+1234567890</span></p>
+                    <p><strong>Gender:</strong> <span id="instructorGender">Male</span></p>
+                    <p><strong>Status:</strong> <span id="instructorStatus">Active</span></p>
+                    <p><strong>Date of Birth:</strong> <span id="instructorDob">1990-01-01</span></p>
+                    <p><strong>Address:</strong> <span id="instructorAddress">123 Main St, City, Country</span></p>
+                    <a class="btn btn-custom" href="/instructors">Back to Instructors</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        $('#usernameMenuItem').text($.cookie('username'));
+        $(document).ready(function() {
+            // Fetch instructor details by ID (assuming ID is passed as a URL parameter)
+            let params = new URL(document.location.toString()).searchParams;
+            let instructorId = params.get("id");
+
+            if (instructorId) {
+                fetchInstructorById(instructorId);
+            }
+
+            function fetchInstructorById(id) {
+                const settings = {
+                    "url": "/api/instructors/" + id,
+                    "method": "GET",
+                    "timeout": 0,
+                };
+
+                $.get(settings.url)
+                .done(function(data) {
+                    if (data.status === 200) {
+                        $('#instructorId').text(data.data.id);
+                        $('#instructorName').text(data.data.name);
+                        $('#instructorNrc').text(data.data.nrc);
+                        $('#instructorEmail').text(data.data.email);
+                        $('#instructorPhone').text(data.data.phone || 'N/A');
+                        $('#instructorGender').text(data.data.gender === 'MALE' ? 'Male' : 'Female');
+                        $('#instructorStatus').text(data.data.status || 'Active');
+                        $('#instructorDob').text(data.data.date_of_birth || '');
+                        $('#instructorAddress').text(data.data.address || '');
+                    } else {
+                        console.log(data.message);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

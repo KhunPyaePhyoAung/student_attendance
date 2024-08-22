@@ -59,6 +59,19 @@ const viewController = ({tokenService}) => {
             return res.sendFile(html);
         },
 
+        student_detail: (req, res) => {
+            const role = req.user.role;
+            let html;
+            if (role === 'ADMIN') {
+                html = path.join(viewFolder, 'admin_student_detail.html');
+            } else if (role === 'INSTRUCTOR') {
+                html = path.join(viewFolder, 'instructor_student_detail.html');
+            } else if (role === 'STUDENT') {
+                html = path.join(viewFolder, 'student_student_detail.html');
+            }
+            return res.sendFile(html);
+        },
+
         instructors: (req, res) => {
             const role = req.user.role;
             let html;
@@ -82,6 +95,19 @@ const viewController = ({tokenService}) => {
             return res.sendFile(html);
         },
 
+        instructor_detail: (req, res) => {
+            const role = req.user.role;
+            let html;
+            if (role === 'ADMIN') {
+                html = path.join(viewFolder, 'admin_instructor_detail.html');
+            } else if (role === 'INSTRUCTOR') {
+                html = path.join(viewFolder, 'instructor_instructor_detail.html');
+            } else if (role === 'STUDENT') {
+                html = path.join(viewFolder, 'student_instructor_detail.html');
+            }
+            return res.sendFile(html);
+        },
+
         subjects: (req, res) => {
             const role = req.user.role;
             let html;
@@ -102,6 +128,19 @@ const viewController = ({tokenService}) => {
 
         subject_edit: (req, res) => {
             const html = path.join(viewFolder, 'admin_subject_edit.html');
+            return res.sendFile(html);
+        },
+
+        subject_detail: (req, res) => {
+            const role = req.user.role;
+            let html;
+            if (role === 'ADMIN') {
+                html = path.join(viewFolder, 'admin_subject_detail.html');
+            } else if (role === 'INSTRUCTOR') {
+                html = path.join(viewFolder, 'instructor_subject_detail.html');
+            } else if (role === 'STUDENT') {
+                html = path.join(viewFolder, 'student_subject_detail.html');
+            }
             return res.sendFile(html);
         },
 
@@ -170,6 +209,19 @@ const viewController = ({tokenService}) => {
                 html = path.join(viewFolder, 'instructor_attendances.html');
             } else if (role === 'STUDENT') {
                 html = path.join(viewFolder, 'student_attendances.html');
+            }
+            return res.sendFile(html);
+        },
+
+        profile: (req, res) => {
+            const role = req.user.role;
+            let html;
+            if (role === 'ADMIN') {
+                html = path.join(viewFolder, 'admin_profile.html');
+            } else if (role === 'INSTRUCTOR') {
+                html = path.join(viewFolder, 'instructor_profile.html');
+            } else if (role === 'STUDENT') {
+                html = path.join(viewFolder, 'student_profile.html');
             }
             return res.sendFile(html);
         },

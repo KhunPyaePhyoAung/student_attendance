@@ -38,7 +38,7 @@ const userRepository = () => {
         findOneByEmail: async (email) => {
             const connection = await getConnection();
 
-            return new Promise((resolve, reject) => {
+            const user = await new Promise((resolve, reject) => {
                 const sql = 'SELECT * FROM `user` WHERE `email` = ?';
                 const params = [email];
                 connection.query(sql, params, (error, results, fields) => {
@@ -46,6 +46,28 @@ const userRepository = () => {
                         reject(new Error(error.sqlMessage));
                     } else {
                         resolve(results[0]);
+                    }
+                });
+            });
+
+            let table = '';
+            if (user.role == 'INSTRUCTOR') {
+                table = 'instructor';
+            } else if (user.role == 'STUDENT') {
+                table = 'student';
+            } else {
+                user.name = 'Admin';
+                return user;
+            }
+            return new Promise((resolve, reject) => {
+                const sql = 'SELECT name FROM `' + table + '` WHERE `id` = ?';
+                const params = [user.id];
+                connection.query(sql, params, (error, results, fields) => {
+                    if (error) {
+                        reject(new Error(error.sqlMessage));
+                    } else {
+                        user.name = results[0].name;
+                        resolve(user);
                     }
                 });
                 connection.release();

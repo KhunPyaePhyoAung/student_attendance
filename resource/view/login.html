@@ -7,6 +7,7 @@
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/fontawesome.css">
+    <link rel="stylesheet" href="/css/main.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
     <script type="text/javascript" src="/js/validate.min.js"></script>
@@ -39,7 +40,7 @@
             background-color: #ecf0f3;
             border-radius: 15px;
             box-shadow: 13px 13px 20px #cbced1, -13px -13px 20px #fff;
-            position: absolute; /* Absolute positioning */
+            position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -72,14 +73,7 @@
 
         .wrapper .form-field {
             position: relative;
-        }
-
-        .wrapper .error-message {
-            margin-top: 5px;
-            margin-left: 12px;
-            margin-bottom: 20px;
-            height: 20px;
-            font-size: 0.9em;
+            margin-bottom: 20px; /* Add some space between fields */
         }
 
         .wrapper .form-field input {
@@ -90,17 +84,26 @@
             background: none;
             font-size: 1.2rem;
             color: #666;
-            padding: 10px 15px 10px 40px;
+            padding: 10px 15px 10px 40px; /* Add padding for the icon */
             border-radius: 20px;
             box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #fff;
         }
 
-        .wrapper .form-field .fas {
+        .wrapper .form-field .fa-user, .wrapper .form-field .fa-key {
             position: absolute;
-            left: 15px;
+            left: 15px; /* Align icons to the left side of input */
             top: 50%;
             transform: translateY(-50%);
             color: #555;
+        }
+
+        .wrapper .form-field .fa-eye, .wrapper .form-field .fa-eye-slash {
+            position: absolute;
+            right: 15px; /* Align the eye icon to the right */
+            top: 50%;
+            transform: translateY(-50%);
+            color: #555;
+            cursor: pointer;
         }
 
         .wrapper .btn {
@@ -157,12 +160,13 @@
     <form id="loginForm" class="p-3 mt-3">
         <div class="form-field d-flex align-items-center">
             <span class="fas fa-user"></span>
-            <input type="email" name="email" id="email" value="admin@gmail.com" placeholder="Email" aria-autocomplete="both" aria-haspopup="false" autocapitalize="off" autocomplete="off" autocorrect="off" autofocus="" role="combobox" spellcheck="false">
+            <input type="email" name="email" id="email" value="admin@gmail.com" placeholder="Email">
         </div>
         <p id="emailErrorMessage" class="text-danger error-message"></p>
         <div class="form-field d-flex align-items-center">
             <span class="fas fa-key"></span>
-            <input type="password" name="password" id="password" value="admin" placeholder="Password">
+            <input type="password" name="password" id="password" placeholder="Password">
+            <span id="togglePassword" class="fas fa-eye"></span>
         </div>
         <p id="passwordErrorMessage" class="text-danger error-message"></p>
         <button id="loginBtn" class="btn mt-3">Login</button>
@@ -178,6 +182,7 @@
     const emailErrorMessage = $('#emailErrorMessage');
     const passwordErrorMessage = $('#passwordErrorMessage');
     const loginBtn = $('#loginBtn');
+    const togglePassword = $('#togglePassword');
 
     const formConstraint = {
         email: {
@@ -201,15 +206,19 @@
         clearFormErrorMessages(e.target.id);
     });
     
-    
     loginBtn.on('click', function() {
         if (validateForm()) {
             const email = emailInput.val();
             const password = passwordInput.val();
             login(email, password);
         }
-        
-    }); {}
+    });
+
+    togglePassword.on('click', function() {
+        const type = passwordInput.attr('type') === 'password' ? 'text' : 'password';
+        passwordInput.attr('type', type);
+        $(this).toggleClass('fa-eye fa-eye-slash');
+    });
 
     function validateForm() {
         clearFormErrorMessages();
@@ -248,7 +257,6 @@
             emailErrorMessage.text('');
             passwordErrorMessage.text('');
         }
-        
     }
 
     function login(email, password) {
@@ -276,9 +284,6 @@
                         const field = element.field;
                         const message = element.message;
 
-                        console.log(field);
-                        console.log(message);
-
                         if (field === 'email') {
                             emailErrorMessage.text(message);
                         } else if (field === 'password') {
@@ -295,8 +300,6 @@
             }
         );
     }
-
-
   </script>
 </body>
 </html>

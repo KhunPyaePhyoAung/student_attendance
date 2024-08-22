@@ -1,4 +1,7 @@
 require('dotenv').config();
+const path = require('path');
+
+const viewFolder = path.join(__dirname, '..', 'resource', 'view');
 const jwt = require('jsonwebtoken');
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 
@@ -30,7 +33,8 @@ const verifyUserRole = (...allowedRoles) => {
         const roles = [...allowedRoles];
         const match = roles.find(role => role === req.user.role);
         if (!match) {
-            return res.status(403).end();
+            let html = path.join(viewFolder, 'unauthorized_page.html');
+            return res.sendFile(html);
         }
         next();
     };

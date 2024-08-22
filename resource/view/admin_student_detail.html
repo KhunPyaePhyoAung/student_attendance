@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Student Information</title>
+    <link type="image/png" rel="icon" href="/icon/icon.png">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/flatpickr.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/js/jQuery.js"></script>
+    <script type="text/javascript" src="/js/jQuery-cookie.js"></script>
+    <script type="text/javascript" src="/js/validate.min.js"></script>
+    <script type="text/javascript" src="/js/sweetAlert.js"></script>
+    <script type="text/javascript" src="/js/flatpickr.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ecf0f3;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #1e56a6;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #fff !important;
+            cursor: pointer;
+        }
+
+        .main-content {
+            width: 100%;
+            padding: 20px;
+        }
+
+        .main-content .container {
+            max-width: 800px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group label {
+            font-weight: 600;
+        }
+
+        .form-control {
+            border-radius: 0.25rem;
+            box-shadow: none;
+        }
+
+        .btn-custom, .btn-cancel {
+            border-radius: 25px; /* Fully rounded borders */
+            font-weight: 600;
+            border: none;
+            width: 100%; /* Full width */
+            display: block;
+            margin-top: 10px; /* Space between buttons */
+        }
+
+        .btn-custom {
+            background-color: #1e56a6;
+            color: #fff;
+        }
+
+        .btn-custom:hover {
+            background-color: #039BE5;
+        }
+
+        .btn-cancel {
+            background-color: #ffffff;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-cancel:hover {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
+        .gender-group .form-check {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .gender-group .form-check-input {
+            margin-right: 5px;
+        }
+
+        .invalid-feedback {
+            display: block;
+            min-height: 20px;
+        }
+
+        .navbar-nav {
+            margin-left: auto;
+        }
+
+        .navbar-nav .nav-item.dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu {
+            display: none;
+        }
+
+        .dropdown-menu a {
+            cursor: pointer;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #e9ecef; /* Background color on hover */
+            color: #1e56a6; /* Text color on hover */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Attendance System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/attendances">Attendances</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/terms">Terms</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/students">Students</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/instructors">Instructors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/subjects">Subjects</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Profile
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                            <li><a id="usernameMenuItem" class="dropdown-item" href="/profile">Your Profile</a></li>
+                            <li><a class="dropdown-item" href="/change-password">Change Password</a></li>
+                            <li><a class="dropdown-item" id="logoutMenuItem">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="main-content">
+        <div class="container">
+            <h2 class="text-center mb-4">Update Student Information</h2>
+            <form novalidate id="studentForm">
+                <!-- Form Fields Here -->
+                <!-- Example for one field, others follow a similar pattern -->
+                <div class="form-group">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control input" id="id" name="id" placeholder="Enter ID" required readonly>
+                    <div class="invalid-feedback" id="idErrorMessage"></div>
+                </div>
+                <!-- Add other fields similarly -->
+                <button type="submit" class="btn btn-custom" id="registerBtn">Update</button>
+                <a class="btn btn-cancel" href="/students">Cancel</a>
+            </form>
+        </div>
+    </section>
+    <script>
+        $('#usernameMenuItem').text($.cookie('username'));
+        const datePicker = flatpickr('#dateOfBirth', {
+            dateFormat: 'd/m/Y',
+            maxDate: new Date(),
+        });
+
+        const logoutMenuItem = $('#logoutMenuItem');
+        const studentForm = $('#studentForm');
+        const idInput = $('#id');
+        const nameInput = $('#name');
+        const roleInput = $('#role');
+        const nrcInput = $('#nrc');
+        const emailInput = $('#email');
+        const phoneInput = $('#phone');
+        const familyPhoneInput = $('#familyPhone');
+        const genderMaleInput = $('#male');
+        const genderFemaleInput = $('#female');
+        const statusInput = $('#status');
+        const dobInput = $('#dateOfBirth');
+        const addressInput = $('#address');
+        const registerBtn = $('#registerBtn');
+
+        const nameErrorMessage = $('#nameErrorMessage');
+        const roleErrorMessage = $('#roleErrorMessage');
+        const nrcErrorMessage = $('#nrcErrorMessage');
+        const emailErrorMessage = $('#emailErrorMessage');
+        const phoneErrorMessage = $('#phoneErrorMessage');
+        const familyPhoneErrorMessage = $('#familyPhoneErrorMessage');
+        const genderErrorMessage = $('#genderErrorMessage');
+        const statusErrorMessage = $('#statusErrorMessage');
+        const dobErrorMessage = $('#dobErrorMessage');
+        const addressErrorMessage = $('#addressErrorMessage');
+
+        const studentConstraint = {
+            name: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Name is required'
+                },
+                length: {
+                    maximum: 60,
+                    message: '^Name cannot be more than 60 characters'
+                }
+            },
+            role_no: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Role is required'
+                },
+                length: {
+                    maximum: 12,
+                    message: '^Role cannot be more than 12 characters'
+                }
+            },
+            nrc: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^NRC NO is required'
+                },
+                format: {
+                    pattern: /^([1-9]|[1][0-4])\/[A-Z]+\(N\)\d{6}$/,
+                    message: '^NRC must be: 1-14/[TOWNSHIP](N)123456 or 1-14/[TOWNSHIP]N123456'
+                },
+                length: {
+                    is: 15,
+                    message: '^NRC NO must be exactly 15 characters'
+                }
+            },
+            email: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Email is required'
+                },
+                email: {
+                    message: '^Email must be valid'
+                }
+            },
+            phone: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Phone is required'
+                },
+                format: {
+                    pattern: /^\d{9,11}$/,
+                    message: '^Phone must be 9 to 11 digits'
+                }
+            },
+            family_phone: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Family Phone is required'
+                },
+                format: {
+                    pattern: /^\d{9,11}$/,
+                    message: '^Family Phone must be 9 to 11 digits'
+                }
+            },
+            gender: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Gender is required'
+                }
+            },
+            status: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Status is required'
+                }
+            },
+            dob: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Date of Birth is required'
+                }
+            },
+            address: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Address is required'
+                },
+                length: {
+                    maximum: 255,
+                    message: '^Address cannot be more than 255 characters'
+                }
+            }
+        };
+
+        function handleFormSubmission(event) {
+            event.preventDefault();
+            const formData = studentForm.serializeArray();
+            const errors = validate(formData, studentConstraint);
+
+            if (errors) {
+                for (const [field, messages] of Object.entries(errors)) {
+                    $(`#${field}ErrorMessage`).text(messages.join(', '));
+                }
+            } else {
+                $.ajax({
+                    url: '/students/update',
+                    type: 'PUT',
+                    data: formData,
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success'
+                            }).then(() => {
+                                window.location.href = '/students';
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: response.message,
+                                icon: 'error'
+                            });
+                        }
+                    },
+                    error: function(error) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'An error occurred while updating student information.',
+                            icon: 'error'
+                        });
+                    }
+                });
+            }
+        }
+
+        function handleLogout() {
+            $.post('/logout', function(response) {
+                if (response.success) {
+                    window.location.href = '/login';
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: response.message,
+                        icon: 'error'
+                    });
+                }
+            });
+        }
+
+        studentForm.on('submit', handleFormSubmission);
+        logoutMenuItem.on('click', handleLogout);
+    </script>
+</body>
+</html>

@@ -9,8 +9,10 @@
     <link rel="stylesheet" href="/css/flatpickr.css">
     <link rel="stylesheet" href="/css/dataTable.css">
     <link rel="stylesheet" href="/css/fontawesome.css">
+    <link rel="stylesheet" href="/css/main.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
+    <script type="text/javascript" src="/js/jQuery-cookie.js"></script>
     <script type="text/javascript" src="/js/validate.min.js"></script>
     <script type="text/javascript" src="/js/sweetAlert.js"></script>
     <script type="text/javascript" src="/js/flatpickr.js"></script>
@@ -196,7 +198,7 @@
                             Profile
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                            <li><a class="dropdown-item" href="/profile">Your Profile</a></li>
+                            <li><a id="usernameMenuItem" class="dropdown-item" href="/profile">Your Profile</a></li>
                             <li><a class="dropdown-item" href="/change-password">Change Password</a></li>
                             <li><a class="dropdown-item" id="logoutMenuItem">Logout</a></li>
                         </ul>
@@ -360,7 +362,7 @@
         </div>
     </section>
     <script>
-
+        $('#usernameMenuItem').text($.cookie('username'));
         let selectedStudentIds = [];
         let selectedSubjectIds = [];
 

@@ -9,8 +9,10 @@
     <link rel="stylesheet" href="/css/flatpickr.css">
     <link rel="stylesheet" href="/css/dataTable.css">
     <link rel="stylesheet" href="/css/fontawesome.css">
+    <link rel="stylesheet" href="/css/main.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
+    <script type="text/javascript" src="/js/jQuery-cookie.js"></script>
     <script type="text/javascript" src="/js/validate.min.js"></script>
     <script type="text/javascript" src="/js/sweetAlert.js"></script>
     <script type="text/javascript" src="/js/flatpickr.js"></script>
@@ -199,7 +201,7 @@
                             Profile
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                            <li><a class="dropdown-item" href="/profile">Your Profile</a></li>
+                            <li><a id="usernameMenuItem" class="dropdown-item" href="/profile">Your Profile</a></li>
                             <li><a class="dropdown-item" href="/change-password">Change Password</a></li>
                             <li><a class="dropdown-item" id="logoutMenuItem">Logout</a></li>
                         </ul>
@@ -224,8 +226,8 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="date">Start Date</label>
-                            <input type="date" class="form-control input" id="date" name="date" required>
+                            <label for="date">Date</label>
+                            <input type="date" class="form-control input" id="date" name="date" readonly>
                             <div class="invalid-feedback" id="dateErrorMessage"></div>
                         </div>
                     </div>
@@ -277,7 +279,7 @@
     </section>
 
     <script>
-
+        $('#usernameMenuItem').text($.cookie('username'));
         let terms = [];
         let params = new URL(document.location.toString()).searchParams;
         let attendanceId = params.get("id");
@@ -468,7 +470,7 @@
                             if (term.id == termId) {
                                 const subjects = term.subjects;
                                 subjects.forEach(subject => {
-                                    const select = subject.id == data.data.id ? 'selected' : '';
+                                    const select = subject.id == data.data.subject_id ? 'selected' : '';
                                     subjectInput.append(`<option value="${subject.id}" ${select}>(${subject.code}) ${subject.name}</option>`);
                                 });
                             }

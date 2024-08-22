@@ -6,8 +6,10 @@
     <title>Home Page</title>
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/main.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
+    <script type="text/javascript" src="/js/jQuery-cookie.js"></script>
     <script type="text/javascript" src="/js/sweetAlert.js"></script>
     <style>
         body {
@@ -96,6 +98,7 @@
     
     </section>
     <script>
+        $('#usernameMenuItem').text($.cookie('username'));
         const logoutMenuItem = $('#logoutMenuItem');
 
         logoutMenuItem.on('click', function() {

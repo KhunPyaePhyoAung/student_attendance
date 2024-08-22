@@ -8,8 +8,10 @@
     <link rel="stylesheet" href="/css/fontawesome.css">
     <link rel="stylesheet" href="/css/dataTable.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/main.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
+    <script type="text/javascript" src="/js/jQuery-cookie.js"></script>
     <script type="text/javascript" src="/js/dataTable.js"></script>
     <script type="text/javascript" src="/js/sweetAlert.js"></script>
     <style>
@@ -152,7 +154,7 @@
                             Profile
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                            <li><a class="dropdown-item" href="/profile">Your Profile</a></li>
+                            <li><a id="usernameMenuItem" class="dropdown-item" href="/profile">Your Profile</a></li>
                             <li><a class="dropdown-item" href="/change-password">Change Password</a></li>
                             <li><a class="dropdown-item" id="logoutMenuItem">Logout</a></li>
                         </ul>
@@ -174,7 +176,7 @@
             <thead>
                 <tr>
                     <th>Sr</th>
-                    <th>Role</th>
+                    <th>Roll</th>
                     <th>Full Name</th>
                     <th>NRC</th>
                     <th>Phone</th>
@@ -188,7 +190,7 @@
         </table>
     </div>
     <script>
-
+        $('#usernameMenuItem').text($.cookie('username'));
         const logoutMenuItem = $('#logoutMenuItem');
         const studentTableBody = $('#studentTableBody');
         let dataTable = null;

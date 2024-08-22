@@ -7,8 +7,10 @@
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/flatpickr.css">
+    <link rel="stylesheet" href="/css/main.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
+    <script type="text/javascript" src="/js/jQuery-cookie.js"></script>
     <script type="text/javascript" src="/js/validate.min.js"></script>
     <script type="text/javascript" src="/js/sweetAlert.js"></script>
     <script type="text/javascript" src="/js/flatpickr.js"></script>
@@ -149,7 +151,7 @@
                             Profile
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                            <li><a class="dropdown-item" href="/profile">Your Profile</a></li>
+                            <li><a id="usernameMenuItem" class="dropdown-item" href="/profile">Your Profile</a></li>
                             <li><a class="dropdown-item" href="/change-password">Change Password</a></li>
                             <li><a class="dropdown-item" id="logoutMenuItem">Logout</a></li>
                         </ul>
@@ -171,8 +173,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="name">Role</label>
-                    <input type="text" class="form-control input" id="role" name="role_no" placeholder="Enter role no" required>
+                    <label for="name">Roll</label>
+                    <input type="text" class="form-control input" id="role" name="role_no" placeholder="Enter roll no" required>
                     <div class="invalid-feedback" id="roleErrorMessage">
                         
                     </div>
@@ -248,7 +250,7 @@
         </div>
     </section>
     <script>
-
+        $('#usernameMenuItem').text($.cookie('username'));
         const datePicker = flatpickr('#dateOfBirth', {
                 dateFormat: 'd/m/Y',
                 maxDate: new Date(),
@@ -296,11 +298,11 @@
             role_no: {
                 presence: {
                     allowEmpty: false,
-                    message: '^Role is required'
+                    message: '^Roll is required'
                 },
                 length: {
                     maximum: 12,
-                    message: '^Name cannot be more than 12 characters'
+                    message: '^Roll cannot be more than 12 characters'
                 }
             },
             nrc: {
