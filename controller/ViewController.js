@@ -161,6 +161,19 @@ const viewController = ({tokenService}) => {
             return res.sendFile(html);
         },
 
+        attendances: (req, res) => {
+            const role = req.user.role;
+            let html;
+            if (role === 'ADMIN') {
+                html = path.join(viewFolder, 'admin_attendances.html');
+            } else if (role === 'INSTRUCTOR') {
+                html = path.join(viewFolder, 'instructor_attendances.html');
+            } else if (role === 'STUDENT') {
+                html = path.join(viewFolder, 'student_attendances.html');
+            }
+            return res.sendFile(html);
+        },
+
     }
 }
 

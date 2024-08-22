@@ -82,6 +82,16 @@ const attendanceService = ({attendanceRepository}) => {
                 throw error;
             }
         },
+
+        filterAttendances: async (termId, fromDate, toDate) => {
+            try {
+                const attendances = await attendanceRepository.filterAttendances(termId, fromDate, toDate);
+                return attendances;
+            } catch (error) {
+                throw error;
+            }
+        },
+
     };
 }
 

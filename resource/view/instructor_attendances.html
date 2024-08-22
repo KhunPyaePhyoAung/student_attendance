@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendances</title>
+    <link type="image/png" rel="icon" href="/icon/icon.png">
+    <link rel="stylesheet" href="/css/fontawesome.css">
+    <link rel="stylesheet" href="/css/dataTable.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/js/jQuery.js"></script>
+    <script type="text/javascript" src="/js/dataTable.js"></script>
+    <script type="text/javascript" src="/js/sweetAlert.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ecf0f3;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .navbar {
+            background-color: #1e56a6;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #fff !important;
+            cursor: pointer;
+        }
+
+        .table-container {
+            max-width: 90%;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .table thead th {
+            color: #1e56a6;
+        }
+
+        .dropdown-menu a {
+            cursor: pointer;
+        }
+        
+        .header-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header-container h2 {
+            color: #1e56a6;
+        }
+
+        .status-active {
+            color: green;
+        }
+
+        .status-inactive {
+            color: gray;
+        }
+
+        .navbar-nav {
+            margin-left: auto;
+        }
+
+        .navbar-nav .nav-item.dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu {
+            display: none;
+        }
+
+        .dropdown-menu a {
+            cursor: pointer;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #e9ecef; /* Background color on hover */
+            color: #1e56a6; /* Text color on hover */
+        }
+
+        .bg-gray {
+            background-color: #f4f4f4!important;
+        }
+
+        .roll-call-danger {
+            color: red!important;
+        }
+
+        .roll-call-warning {
+            color: orange!important;
+        }
+
+        .roll-call-success {
+            color: green!important;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Attendance System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sessions">Sessions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/attendances">Attendances</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/terms">Terms</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/students">Students</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/instructors">Instructors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/subjects">Subjects</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Profile
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="/profile">Your Profile</a></li>
+                            <li><a class="dropdown-item" href="/change-password">Change Password</a></li>
+                            <li><a class="dropdown-item" id="logoutMenuItem">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Attendance List -->
+    <div class="table-container">
+        <div class="header-container">
+            <h2>Attendances</h2>
+        </div>
+        
+        <div class="container-fluid my-4">
+            <div class="row g-3">
+                <div class="col-12 col-md-auto d-flex align-items-center mb-2">
+                    <select id="termSelect" class="form-select input filter-input">
+                        <option value="">-- select a term --</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-auto d-flex align-items-center mb-2">
+                    <input type="date" id="fromDate" class="form-control filter-input" placeholder="From">
+                </div>
+                <div class="col-12 col-md-auto d-flex align-items-center mb-2">
+                    <input type="date" id="toDate" class="form-control filter-input" placeholder="To">
+                </div>
+            </div>
+        </div>
+        
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <i class="fa fa-user roll-call-success"></i>
+                    <label id="successCountLabel">0</label>
+                    <i class="fa fa-user roll-call-warning ms-2"></i>
+                    <label id="warningCountLabel">0</label>
+                    <i class="fa fa-user roll-call-danger ms-2"></i>
+                    <label id="dangerCountLabel">0</label>
+                </div>
+            </div>
+        </div>
+
+        <table class="table table-bordered display">
+            <thead id="attendanceTableHeader">
+            </thead>
+            <tbody id="attendanceTableBody">
+            </tbody>
+        </table>
+    </div>
+    <script>
+
+        let terms = [];
+        let subjectsTotalSessions = {};
+        // let fromDate = dateformat(new Date(), 'mm/dd/yyyy');
+        // let toDate = dateformat(new Date(), 'mm/dd/yyyy');
+        const logoutMenuItem = $('#logoutMenuItem');
+        const termSelector = $('#termSelect');
+        const fromDateInput = $('#fromDate');
+        const toDateInput = $('#toDate');
+        const attendanceTableHeader = $('#attendanceTableHeader');
+        const attendanceTableBody = $('#attendanceTableBody');
+        const successCountLabel = $('#successCountLabel');
+        const warningCountLabel = $('#warningCountLabel');
+        const dangerCountLabel = $('#dangerCountLabel');
+
+        $(document).ready(function() {
+            fetchTerms();
+            // fromDateInput.val(fromDate);
+            // toDateInput.val(toDate);
+        });
+
+        $('.filter-input').on('input', function(e) {
+            const termId = termSelector.val();
+
+            if (e.target.id === 'termSelect') {
+                fetchAttendanceTable(termId);
+                const selectedTerm = terms.filter(t => t.id == termId)[0];
+                if (selectedTerm) {
+                    fromDateInput.val(selectedTerm.start_date);
+                    toDateInput.val(selectedTerm.end_date);
+                }
+            }
+            fetchAttendance();
+        });
+
+        logoutMenuItem.on('click', function() {
+            swal({
+                title: "Are you sure to logout?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    logout();
+                }
+            });
+        });
+
+        function fetchTerms() {
+
+            const settings = {
+                "url": "/api/terms",
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                    if (data.status === 200) {
+                        terms = data.data;
+                        termSelector.empty();
+                        terms.forEach(term => {
+                            termSelector.append(`<option value="${term.id}">${term.name}</option>`);
+                        });
+                        const term_id = termSelector.val();
+                        fetchAttendanceTable(term_id);
+                        const selectedTerm = terms.filter(t => t.id == term_id)[0];
+                        if (selectedTerm) {
+                            fromDateInput.val(selectedTerm.start_date);
+                            toDateInput.val(selectedTerm.end_date);
+                        }
+                        
+                    } else if (data.status === 500) {
+                        const errorMessage = data.message;
+                        console.log(errorMessage);
+                    }
+                }
+            );
+        }
+
+        function fetchAttendance() {
+            
+            const termId = termSelector.val();
+            const fromDate = fromDateInput.val();
+            const toDate = toDateInput.val();
+
+            const settings = {
+                "url": `/api/attendances/filter?term_id=${termId}&from_date=${fromDate}&to_date=${toDate}`,
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                
+                    successCountLabel.text('0');
+                    warningCountLabel.text('0');
+                    dangerCountLabel.text('0');
+                    if (data.status === 200) {
+                        const attendances = data.data;
+                        const subCount = {};
+                        const stuCount = {};
+                        const percentType = {
+                            success: 0,
+                            warning: 0,
+                            danger: 0
+                        };
+
+                        console.log(attendances);
+                        attendances.forEach(att => {
+                            subCount[`sub_${att.subject_id}`] = att.total_times;
+                            if (!stuCount[`all_${att.student_id}`]) {
+                                stuCount[`all_${att.student_id}`] = 0;
+                            }
+                            stuCount[`all_${att.student_id}`] += att.attendance_times;
+
+                            const percent = Math.round(att.attendance_times / att.total_times * 100);
+                            const className = getRollCallPercentClass(percent);
+                            $(`#total_${att.subject_id}`).text(att.total_times);
+                            $(`#data_${att.student_id}_${att.subject_id}`).text(att.attendance_times);
+                            $(`#data_${att.student_id}_${att.subject_id}`).addClass(className);
+                            $(`#percent_${att.student_id}_${att.subject_id}`).text(percent + '%');
+                            $(`#percent_${att.student_id}_${att.subject_id}`).addClass(className);
+                        });
+                        let allCount = 0;
+                        $.each(subCount, function(key, value) {
+                            allCount += parseInt(value);
+                        });
+
+                        $.each(stuCount, function(key, value) {
+                            const percent = Math.round(value / allCount * 100);
+                            if ($(`#${key}`).length) {
+                                if (percent >= 80) {
+                                    percentType['success'] += 1;
+                                } else if (percent >= 75) {
+                                    percentType['warning'] += 1;
+                                } else if (percent >= 0) {
+                                    percentType['danger'] += 1;
+                                }
+                            }
+                            
+                            const className = getRollCallPercentClass(percent);
+                            $(`#${key}`).text(value);
+                            $(`#${key}`).addClass(className);
+                            $(`#percent_${key}`).text(percent + '%%');
+                            $(`#percent_${key}`).addClass(className);
+                        });
+                        
+                        // console.log(percentType);
+                        $(`#all`).text(allCount);
+                        successCountLabel.text(percentType.success);
+                        warningCountLabel.text(percentType.warning);
+                        dangerCountLabel.text(percentType.danger);
+                    } else if (data.status === 500) {
+                        const errorMessage = data.message;
+                        console.log(errorMessage);
+                    }
+                }
+            );
+        }
+
+        function fetchAttendanceTable(termId) {
+            fetchAndAddSubjectsByTermId(termId);
+            // fetchAndAddStudentsByTermId(termId);
+        }
+
+        function fetchAndAddStudentsByTermId(termId, subjects) {
+            const settings = {
+                "url": "/api/students/term/" + termId,
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                    if (data.status === 200) {
+                        attendanceTableBody.empty();
+                        
+                        data.data.forEach((student, i) => {
+                            let row = '<tr>';
+                            row += `<th class="text-center">${i + 1}</th>`;
+                            row += `<th>${student.role_no}</th>`;
+                            row += `<th>${student.name}</th>`;
+                            row += `<th id="all_${student.id}" class="text-center bg-gray"></th>`;
+                            row += `<th id="percent_all_${student.id}" class="text-center bg-gray"></th>`;
+                            subjects.forEach(subject => {
+                                row += `<th id="data_${student.id}_${subject.id}" class="text-center"></th>`;
+                                row += `<th id="percent_${student.id}_${subject.id}" class="text-center"></th>`;
+                            });
+
+                            row += '</tr>';
+                            attendanceTableBody.append(row);
+                        });
+
+                        fetchAttendance();
+                        
+                    } else if (data.status === 404) {
+                        console.log(data.message);
+                    }
+                }
+            );
+        }
+
+        function fetchAndAddSubjectsByTermId(termId) {
+            const settings = {
+                "url": "/api/subjects/term/" + termId,
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                
+                    if (data.status === 200) {
+                        attendanceTableHeader.empty();
+                        let row = '<tr>';
+                        row += `<th rowspan="2" class="text-center align-middle">Sr</th>`;
+                        row += `<th rowspan="2" class="text-center align-middle">Roll</th>`;
+                        row += `<th rowspan="2" class="text-center align-middle">Name</th>`;
+                        row += `<th colspan="2" class="text-center align-middle bg-gray">All</th>`;
+                        data.data.forEach((subject, i) => {
+                            row += `<th colspan="2" class="text-center align-middle">${subject.name}</th>`;
+                        });
+
+                        row += '</tr>';
+                        attendanceTableHeader.append(row);
+
+                        row = '<tr>';
+                        row += `<th id="all" colspan="2" class="text-center bg-gray"></th>`;
+                        data.data.forEach((subject, i) => {
+                            row += `<th id="total_${subject.id}" colspan="2" class="text-center"></th>`;
+                        });
+
+                        row += '</tr>';
+                        attendanceTableHeader.append(row);
+
+                        fetchAndAddStudentsByTermId(termId, data.data);
+                    } else if (data.status === 404) {
+                        console.log(data.message);
+                    }
+                }
+            );
+        }
+
+        function getRollCallPercentClass(percent) {
+            if (percent >= 80) {
+                return 'roll-call-success';
+            } else if (percent >= 75) {
+                return 'roll-call-warning';
+            } else {
+                return 'roll-call-danger';
+            }
+        }
+
+        function logout() {
+            
+            const settings = {
+                "url": "/api/auth/logout",
+                "method": "POST",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                
+                    if (data.status === 204) {
+                        window.location.replace('/login');
+                    }
+                }
+            );
+        }
+
+    </script>
+</body>
+</html>

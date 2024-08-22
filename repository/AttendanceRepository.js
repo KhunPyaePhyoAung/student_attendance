@@ -216,7 +216,78 @@ const attendanceRepository = () => {
                 });
                 connection.release();
             });
-        }
+        },
+
+        filterAttendances: async (termId, fromDate, toDate) => {
+            const connection = await getConnection();
+
+            termId = parseInt(termId);
+
+            return new Promise((resolve, reject) => {
+                const sql = `SELECT 
+                                stu.id AS student_id,
+                                stu.name AS student_name,
+                                stu.nrc AS student_nrc,
+                                stu.role_no AS student_role_no,
+                                stu.phone AS student_phone,
+                                stu.family_phone AS student_family_phone,
+                                stu.gender AS student_gender,
+                                stu.date_of_birth AS student_date_of_birth,
+                                stu.address AS student_address,
+                                sub.id AS subject_id,
+                                sub.name AS subject_name,
+                                COALESCE(COUNT(att.student_id), 0) AS attendance_times,
+                                COALESCE(sub_total.total_times, 0) AS total_times
+                            FROM 
+                                student stu
+                            JOIN 
+                                roll_call rc ON rc.subject_id IN (
+                                    SELECT subject_id
+                                    FROM roll_call
+                                    WHERE term_id = ?
+                                    AND date >= ?
+                                    AND date <= ?
+                                )
+                            JOIN 
+                                subject sub ON rc.subject_id = sub.id
+                            LEFT JOIN 
+                                attendance att ON stu.id = att.student_id
+                                                AND att.roll_call_id = rc.id
+                            LEFT JOIN 
+                                (
+                                    SELECT 
+                                        rc.subject_id, 
+                                        COUNT(*) AS total_times
+                                    FROM 
+                                        roll_call rc
+                                    WHERE 
+                                        rc.term_id = ?
+                                        AND rc.date >= ?
+                                        AND rc.date <= ?
+                                    GROUP BY 
+                                        rc.subject_id
+                                ) AS sub_total
+                                ON rc.subject_id = sub_total.subject_id
+                            WHERE 
+                                rc.term_id = ?
+                                AND rc.date >= ?
+                                AND rc.date <= ?
+                            GROUP BY 
+                                stu.id, 
+                                sub.id;
+
+                            `;
+                const params = [termId, fromDate, toDate, termId, fromDate, toDate, termId, fromDate, toDate];
+                connection.query(sql, params, (error, results, fields) => {
+                    if (error) {
+                        reject(new Error(error.sqlMessage));
+                    } else {
+                        resolve(results);
+                    }
+                });
+                connection.release();
+            });
+        },
 
     };
 }

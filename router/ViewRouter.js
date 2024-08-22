@@ -117,4 +117,10 @@ router.get(
     viewController.session_detail
 );
 
+router.get(
+    ['/attendances'],
+    [authMiddleware.verifyUserToken],
+    viewController.attendances
+);
+
 module.exports = router;

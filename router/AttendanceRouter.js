@@ -42,4 +42,10 @@ router.get(
     attendanceController.getAllAttendancesByInstructorId
 );
 
+router.get(
+    ['/filter'],
+    [authMiddleware.verifyUserToken],
+    attendanceController.filter
+);
+
 module.exports = router;

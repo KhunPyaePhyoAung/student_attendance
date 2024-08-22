@@ -130,6 +130,32 @@ const attendanceController = ({attendanceService}) => {
                 );
             }
         },
+
+        filter: async (req, res) => {
+            const termId = req.query.term_id;
+            const fromDate = req.query.from_date;
+            const toDate = req.query.to_date;
+
+            try {
+                const attendances = await attendanceService.filterAttendances(termId, fromDate, toDate);
+                return res.status(200).json(
+                    {
+                        status: 200,
+                        meata: {
+                            total: attendances.length
+                        },
+                        data: attendances
+                    }
+                );
+            } catch (error) {
+                return res.status(200).json(
+                    {
+                        status: 400,
+                        message: error.message
+                    }
+                );
+            }
+        },
     };
 
     
