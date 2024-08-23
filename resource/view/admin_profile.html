@@ -6,14 +6,11 @@
     <title>Profile</title>
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/flatpickr.css">
     <link rel="stylesheet" href="/css/main.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
     <script type="text/javascript" src="/js/jQuery-cookie.js"></script>
-    <script type="text/javascript" src="/js/validate.min.js"></script>
     <script type="text/javascript" src="/js/sweetAlert.js"></script>
-    <script type="text/javascript" src="/js/flatpickr.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -163,19 +160,19 @@
 
     <section class="main-content">
         <div class="container">
-            <h2 class="text-center mb-4">Profile</h2>
+            <h2 class="text-center mb-4" id="name"></h2>
             <form novalidate id="studentForm">
                 <div class="form-group mt-3">
                     <label for="name">Email</label>
-                    <input type="text" class="form-control input" readonly>
+                    <input type="text" id="email" class="form-control input" readonly>
                 </div>
                 <div class="form-group mt-3">
                     <label for="name">Role</label>
-                    <input type="text" class="form-control input" readonly>
+                    <input type="text" id="role" class="form-control input" readonly>
                 </div>
                 <div class="form-group mt-3">
                     <label for="name">Status</label>
-                    <input type="text" class="form-control input" readonly>
+                    <input type="text" id="status" class="form-control input" readonly>
                 </div>
                 
             </form>
@@ -183,158 +180,12 @@
     </section>
     <script>
         $('#usernameMenuItem').text($.cookie('username'));
-        const datePicker = flatpickr('#dateOfBirth', {
-                dateFormat: 'd/m/Y',
-                maxDate: new Date(),
-            });
 
-        const logoutMenuItem = $('#logoutMenuItem');
-        const studentForm = $('#studentForm');
-        const idInput = $('#id');
-        const nameInput = $('#name');
+        const nameLabel = $('#name');
         const roleInput = $('#role');
-        const nrcInput = $('#nrc');
         const emailInput = $('#email');
-        const phoneInput = $('#phone');
-        const familyPhoneInput = $('#familyPhone');
-        const genderInput = $('#gender');
-        const genderMaleInput = $('#male');
-        const genderFemaleInput = $('#female');
         const statusInput = $('#status');
-        const dobInput = $('#dateOfBirth')
-        const addressInput = $('#address');
-        const registerBtn = $('#registerBtn');
-
-        const nameErrorMessage = $('#nameErrorMessage');
-        const roleErrorMessage = $('#roleErrorMessage');
-        const nrcErrorMessage = $('#nrcErrorMessage');
-        const emailErrorMessage = $('#emailErrorMessage');
-        const phoneErrorMessage = $('#phoneErrorMessage');
-        const familyPhoneErrorMessage = $('#familyPhoneErrorMessage');
-        const genderErrorMessage = $('#genderErrorMessage');
-        const statusErrorMessage = $('#statusErrorMessage');
-        const dobErrorMessage = $('#dobErrorMessage');
-        const addressErrorMessage = $('#addressErrorMessage');
-
-        const studentConstraint = {
-            name: {
-                presence: {
-                    allowEmpty: false,
-                    message: '^Name is required'
-                },
-                length: {
-                    maximum: 60,
-                    message: '^Name cannot be more than 60 characters'
-                }
-            },
-            role_no: {
-                presence: {
-                    allowEmpty: false,
-                    message: '^Role is required'
-                },
-                length: {
-                    maximum: 12,
-                    message: '^Name cannot be more than 12 characters'
-                }
-            },
-            nrc: {
-                presence: {
-                    allowEmpty: false,
-                    message: '^NRC NO is required'
-                },
-                format: {
-                    pattern: /^([1-9]|[1][0-4])\/[A-Z]+\(N\)\d{6}$/,
-                    message: '^NRC must be: 1-14/[TOWNSHIP](N) followed by 6 digits'
-                }
-            },
-            email: {
-                presence: {
-                    allowEmpty: false,
-                    message: '^Email is required'
-                },
-                email: {
-                    message: '^Invalid email format'
-                },
-                length: {
-                    maximum: 200,
-                    message: '^Email cannot be more than 200 characters'
-                }
-            },
-            phone: {
-                presence: {
-                    allowEmpty: false,
-                    message: '^Phone is required'
-                },
-                format: {
-                    pattern: /^\d+$/,
-                    message: '^Phone must be a number'
-                },
-                length: {
-                    minimum: 6,
-                    maximum: 12,
-                    message: '^Phone must be between 6 and 12 digits'
-                }
-            },
-            family_phone: {
-                presence: {
-                    allowEmpty: false,
-                    message: '^Family Phone is required'
-                },
-                format: {
-                    pattern: /^\d+$/,
-                    message: '^Family Phone must be a number'
-                },
-                length: {
-                    minimum: 6,
-                    maximum: 12,
-                    message: '^Family Phone must be between 6 and 12 digits'
-                }
-            },
-            gender: {
-                presence: {
-                    allowEmpty: false,
-                    message: '^Gender is required'
-                }
-            },
-            status: {
-                presence: {
-                    allowEmpty: false,
-                    message: '^Status is required'
-                }
-            },
-            date_of_birth: {
-                presence: {
-                    allowEmpty: false,
-                    message: '^Date of birth is required'
-                }
-            },
-            address: {
-                presence: {
-                    allowEmpty: false,
-                    message: '^Address is required'
-                },
-                length: {
-                    maximum: 255,
-                    message: '^Address cannot be more than 255 characters'
-                }
-            }
-        };
-
-        studentForm.on('submit', function(e){
-            e.preventDefault();
-        });
-
-        $('.input').on('input', function(e) {
-            clearFormErrorMessages(e.target.id);
-        });
-
-        registerBtn.on('click', function() {
-            if (validateForm()) {
-                const student = getFormData();
-                updateStudent(student);
-            }
-            
-        });
+        const logoutMenuItem = $('#logoutMenuItem');
 
         logoutMenuItem.on('click', function() {
             swal({
@@ -351,108 +202,23 @@
         });
 
         $(document).ready(function() {
-            let params = new URL(document.location.toString()).searchParams;
-            let studentId = params.get("id");
-            fetchStudentById(studentId);
+            let userId = $.cookie('user_id');
+            fetchAdminById(userId);
         })
 
 
         // ---------------------- Functions ----------------------------------
 
-        function fillStudentForm(student) {
-            idInput.val(student.id);
-            nameInput.val(student.name);
-            roleInput.val(student.role_no);
-            nrcInput.val(student.nrc);
-            emailInput.val(student.email);
-            phoneInput.val(student.phone);
-            familyPhoneInput.val(student.family_phone);
-            statusInput.val(student.status);
-            datePicker.setDate(formatDateDMY(new Date(student.date_of_birth)), true);
-            addressInput.val(student.address);
-
-            if (student.gender === 'MALE') {
-                genderMaleInput.prop('checked', true);
-            } else if (student.gender === 'FEMALE') {
-                genderFemaleInput.prop('checked', true);
-            }
-
-            // flatpickr('#dateOfBirth', {
-            //     dateFormat: 'd/m/Y',
-            //     maxDate: new Date(),
-            // });
+        function fillAdminForm(admin) {
+            nameLabel.text($.cookie('username'));
+            roleInput.val(admin.role);
+            emailInput.val(admin.email);
+            statusInput.val(admin.status);
         }
 
-        function updateStudent(student) {
+        function fetchAdminById(id) {
             const settings = {
-                "url": "/api/students/" + student.id,
-                "method": "PUT",
-                "timeout": 0,
-                "headers": {
-                "Content-Type": "application/json"
-                },
-                "data": JSON.stringify(student),
-            };
-
-            $.post(
-                settings
-            ).always(function (data, status, xhr) {
-                    if (data.status === 200) {
-                        window.scrollTo(0, 0);
-                        swal('Successfully updated the student', {
-                            icon: 'success',
-                        });
-                        
-                    } else if (data.status === 400) {
-                        const errors = data.errors;
-                        console.log(data);
-                        errors.forEach(element => {
-                            const field = element.field;
-                            const message = element.message;
-
-                            console.log(field);
-                            console.log(message);
-
-                            if (field === 'name') {
-                                nameErrorMessage.text(message);
-                                nameInput.addClass('is-invalid');
-                            } else if (field === 'role_no') {
-                                roleErrorMessage.text(message);
-                                roleInput.addClass('is-invalid');
-                            } else if (field === 'nrc') {
-                                nrcErrorMessage.text(message);
-                                nrcInput.addClass('is-invalid');
-                            } else if (field === 'email') {
-                                emailErrorMessage.text(message);
-                                emailInput.addClass('is-invalid');
-                            } else if (field === 'phone') {
-                                phoneErrorMessage.text(message);
-                                phoneInput.addClass('is-invalid');
-                            } else if (field === 'family_phone') {
-                                familyPhoneErrorMessage.text(message);
-                                familyPhoneInput.addClass('is-invalid');
-                            } else if (field === 'gender') {
-                                genderErrorMessage.text(message);
-                                genderInput.addClass('is-invalid');
-                            } else if (field === 'status') {
-                                statusErrorMessage.text(message);
-                                statusInput.addClass('is-invalid');
-                            } else if (field === 'date_of_birth') {
-                                dobErrorMessage.text(message);
-                                dobInput.addClass('is-invalid');
-                            } else if (field === 'address') {
-                                addressErrorMessage.text(message);
-                                addressInput.addClass('is-invalid');
-                            }
-                        });
-                    }
-                }
-            );
-        }
-
-        function fetchStudentById(id) {
-            const settings = {
-                "url": "/api/students/" + id,
+                "url": "/api/users/" + id,
                 "method": "GET",
                 "timeout": 0,
             };
@@ -460,164 +226,14 @@
             $.post(
                 settings
             ).always(function (data, status, xhr) {
+                    console.log(data);
                     if (data.status === 200) {
-                        fillStudentForm(data.data);
+                        fillAdminForm(data.data);
                     } else if (data.status === 404) {
                         console.log(data.message);
                     }
                 }
             );
-        }
-
-        function getFormData() {
-            const student = {};
-            const dataArray = studentForm.serializeArray();
-            dataArray.forEach(data => {
-                student[data.name] = data.value;
-            });
-            student['date_of_birth'] = formatDateYMD(datePicker.input.value);
-            return student;
-        }
-
-        function clearFormErrorMessages(sourceId) {
-            if (sourceId) {
-                if (sourceId === 'name') {
-                    nameErrorMessage.text('');
-                    nameInput.removeClass('is-invalid');
-                } else if (sourceId === 'role') {
-                    roleErrorMessage.text('');
-                    roleInput.removeClass('is-invalid');
-                } else if (sourceId === 'nrc') {
-                    nrcErrorMessage.text('');
-                    nrcInput.removeClass('is-invalid');
-                } else if (sourceId === 'email') {
-                    emailErrorMessage.text('');
-                    emailInput.removeClass('is-invalid');
-                } else if (sourceId === 'phone') {
-                    phoneErrorMessage.text('');
-                    phoneInput.removeClass('is-invalid');
-                } else if (sourceId === 'family_phone') {
-                    familyPhoneErrorMessage.text('');
-                    familyPhoneInput.removeClass('is-invalid');
-                } else if (sourceId === 'gender' || sourceId === 'male' || sourceId == 'female') {
-                    genderErrorMessage.text('');
-                    genderInput.removeClass('is-invalid');
-                } else if (sourceId === 'status') {
-                    statusErrorMessage.text('');
-                    statusInput.removeClass('is-invalid');
-                } else if (sourceId === 'dateOfBirth') {
-                    dobErrorMessage.text('');
-                    dobInput.removeClass('is-invalid');
-                } else if (sourceId === 'address') {
-                    addressErrorMessage.text('');
-                    addressInput.removeClass('is-invalid');
-                }
-            } else {
-                nameErrorMessage.text('');
-                roleErrorMessage.text('');
-                nrcErrorMessage.text('');
-                emailErrorMessage.text('');
-                phoneErrorMessage.text('');
-                familyPhoneErrorMessage.text('');
-                genderErrorMessage.text('');
-                statusErrorMessage.text('');
-                dobErrorMessage.text('');
-                addressErrorMessage.text('');
-
-                nameInput.removeClass('is-invalid');
-                roleInput.removeClass('is-invalid');
-                nrcInput.removeClass('is-invalid');
-                emailInput.removeClass('is-invalid');
-                phoneInput.removeClass('is-invalid');
-                familyPhoneInput.removeClass('is-invalid');
-                genderInput.removeClass('is-invalid');
-                statusInput.removeClass('is-invalid');
-                dobInput.removeClass('is-invalid');
-                addressInput.removeClass('is-invalid');
-            }
-            
-        }
-
-
-        function validateForm() {
-            clearFormErrorMessages();
-
-            const student = getFormData();
-
-            const checkResult = validate(student, studentConstraint);
-
-            if (!checkResult) {
-                return true;
-            }
-
-            if (checkResult.name) {
-                nameErrorMessage.text(checkResult.name[0]);
-                nameInput.addClass('is-invalid');
-            }
-
-            if (checkResult.role_no) {
-                roleErrorMessage.text(checkResult.role_no[0]);
-                roleInput.addClass('is-invalid');
-            }
-
-            if (checkResult.nrc) {
-                nrcErrorMessage.text(checkResult.nrc[0]);
-                nrcInput.addClass('is-invalid');
-            }
-
-            if (checkResult.email) {
-                emailErrorMessage.text(checkResult.email[0]);
-                emailInput.addClass('is-invalid');
-            }
-
-            if (checkResult.phone) {
-                phoneErrorMessage.text(checkResult.phone[0]);
-                phoneInput.addClass('is-invalid');
-            }
-
-            if (checkResult.family_phone) {
-                familyPhoneErrorMessage.text(checkResult.family_phone[0]);
-                familyPhoneInput.addClass('is-invalid');
-            }
-
-            if (checkResult.gender) {
-                genderErrorMessage.text(checkResult.gender[0]);
-                genderInput.addClass('is-invalid');
-            }
-
-            if (checkResult.status) {
-                statusErrorMessage.text(checkResult.status[0]);
-                statusInput.addClass('is-invalid');
-            }
-
-            if (checkResult.date_of_birth) {
-                dobErrorMessage.text(checkResult.date_of_birth[0]);
-                dobInput.addClass('is-invalid');
-            }
-
-            if (checkResult.address) {
-                addressErrorMessage.text(checkResult.address[0]);
-                addressInput.addClass('is-invalid');
-            }
-            
-            console.log(checkResult);
-            return false;
-        }
-
-        function formatDateDMY(date) {
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-            const year = date.getFullYear();
-            
-            return `${day}/${month}/${year}`;
-        }
-
-        function formatDateYMD(dateStr) {
-            if (!dateStr) {
-                return '';
-            }
-            const [day, month, year] = dateStr.split('/');
-            return `${year}/${month}/${day}`;
         }
 
 

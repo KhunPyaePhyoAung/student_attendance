@@ -19,6 +19,7 @@ const authController = ({ authService, userService, tokenService }) => {
                     role: ${user.role}
                 }`);
                 res.cookie('username', user.name);
+                res.cookie('user_id', user.id);
 
                 return res.status(200).json({
                     status: 200,

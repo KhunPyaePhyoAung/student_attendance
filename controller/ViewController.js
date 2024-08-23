@@ -167,6 +167,19 @@ const viewController = ({tokenService}) => {
             return res.sendFile(html);
         },
 
+        term_detail: (req, res) => {
+            const role = req.user.role;
+            let html;
+            if (role === 'ADMIN') {
+                html = path.join(viewFolder, 'admin_term_detail.html');
+            } else if (role === 'INSTRUCTOR') {
+                html = path.join(viewFolder, 'instructor_term_detail.html');
+            } else if (role === 'STUDENT') {
+                html = path.join(viewFolder, 'student_term_detail.html');
+            }
+            return res.sendFile(html);
+        },
+
         attendance_scan: (req, res) => {
             const html = path.join(viewFolder, 'student_attendance_scan.html');
             return res.sendFile(html);
@@ -222,6 +235,19 @@ const viewController = ({tokenService}) => {
                 html = path.join(viewFolder, 'instructor_profile.html');
             } else if (role === 'STUDENT') {
                 html = path.join(viewFolder, 'student_profile.html');
+            }
+            return res.sendFile(html);
+        },
+
+        change_password: (req, res) => {
+            const role = req.user.role;
+            let html;
+            if (role === 'ADMIN') {
+                html = path.join(viewFolder, 'admin_change_password.html');
+            } else if (role === 'INSTRUCTOR') {
+                html = path.join(viewFolder, 'instructor_change_password.html');
+            } else if (role === 'STUDENT') {
+                html = path.join(viewFolder, 'student_change_password.html');
             }
             return res.sendFile(html);
         },

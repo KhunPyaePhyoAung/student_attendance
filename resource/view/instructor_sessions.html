@@ -181,11 +181,11 @@
                     <th>Sr</th>
                     <th>Term</th>
                     <th>Subject</th>
-                    <th>Date</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Start Time</th>
+                    <th class="text-center">End Time</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody id="termTableBody">
@@ -296,11 +296,11 @@
                 row += `<td>${i + 1}</td>`;
                 row += `<td>${attendance.term_name}</td>`;
                 row += `<td>${attendance.subject_name}</td>`;
-                row += `<td>${attendance.date}</td>`;
-                row += `<td>${attendance.start_time}</td>`;
-                row += `<td>${attendance.end_time}</td>`;
+                row += `<td class="text-center">${attendance.date}</td>`;
+                row += `<td class="text-center">${attendance.start_time}</td>`;
+                row += `<td class="text-center">${attendance.end_time}</td>`;
                 row += `<td class="text-center">${attendance.status == 'OPENING' ? '<i class="fa fa-circle status-active"></i>' : '<i class="fa fa-circle status-inactive"></i>'}</td>`;
-                row += `<td>
+                row += `<td class="text-center">
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-cog"></i>

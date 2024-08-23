@@ -11,12 +11,12 @@ router.get(
 );
 
 router.get(
-    '/:id',
+    '/:id(\\d+)',
     subjectController.findOneById
 );
 
 router.get(
-    '/term/:termId',
+    '/term/:termId(\\d+)',
     subjectController.findAllByTermId
 );
 
@@ -26,12 +26,12 @@ router.post(
 );
 
 router.put(
-    '/:id',
+    '/:id(\\d+)',
     subjectController.update
 );
 
 router.delete(
-    '/:id',
+    '/:id(\\d+)',
     subjectController.delete
 );
 

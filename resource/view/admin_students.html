@@ -179,10 +179,10 @@
                     <th>Roll</th>
                     <th>Full Name</th>
                     <th>NRC</th>
-                    <th>Phone</th>
+                    <th class="text-start">Phone</th>
                     <th>Email</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody id="studentTableBody">
@@ -300,7 +300,7 @@
                 row += `<td>${student.role_no}</td>`;
                 row += `<td>${student.name}</td>`;
                 row += `<td>${student.nrc}</td>`;
-                row += `<td>${student.phone}</td>`;
+                row += `<td class="text-start">${student.phone}</td>`;
                 row += `<td>${student.email}</td>`;
                 row += `<td class="text-center">${student.status == 'ACTIVE' ? '<i class="fa fa-circle status-active"></i>' : '<i class="fa fa-circle status-inactive"></i>'}</td>`;
                 row += `<td class="text-center">
@@ -309,7 +309,7 @@
                                     <i class="fas fa-cog"></i>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item" href="#">View</a></li>
+                                    <li><a class="dropdown-item" href="/student_detail?id=${student.id}">View</a></li>
                                     <li><a class="dropdown-item" href="/student_edit?id=${student.id}">Edit</a></li>
                                     <li><a class="dropdown-item" onClick="onDeleteStudent(${student.id})">Delete</a></li>
                                 </ul>

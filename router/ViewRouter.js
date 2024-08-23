@@ -55,7 +55,7 @@ router.get(
     ['/instructors'],
     [
         authMiddleware.verifyUserToken,
-        authMiddleware.verifyUserRole('ADMIN', 'INSTRUCTOR')
+        authMiddleware.verifyUserRole('ADMIN', 'INSTRUCTOR', 'STUDENT')
     ],
     viewController.instructors
 );
@@ -82,7 +82,7 @@ router.get(
     ['/instructor_detail'],
     [
         authMiddleware.verifyUserToken,
-        authMiddleware.verifyUserRole('ADMIN', 'INSTRUCTOR')
+        authMiddleware.verifyUserRole('ADMIN', 'INSTRUCTOR', 'STUDENT')
     ],
     viewController.instructor_detail
 );
@@ -121,7 +121,7 @@ router.get(
     ['/terms'],
     [
         authMiddleware.verifyUserToken,
-        authMiddleware.verifyUserRole('ADMIN', 'INSTRUCTOR')
+        authMiddleware.verifyUserRole('ADMIN', 'INSTRUCTOR', 'STUDENT')
     ],
     viewController.terms
 );
@@ -142,6 +142,15 @@ router.get(
         authMiddleware.verifyUserRole('ADMIN')
     ],
     viewController.term_edit
+);
+
+router.get(
+    ['/term_detail'],
+    [
+        authMiddleware.verifyUserToken,
+        authMiddleware.verifyUserRole('ADMIN', 'INSTRUCTOR', 'STUDENT')
+    ],
+    viewController.term_detail
 );
 
 router.get(
@@ -202,6 +211,12 @@ router.get(
     ['/profile'],
     [authMiddleware.verifyUserToken],
     viewController.profile
+);
+
+router.get(
+    ['/change-password'],
+    [authMiddleware.verifyUserToken],
+    viewController.change_password
 );
 
 module.exports = router;

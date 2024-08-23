@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Term Information</title>
+    <link type="image/png" rel="icon" href="/icon/icon.png">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/flatpickr.css">
+    <link rel="stylesheet" href="/css/dataTable.css">
+    <link rel="stylesheet" href="/css/fontawesome.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/js/jQuery.js"></script>
+    <script type="text/javascript" src="/js/jQuery-cookie.js"></script>
+    <script type="text/javascript" src="/js/validate.min.js"></script>
+    <script type="text/javascript" src="/js/sweetAlert.js"></script>
+    <script type="text/javascript" src="/js/flatpickr.js"></script>
+    <script type="text/javascript" src="/js/dataTable.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ecf0f3;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #1e56a6;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #fff !important;
+            cursor: pointer;
+        }
+
+        .main-content {
+            width: 100%;
+            padding: 20px;
+        }
+
+        .main-content .container {
+            max-width: 800px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group label {
+            font-weight: 600;
+        }
+
+        .form-control {
+            border-radius: 0.25rem;
+            box-shadow: none;
+        }
+
+        .btn-custom, .btn-cancel {
+            border-radius: 25px; /* Fully rounded borders */
+            font-weight: 600;
+            border: none;
+            width: 100%; /* Full width */
+            display: block;
+            margin-top: 10px; /* Space between buttons */
+        }
+
+        .btn-custom {
+            background-color: #1e56a6;
+            color: #fff;
+        }
+
+        .btn-custom:hover {
+            background-color: #039BE5;
+        }
+
+        .btn-cancel {
+            background-color: #ffffff;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-cancel:hover {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
+        .gender-group .form-check {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .gender-group .form-check-input {
+            margin-right: 5px;
+        }
+
+        .invalid-feedback {
+            display: block;
+            min-height: 20px;
+        }
+
+        .navbar-nav {
+            margin-left: auto;
+        }
+
+        .navbar-nav .nav-item.dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu {
+            display: none;
+        }
+
+        .dropdown-menu a {
+            cursor: pointer;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #e9ecef; /* Background color on hover */
+            color: #1e56a6; /* Text color on hover */
+        }
+
+        .btn-add {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 0.25rem;
+            padding: 5px 10px;
+        }
+
+        .btn-add:hover {
+            background-color: #218838;
+        }
+
+        .subject-table-container {
+            overflow-y: auto; /* Vertical scrollbar for overflow */
+            width: 100%; /* Make sure the container fills the parent */
+            overflow-x: hidden; /* Hide horizontal overflow if needed */
+            border-radius: 5px; /* Optional: Add rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+            background-color: #fff; /* Ensure background is white or another color */
+            padding: 10px; /* Optional: Add padding around the table */
+            margin-top: 10px; /* Optional: Add margin for spacing */
+        }
+
+        .subjects-table-container .table {
+            width: 100%; /* Ensure the table width is 100% of its container */
+        }
+
+        .student-table-container {
+            max-height: 500px; /* Maximum height for the table container */
+            overflow-y: auto; /* Vertical scrollbar for overflow */
+            width: 100%; /* Make sure the container fills the parent */
+            overflow-x: hidden; /* Hide horizontal overflow if needed */
+            border-radius: 5px; /* Optional: Add rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+            background-color: #fff; /* Ensure background is white or another color */
+            padding: 10px; /* Optional: Add padding around the table */
+            margin-top: 10px; /* Optional: Add margin for spacing */
+        }
+
+        .student-table-container .table {
+            width: 100%; /* Ensure the table width is 100% of its container */
+        }
+        
+        .page-header {
+            color: #1e56a6;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Attendance System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sessions">Sessions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/attendances">Attendances</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/terms">Terms</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/students">Students</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/instructors">Instructors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/subjects">Subjects</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Profile
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                            <li><a id="usernameMenuItem" class="dropdown-item" href="/profile">Your Profile</a></li>
+                            <li><a class="dropdown-item" href="/change-password">Change Password</a></li>
+                            <li><a class="dropdown-item" id="logoutMenuItem">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="main-content">
+        <div class="container">
+            <h2 class="text-center mb-4 page-header">Term Information</h2>
+            <form novalidate id="termForm">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control input" id="name" name="name" readonly>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="dob">Start Date</label>
+                    <input type="date" class="form-control input" id="startDate" name="start_date" readonly>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="dob">End Date</label>
+                    <input type="date" class="form-control input" id="endDate" name="end_date" readonly>
+                </div>
+
+                <div class="form-group text-right mt-5">
+                    <i class="fa fa-book text-success"></i> <label id="totalSubjectLabel" class="text-success"></label>
+                </div>
+
+                <!-- Subject Table -->
+                <div class="form-group mt-3">
+                    <div class="subject-table-container">
+                        <table class="table table-bordered" id="subjectTable">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Sr</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div class="form-group text-right mt-5">
+                    <i class="fa fa-user text-success"></i> <label id="totalStudentLabel" class="text-success"></label>
+                </div>
+
+                <!-- Student Table -->
+                <div class="form-group mt-3">
+                    <div class="student-table-container">
+                        <table class="table table-bordered" id="studentTable">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Sr</th>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <a class="btn btn-custom mt-5" href="/terms">Back to Terms</a>
+            </form>
+        </div>
+    </section>
+    <script>
+        $('#usernameMenuItem').text($.cookie('username'));
+        let selectedStudentIds = [];
+        let selectedSubjectIds = [];
+
+        const totalStudentLabel = $('#totalStudentLabel');
+        const totalSubjectLabel = $('#totalSubjectLabel');
+        
+        totalStudentLabel.text(`Total students: ${selectedStudentIds.length}`);
+        totalSubjectLabel.text(`Total subjects: ${selectedSubjectIds.length}`);
+
+        const logoutMenuItem = $('#logoutMenuItem');
+        const termForm = $('#termForm');
+        const idInput = $('#id');
+        const nameInput = $('#name');
+        const startDateInput = $('#startDate');
+        const endDateInput = $('#endDate');
+        const registerBtn = $('#registerBtn');
+        
+
+        logoutMenuItem.on('click', function() {
+            swal({
+                title: "Are you sure to logout?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    logout();
+                }
+            });
+        });
+
+
+        $(document).ready(function() {
+            let params = new URL(document.location.toString()).searchParams;
+            let termId = params.get("id");
+            fetchTermById(termId);
+        })
+
+
+        // ---------------------- Functions ----------------------------------
+
+        function fillTermForm(term) {
+            idInput.val(term.id);
+            nameInput.val(term.name);
+            startDateInput.val(term.start_date);
+            endDateInput.val(term.end_date);
+        }
+
+
+        function fetchTermById(id) {
+            const settings = {
+                "url": "/api/terms/" + id,
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                    console.log(data);
+                    if (data.status === 200) {
+                        fillTermForm(data.data);
+                        fetchAndAddStudentsByTermId(id);
+                        fetchAndAddSubjectsByTermId(id);
+                    } else if (data.status === 404) {
+                        console.log(data.message);
+                    }
+                }
+            );
+        }
+
+        function fetchAndAddStudentsByTermId(termId) {
+            const settings = {
+                "url": "/api/students/term/" + termId,
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                    if (data.status === 200) {
+                        data.data.forEach((student, i) => {
+                            let row = `<tr id="student${student.id}">`;
+                            row += `<td class="text-center">${i + 1}</td>`;
+                            row += `<td>${student.name}</td>`;
+                            row += `<td>${student.role_no}</td>`;
+                            row += `</tr>`;
+
+                            $('#studentTable tbody').append(row);
+                            selectedStudentIds.push(student.id);
+                            totalStudentLabel.text(`Total students: ${selectedStudentIds.length}`);
+                        });
+
+                        
+                        
+                    } else if (data.status === 404) {
+                        console.log(data.message);
+                    }
+                }
+            );
+        }
+
+        function fetchAndAddSubjectsByTermId(termId) {
+            const settings = {
+                "url": "/api/subjects/term/" + termId,
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                    console.log('subjects');
+                    console.log(data);
+                    if (data.status === 200) {
+                        data.data.forEach((subject, i) => {
+                            let row = `<tr id="subject${subject.id}">`;
+                            row += `<td class="text-center">${i + 1}</td>`;
+                            row += `<td>${subject.code}</td>`;
+                            row += `<td>${subject.name}</td>`;
+                            row += `</tr>`;
+
+                            $('#subjectTable tbody').append(row);
+                            selectedSubjectIds.push(subject.id);
+                            totalSubjectLabel.text(`Total subjects: ${selectedSubjectIds.length}`);
+                        });
+
+                        
+                        
+                    } else if (data.status === 404) {
+                        console.log(data.message);
+                    }
+                }
+            );
+        }
+
+
+        function logout() {
+            console.log('Logging out');
+            const settings = {
+                "url": "/api/auth/logout",
+                "method": "POST",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                console.log(data);
+                    if (data.status === 204) {
+                        window.location.replace('/login');
+                    }
+                }
+            );
+        }
+    </script>
+</body>
+</html>

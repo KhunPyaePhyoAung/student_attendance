@@ -25,7 +25,7 @@ router.get(
 );
 
 router.get(
-    '/:id',
+    '/:id(\\d+)',
     termController.findOneById
 );
 
@@ -37,12 +37,12 @@ router.post(
 );
 
 router.put(
-    '/:id',
+    '/:id(\\d+)',
     termController.update
 );
 
 router.delete(
-    '/:id',
+    '/:id(\\d+)',
     termController.delete
 );
 

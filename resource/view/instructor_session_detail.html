@@ -292,10 +292,10 @@
         <table class="table table-striped display" id="studentTable">
             <thead>
                 <tr>
-                    <th>Sr</th>
-                    <th>Role</th>
+                    <th class="text-center">Sr</th>
+                    <th>Roll</th>
                     <th>Full Name</th>
-                    <th>Status</th>
+                    <th class="text-center">Status</th>
                     <th>Phone</th>
                 </tr>
             </thead>
@@ -329,7 +329,7 @@
             setInterval(function() {
                 fetchAttendanceDetailById(attendanceId);
                 fetchStudentsForAttendance(attendanceId);
-            }, 1000);
+            }, 2000);
         });
 
         logoutMenuItem.on('click', function() {
@@ -494,10 +494,10 @@
                 }
 
                 let row = `<tr id="student${student.id}">`;
-                row += `<td class="text-right">${i + 1}</td>`;
+                row += `<td class="text-center">${i + 1}</td>`;
                 row += `<td>${student.role_no}</td>`;
                 row += `<td>${student.name}</td>`;
-                row += `<td><i class="fa fa-user ${statusClass}"></i></td>`;
+                row += `<td class="text-center"><i class="fa fa-user ${statusClass}"></i></td>`;
                 row += `<td>${student.phone}</td>`;
                 row += `</tr>`;
 

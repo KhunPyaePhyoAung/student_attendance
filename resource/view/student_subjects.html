@@ -135,6 +135,9 @@
                         <a class="nav-link active" href="/home">Home</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/terms">Terms</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/subjects">Subjects</a>
                     </li>
                     <li class="nav-item">
@@ -166,11 +169,11 @@
         <table class="table table-striped display" id="subjectTable">
             <thead>
                 <tr>
-                    <th>Sr</th>
+                    <th class="text-center">Sr</th>
                     <th>Code</th>
                     <th>Name</th>
                     <th>Instructor</th>
-                    <th>Actions</th>
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody id="subjectTableBody">
@@ -284,17 +287,17 @@
             // Append new rows
             subjects.forEach((subject, i) => {
                 let row = `<tr id="subject${subject.id}">`;
-                row += `<td>${i + 1}</td>`;
+                row += `<td class="text-center">${i + 1}</td>`;
                 row += `<td>${subject.code}</td>`;
                 row += `<td>${subject.name}</td>`;
                 row += `<td>${subject.instructor_name}</td>`;
-                row += `<td>
+                row += `<td class="text-center">
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-cog"></i>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item" href="#">View</a></li>
+                                    <li><a class="dropdown-item" href="/subject_detail?id=${subject.id}">View</a></li>
                                 </ul>
                             </div>
                         </td>`;

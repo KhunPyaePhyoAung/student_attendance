@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subject Information</title>
+    <title>Student Information</title>
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/main.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
     <script type="text/javascript" src="/js/jQuery-cookie.js"></script>
+    <script type="text/javascript" src="/js/validate.min.js"></script>
     <script type="text/javascript" src="/js/sweetAlert.js"></script>
     <style>
         body {
@@ -130,7 +131,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/home">Home</a>
+                        <a class="nav-link active" href="/home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sessions">Sessions</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/attendances">Attendances</a>
@@ -164,42 +168,59 @@
 
     <section class="main-content">
         <div class="container">
-            <h2 class="text-center mb-4 page-header">Subject Information</h2>
-            <form novalidate id="subjectForm">
+            <h2 class="text-center mb-4 page-header">Student Information</h2>
+            <form novalidate id="studentForm">
                 <div class="form-group">
-                    <label for="name">Code</label>
-                    <input type="text" class="form-control input" id="code" name="code" readonly>
-                </div>
-                <div class="form-group mt-3">
-                    <label for="nrc">Name</label>
+                    <label for="name">Full Name</label>
                     <input type="text" class="form-control input" id="name" name="name" readonly>
                 </div>
                 <div class="form-group mt-3">
-                    <label for="instructor">Instructor</label>
-                    <input type="text" class="form-control input" id="instructor" name="name" readonly>
+                    <label for="name">Roll</label>
+                    <input type="text" class="form-control input" id="role" name="role_no" readonly>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="phone">Phone</label>
+                    <input type="tel" class="form-control input" id="phone" name="phone" readonly>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="familyPhone">Family Phone</label>
+                    <input type="tel" class="form-control input" id="familyPhone" name="family_phone" readonly>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="familyPhone">Gender</label>
+                    <input type="tel" class="form-control input" id="gender" name="family_phone" readonly>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="status">Status</label>
+                    <input type="tel" class="form-control input" id="status" name="family_phone" readonly>
                 </div>
                 
-                <a class="btn btn-custom mt-5" href="/subjects">Back to subjects</a>
+                <div class="form-group mt-3">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" class="form-control input" id="dateOfBirth" name="date_of_birth" readonly>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="address">Address</label>
+                    <textarea class="form-control input" id="address" name="address" rows="3" readonly></textarea>
+                </div>
+                
+                <a class="btn btn-custom mt-5" href="/students">Back to students</a>
             </form>
         </div>
     </section>
     <script>
-
         $('#usernameMenuItem').text($.cookie('username'));
-        
         const logoutMenuItem = $('#logoutMenuItem');
-        const subjectForm = $('#subjectForm');
+        const studentForm = $('#studentForm');
         const idInput = $('#id');
-        const codeInput = $('#code');
-        const instructorInput = $('#instructor');
         const nameInput = $('#name');
-
-        $(document).ready(function() {
-            let params = new URL(document.location.toString()).searchParams;
-            let subjectId = params.get("id");
-            fetchSubjectById(subjectId);
-        });
-
+        const roleInput = $('#role');
+        const phoneInput = $('#phone');
+        const familyPhoneInput = $('#familyPhone');
+        const genderInput = $('#gender');
+        const statusInput = $('#status');
+        const dobInput = $('#dateOfBirth')
+        const addressInput = $('#address');
 
         logoutMenuItem.on('click', function() {
             swal({
@@ -215,19 +236,30 @@
             });
         });
 
+        $(document).ready(function() {
+            let params = new URL(document.location.toString()).searchParams;
+            let studentId = params.get("id");
+            fetchStudentById(studentId);
+        })
+
 
         // ---------------------- Functions ----------------------------------
 
-        function fillSubjectForm(subject) {
-            idInput.val(subject.id);
-            codeInput.val(subject.code);
-            nameInput.val(subject.name);
-            instructorInput.val(subject.instructor_name);
+        function fillStudentForm(student) {
+            idInput.val(student.id);
+            nameInput.val(student.name);
+            roleInput.val(student.role_no);
+            phoneInput.val(student.phone);
+            familyPhoneInput.val(student.family_phone);
+            genderInput.val(student.gender);
+            statusInput.val(student.status);
+            dobInput.val(student.date_of_birth);
+            addressInput.val(student.address);
         }
 
-        function fetchSubjectById(id) {
+        function fetchStudentById(id) {
             const settings = {
-                "url": "/api/subjects/" + id,
+                "url": "/api/students/" + id,
                 "method": "GET",
                 "timeout": 0,
             };
@@ -235,9 +267,8 @@
             $.post(
                 settings
             ).always(function (data, status, xhr) {
-                    console.log(data.status);
                     if (data.status === 200) {
-                        fillSubjectForm(data.data);
+                        fillStudentForm(data.data);
                     } else if (data.status === 404) {
                         console.log(data.message);
                     }

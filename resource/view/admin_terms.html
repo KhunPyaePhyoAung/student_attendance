@@ -177,11 +177,11 @@
                 <tr>
                     <th>Sr</th>
                     <th>Name</th>
-                    <th>Subjects</th>
-                    <th>Students</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Actions</th>
+                    <th class="text-center">Subjects</th>
+                    <th class="text-center">Students</th>
+                    <th class="text-center">Start Date</th>
+                    <th class="text-center">End Date</th>
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody id="termTableBody">
@@ -291,17 +291,17 @@
                 let row = `<tr id="term${term.id}">`;
                 row += `<td>${i + 1}</td>`;
                 row += `<td>${term.name}</td>`;
-                row += `<td>${term.subject_count}</td>`;
-                row += `<td>${term.student_count}</td>`;
-                row += `<td>${term.start_date}</td>`;
-                row += `<td>${term.end_date}</td>`;
-                row += `<td>
+                row += `<td class="text-center">${term.subject_count}</td>`;
+                row += `<td class="text-center">${term.student_count}</td>`;
+                row += `<td class="text-center">${term.start_date}</td>`;
+                row += `<td class="text-center">${term.end_date}</td>`;
+                row += `<td class="text-center">
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-cog"></i>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item" href="#">View</a></li>
+                                    <li><a class="dropdown-item" href="/term_detail?id=${term.id}">View</a></li>
                                     <li><a class="dropdown-item" href="/term_edit?id=${term.id}">Edit</a></li>
                                     <li><a class="dropdown-item" onClick="onDeleteTerm(${term.id})">Delete</a></li>
                                 </ul>

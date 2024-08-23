@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
+    <title>Instructor Information</title>
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/main.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
     <script type="text/javascript" src="/js/jQuery-cookie.js"></script>
+    <script type="text/javascript" src="/js/validate.min.js"></script>
     <script type="text/javascript" src="/js/sweetAlert.js"></script>
     <style>
         body {
@@ -113,6 +114,10 @@
             background-color: #e9ecef; /* Background color on hover */
             color: #1e56a6; /* Text color on hover */
         }
+
+        .page-header {
+            color: #1e56a6;
+        }
     </style>
 </head>
 <body>
@@ -157,49 +162,34 @@
 
     <section class="main-content">
         <div class="container">
-            <h2 class="text-center mb-4" id="name"></h2>
-            <form novalidate id="studentForm">
-                <div class="form-group mt-3">
-                    <label for="name">Roll</label>
-                    <input type="text" id="roll" class="form-control input" readonly>
+            <h2 class="text-center mb-4 page-header">Instructor Information</h2>
+            <form novalidate id="instructorForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" class="form-control input" id="name" name="name" readonly>
                 </div>
                 <div class="form-group mt-3">
-                    <label for="name">NRC</label>
-                    <input type="text" id="nrc" class="form-control input" readonly>
+                    <label for="phone">Phone</label>
+                    <input type="tel" class="form-control input" id="phone" name="phone" readonly>
                 </div>
                 <div class="form-group mt-3">
-                    <label for="name">Email</label>
-                    <input type="text" id="email" class="form-control input" readonly>
+                    <label for="phone">Gender</label>
+                    <input type="tel" class="form-control input" id="gender" name="phone" readonly>
                 </div>
                 <div class="form-group mt-3">
-                    <label for="name">Phone</label>
-                    <input type="text" id="phone" class="form-control input" readonly>
+                    <label for="phone">Status</label>
+                    <input type="tel" class="form-control input" id="status" name="phone" readonly>
                 </div>
                 <div class="form-group mt-3">
-                    <label for="name">Family Phone</label>
-                    <input type="text" id="familyPhone" class="form-control input" readonly>
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" class="form-control input" id="dateOfBirth" name="date_of_birth" readonly>
                 </div>
                 <div class="form-group mt-3">
-                    <label for="name">Gender</label>
-                    <input type="text" id="gender" class="form-control input" readonly>
-                </div>
-                <div class="form-group mt-3">
-                    <label for="name">Date of birth</label>
-                    <input type="text" id="dateOfBirth" class="form-control input" readonly>
-                </div>
-                <div class="form-group mt-3">
-                    <label for="name">Role</label>
-                    <input type="text" id="role" class="form-control input" readonly>
-                </div>
-                <div class="form-group mt-3">
-                    <label for="name">Status</label>
-                    <input type="text" id="status" class="form-control input" readonly>
-                </div>
-                <div class="form-group mt-3">
-                    <label for="name">Address</label>
-                    <textarea id="address" class="form-control input" readonly></textarea>
+                    <label for="address">Address</label>
+                    <textarea class="form-control input" id="address" name="address" rows="3" readonly></textarea>
                 </div>
                 
+                <a class="btn btn-custom mt-5" href="/instructors">Back to instructors</a>
             </form>
         </div>
     </section>
@@ -208,19 +198,14 @@
 
         const logoutMenuItem = $('#logoutMenuItem');
         
-        
-        const nameLabel = $('#name');
-        const roleInput = $('#role');
-        const nrcInput = $('#nrc');
-        const emailInput = $('#email');
+        const idInput = $('#id');
+        const nameInput = $('#name');
         const phoneInput = $('#phone');
-        const familyPhoneInput = $('#familyPhone');
         const genderInput = $('#gender');
-        const rollInput = $('#roll');
         const statusInput = $('#status');
         const dobInput = $('#dateOfBirth')
         const addressInput = $('#address');
-
+        
         logoutMenuItem.on('click', function() {
             swal({
                 title: "Are you sure to logout?",
@@ -236,31 +221,27 @@
         });
 
         $(document).ready(function() {
-            let studentId = $.cookie('user_id');
-            fetchStudentById(studentId);
+            let params = new URL(document.location.toString()).searchParams;
+            let instructorId = params.get("id");
+            fetchInstructorById(instructorId);
         })
 
 
         // ---------------------- Functions ----------------------------------
 
-        function fillStudentForm(student) {
-            nameLabel.text(student.name);
-            roleInput.val(student.role);
-            nrcInput.val(student.nrc);
-            emailInput.val(student.email);
-            phoneInput.val(student.phone);
-            familyPhoneInput.val(student.family_phone);
-            rollInput.val(student.role_no);
-            genderInput.val(student.gender);
-            statusInput.val(student.status);
-            dobInput.val(student.date_of_birth);
-            addressInput.val(student.address);
+        function fillInstructorForm(instructor) {
+            idInput.val(instructor.id);
+            nameInput.val(instructor.name);
+            phoneInput.val(instructor.phone);
+            genderInput.val(instructor.gender);
+            statusInput.val(instructor.status);
+            dobInput.val(instructor.date_of_birth);
+            addressInput.val(instructor.address);
         }
 
-
-        function fetchStudentById(id) {
+        function fetchInstructorById(id) {
             const settings = {
-                "url": "/api/students/" + id,
+                "url": "/api/instructors/" + id,
                 "method": "GET",
                 "timeout": 0,
             };
@@ -268,14 +249,149 @@
             $.post(
                 settings
             ).always(function (data, status, xhr) {
+                    console.log(data.status);
                     if (data.status === 200) {
-                        fillStudentForm(data.data);
+                        console.log('fetched');
+                        console.log(data.data);
+                        fillInstructorForm(data.data);
                     } else if (data.status === 404) {
                         console.log(data.message);
                     }
                 }
             );
         }
+
+        function getFormData() {
+            const instructor = {};
+            const dataArray = instructorForm.serializeArray();
+            dataArray.forEach(data => {
+                instructor[data.name] = data.value;
+            });
+            instructor['date_of_birth'] = formatDateYMD(datePicker.input.value);
+            return instructor;
+        }
+
+        function clearFormErrorMessages(sourceId) {
+            if (sourceId) {
+                if (sourceId === 'name') {
+                    nameErrorMessage.text('');
+                    nameInput.removeClass('is-invalid');
+                } else if (sourceId === 'nrc') {
+                    nrcErrorMessage.text('');
+                    nrcInput.removeClass('is-invalid');
+                } else if (sourceId === 'email') {
+                    emailErrorMessage.text('');
+                    emailInput.removeClass('is-invalid');
+                } else if (sourceId === 'phone') {
+                    phoneErrorMessage.text('');
+                    phoneInput.removeClass('is-invalid');
+                } else if (sourceId === 'gender' || sourceId === 'male' || sourceId == 'female') {
+                    genderErrorMessage.text('');
+                    genderInput.removeClass('is-invalid');
+                } else if (sourceId === 'status') {
+                    statusErrorMessage.text('');
+                    statusInput.removeClass('is-invalid');
+                } else if (sourceId === 'dateOfBirth') {
+                    dobErrorMessage.text('');
+                    dobInput.removeClass('is-invalid');
+                } else if (sourceId === 'address') {
+                    addressErrorMessage.text('');
+                    addressInput.removeClass('is-invalid');
+                }
+            } else {
+                nameErrorMessage.text('');
+                nrcErrorMessage.text('');
+                emailErrorMessage.text('');
+                phoneErrorMessage.text('');
+                genderErrorMessage.text('');
+                statusErrorMessage.text('');
+                dobErrorMessage.text('');
+                addressErrorMessage.text('');
+
+                nameInput.removeClass('is-invalid');
+                nrcInput.removeClass('is-invalid');
+                emailInput.removeClass('is-invalid');
+                phoneInput.removeClass('is-invalid');
+                genderInput.removeClass('is-invalid');
+                statusInput.removeClass('is-invalid');
+                dobInput.removeClass('is-invalid');
+                addressInput.removeClass('is-invalid');
+            }
+            
+        }
+
+
+        function validateForm() {
+            clearFormErrorMessages();
+
+            const instructor = getFormData();
+
+            const checkResult = validate(instructor, instructorConstraint);
+
+            if (!checkResult) {
+                return true;
+            }
+
+            if (checkResult.name) {
+                nameErrorMessage.text(checkResult.name[0]);
+                nameInput.addClass('is-invalid');
+            }
+
+            if (checkResult.nrc) {
+                nrcErrorMessage.text(checkResult.nrc[0]);
+                nrcInput.addClass('is-invalid');
+            }
+
+            if (checkResult.email) {
+                emailErrorMessage.text(checkResult.email[0]);
+                emailInput.addClass('is-invalid');
+            }
+
+            if (checkResult.phone) {
+                phoneErrorMessage.text(checkResult.phone[0]);
+                phoneInput.addClass('is-invalid');
+            }
+
+            if (checkResult.gender) {
+                genderErrorMessage.text(checkResult.gender[0]);
+                genderInput.addClass('is-invalid');
+            }
+
+            if (checkResult.status) {
+                statusErrorMessage.text(checkResult.status[0]);
+                statusInput.addClass('is-invalid');
+            }
+
+            if (checkResult.date_of_birth) {
+                dobErrorMessage.text(checkResult.date_of_birth[0]);
+                dobInput.addClass('is-invalid');
+            }
+
+            if (checkResult.address) {
+                addressErrorMessage.text(checkResult.address[0]);
+                addressInput.addClass('is-invalid');
+            }
+            
+            console.log(checkResult);
+            return false;
+        }
+
+        function formatDateDMY(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const year = date.getFullYear();
+            
+            return `${day}/${month}/${year}`;
+        }
+
+        function formatDateYMD(dateStr) {
+            if (!dateStr) {
+                return '';
+            }
+            const [day, month, year] = dateStr.split('/');
+            return `${year}/${month}/${day}`;
+        }
+
 
         function logout() {
             console.log('Logging out');

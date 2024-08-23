@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instructor Details</title>
+    <title>Instructor Information</title>
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/main.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
     <script type="text/javascript" src="/js/jQuery-cookie.js"></script>
+    <script type="text/javascript" src="/js/validate.min.js"></script>
+    <script type="text/javascript" src="/js/sweetAlert.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -40,23 +42,22 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .card {
-            margin-bottom: 20px;
+        .form-group label {
+            font-weight: 600;
         }
 
-        .card-header {
-            background-color: #1e56a6;
-            color: #fff;
-            font-weight: 600;
+        .form-control {
+            border-radius: 0.25rem;
+            box-shadow: none;
         }
 
         .btn-custom, .btn-cancel {
-            border-radius: 25px;
+            border-radius: 25px; /* Fully rounded borders */
             font-weight: 600;
             border: none;
-            width: 100%;
+            width: 100%; /* Full width */
             display: block;
-            margin-top: 10px;
+            margin-top: 10px; /* Space between buttons */
         }
 
         .btn-custom {
@@ -77,6 +78,45 @@
         .btn-cancel:hover {
             background-color: #f1f1f1;
             color: #333;
+        }
+
+        .gender-group .form-check {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .gender-group .form-check-input {
+            margin-right: 5px;
+        }
+
+        .invalid-feedback {
+            display: block;
+            min-height: 20px;
+        }
+
+        .navbar-nav {
+            margin-left: auto;
+        }
+
+        .navbar-nav .nav-item.dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu {
+            display: none;
+        }
+
+        .dropdown-menu a {
+            cursor: pointer;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #e9ecef; /* Background color on hover */
+            color: #1e56a6; /* Text color on hover */
+        }
+
+        .page-header {
+            color: #1e56a6;
         }
     </style>
 </head>
@@ -125,62 +165,267 @@
 
     <section class="main-content">
         <div class="container">
-            <h2 class="text-center mb-4">Instructor Details</h2>
-            <div class="card">
-                <div class="card-header">
-                    Instructor Information
+            <h2 class="text-center mb-4 page-header">Instructor Information</h2>
+            <form novalidate id="instructorForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" class="form-control input" id="name" name="name" readonly>
                 </div>
-                <div class="card-body">
-                    <p><strong>ID:</strong> <span id="instructorId">12345</span></p>
-                    <p><strong>Full Name:</strong> <span id="instructorName">John Doe</span></p>
-                    <p><strong>NRC Number:</strong> <span id="instructorNrc">12/ABC(N)345678</span></p>
-                    <p><strong>Email Address:</strong> <span id="instructorEmail">john.doe@example.com</span></p>
-                    <p><strong>Phone Number:</strong> <span id="instructorPhone">+1234567890</span></p>
-                    <p><strong>Gender:</strong> <span id="instructorGender">Male</span></p>
-                    <p><strong>Status:</strong> <span id="instructorStatus">Active</span></p>
-                    <p><strong>Date of Birth:</strong> <span id="instructorDob">1990-01-01</span></p>
-                    <p><strong>Address:</strong> <span id="instructorAddress">123 Main St, City, Country</span></p>
-                    <a class="btn btn-custom" href="/instructors">Back to Instructors</a>
+                <div class="form-group mt-3">
+                    <label for="nrc">NRC</label>
+                    <input type="text" class="form-control input" id="nrc" name="nrc" readonly>
                 </div>
-            </div>
+                <div class="form-group mt-3">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control input" id="email" name="email" readonly>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="phone">Phone</label>
+                    <input type="tel" class="form-control input" id="phone" name="phone" readonly>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="phone">Gender</label>
+                    <input type="tel" class="form-control input" id="gender" name="phone" readonly>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="phone">Status</label>
+                    <input type="tel" class="form-control input" id="status" name="phone" readonly>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" class="form-control input" id="dateOfBirth" name="date_of_birth" readonly>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="address">Address</label>
+                    <textarea class="form-control input" id="address" name="address" rows="3" readonly></textarea>
+                </div>
+                
+                <a class="btn btn-custom mt-5" href="/instructors">Back to instructors</a>
+            </form>
         </div>
     </section>
     <script>
         $('#usernameMenuItem').text($.cookie('username'));
+
+        const logoutMenuItem = $('#logoutMenuItem');
+        
+        const idInput = $('#id');
+        const nameInput = $('#name');
+        const nrcInput = $('#nrc');
+        const emailInput = $('#email');
+        const phoneInput = $('#phone');
+        const genderInput = $('#gender');
+        const statusInput = $('#status');
+        const dobInput = $('#dateOfBirth')
+        const addressInput = $('#address');
+        
+        logoutMenuItem.on('click', function() {
+            swal({
+                title: "Are you sure to logout?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    logout();
+                }
+            });
+        });
+
         $(document).ready(function() {
-            // Fetch instructor details by ID (assuming ID is passed as a URL parameter)
             let params = new URL(document.location.toString()).searchParams;
             let instructorId = params.get("id");
+            fetchInstructorById(instructorId);
+        })
 
-            if (instructorId) {
-                fetchInstructorById(instructorId);
-            }
 
-            function fetchInstructorById(id) {
-                const settings = {
-                    "url": "/api/instructors/" + id,
-                    "method": "GET",
-                    "timeout": 0,
-                };
+        // ---------------------- Functions ----------------------------------
 
-                $.get(settings.url)
-                .done(function(data) {
+        function fillInstructorForm(instructor) {
+            idInput.val(instructor.id);
+            nameInput.val(instructor.name);
+            nrcInput.val(instructor.nrc);
+            emailInput.val(instructor.email);
+            phoneInput.val(instructor.phone);
+            genderInput.val(instructor.gender);
+            statusInput.val(instructor.status);
+            dobInput.val(instructor.date_of_birth);
+            addressInput.val(instructor.address);
+        }
+
+        function fetchInstructorById(id) {
+            const settings = {
+                "url": "/api/instructors/" + id,
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                    console.log(data.status);
                     if (data.status === 200) {
-                        $('#instructorId').text(data.data.id);
-                        $('#instructorName').text(data.data.name);
-                        $('#instructorNrc').text(data.data.nrc);
-                        $('#instructorEmail').text(data.data.email);
-                        $('#instructorPhone').text(data.data.phone || 'N/A');
-                        $('#instructorGender').text(data.data.gender === 'MALE' ? 'Male' : 'Female');
-                        $('#instructorStatus').text(data.data.status || 'Active');
-                        $('#instructorDob').text(data.data.date_of_birth || '');
-                        $('#instructorAddress').text(data.data.address || '');
-                    } else {
+                        console.log('fetched');
+                        console.log(data.data);
+                        fillInstructorForm(data.data);
+                    } else if (data.status === 404) {
                         console.log(data.message);
                     }
-                });
+                }
+            );
+        }
+
+        function getFormData() {
+            const instructor = {};
+            const dataArray = instructorForm.serializeArray();
+            dataArray.forEach(data => {
+                instructor[data.name] = data.value;
+            });
+            instructor['date_of_birth'] = formatDateYMD(datePicker.input.value);
+            return instructor;
+        }
+
+        function clearFormErrorMessages(sourceId) {
+            if (sourceId) {
+                if (sourceId === 'name') {
+                    nameErrorMessage.text('');
+                    nameInput.removeClass('is-invalid');
+                } else if (sourceId === 'nrc') {
+                    nrcErrorMessage.text('');
+                    nrcInput.removeClass('is-invalid');
+                } else if (sourceId === 'email') {
+                    emailErrorMessage.text('');
+                    emailInput.removeClass('is-invalid');
+                } else if (sourceId === 'phone') {
+                    phoneErrorMessage.text('');
+                    phoneInput.removeClass('is-invalid');
+                } else if (sourceId === 'gender' || sourceId === 'male' || sourceId == 'female') {
+                    genderErrorMessage.text('');
+                    genderInput.removeClass('is-invalid');
+                } else if (sourceId === 'status') {
+                    statusErrorMessage.text('');
+                    statusInput.removeClass('is-invalid');
+                } else if (sourceId === 'dateOfBirth') {
+                    dobErrorMessage.text('');
+                    dobInput.removeClass('is-invalid');
+                } else if (sourceId === 'address') {
+                    addressErrorMessage.text('');
+                    addressInput.removeClass('is-invalid');
+                }
+            } else {
+                nameErrorMessage.text('');
+                nrcErrorMessage.text('');
+                emailErrorMessage.text('');
+                phoneErrorMessage.text('');
+                genderErrorMessage.text('');
+                statusErrorMessage.text('');
+                dobErrorMessage.text('');
+                addressErrorMessage.text('');
+
+                nameInput.removeClass('is-invalid');
+                nrcInput.removeClass('is-invalid');
+                emailInput.removeClass('is-invalid');
+                phoneInput.removeClass('is-invalid');
+                genderInput.removeClass('is-invalid');
+                statusInput.removeClass('is-invalid');
+                dobInput.removeClass('is-invalid');
+                addressInput.removeClass('is-invalid');
             }
-        });
+            
+        }
+
+
+        function validateForm() {
+            clearFormErrorMessages();
+
+            const instructor = getFormData();
+
+            const checkResult = validate(instructor, instructorConstraint);
+
+            if (!checkResult) {
+                return true;
+            }
+
+            if (checkResult.name) {
+                nameErrorMessage.text(checkResult.name[0]);
+                nameInput.addClass('is-invalid');
+            }
+
+            if (checkResult.nrc) {
+                nrcErrorMessage.text(checkResult.nrc[0]);
+                nrcInput.addClass('is-invalid');
+            }
+
+            if (checkResult.email) {
+                emailErrorMessage.text(checkResult.email[0]);
+                emailInput.addClass('is-invalid');
+            }
+
+            if (checkResult.phone) {
+                phoneErrorMessage.text(checkResult.phone[0]);
+                phoneInput.addClass('is-invalid');
+            }
+
+            if (checkResult.gender) {
+                genderErrorMessage.text(checkResult.gender[0]);
+                genderInput.addClass('is-invalid');
+            }
+
+            if (checkResult.status) {
+                statusErrorMessage.text(checkResult.status[0]);
+                statusInput.addClass('is-invalid');
+            }
+
+            if (checkResult.date_of_birth) {
+                dobErrorMessage.text(checkResult.date_of_birth[0]);
+                dobInput.addClass('is-invalid');
+            }
+
+            if (checkResult.address) {
+                addressErrorMessage.text(checkResult.address[0]);
+                addressInput.addClass('is-invalid');
+            }
+            
+            console.log(checkResult);
+            return false;
+        }
+
+        function formatDateDMY(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const year = date.getFullYear();
+            
+            return `${day}/${month}/${year}`;
+        }
+
+        function formatDateYMD(dateStr) {
+            if (!dateStr) {
+                return '';
+            }
+            const [day, month, year] = dateStr.split('/');
+            return `${year}/${month}/${day}`;
+        }
+
+
+        function logout() {
+            console.log('Logging out');
+            const settings = {
+                "url": "/api/auth/logout",
+                "method": "POST",
+                "timeout": 0,
+            };
+
+            $.post(
+                settings
+            ).always(function (data, status, xhr) {
+                console.log(data);
+                    if (data.status === 204) {
+                        window.location.replace('/login');
+                    }
+                }
+            );
+        }
     </script>
 </body>
 </html>

@@ -28,7 +28,8 @@ const userRepository = () => {
                     if (error) {
                         reject(new Error(error.sqlMessage));
                     } else {
-                        resolve(results[0]);
+                        const user = results[0];
+                        resolve(user);
                     }
                 });
                 connection.release();
@@ -165,6 +166,48 @@ const userRepository = () => {
             // connection.release();
         
             user.id = id;
+
+            if (affectedRows) {
+                return new Promise((resolve, reject) => {
+                    const sql = 'SELECT * FROM `user` WHERE `id` = ?';
+                    const params = [id];
+                    connection.query(sql, params, (error, results, fields) => {
+                        if (error) {
+                            reject(new Error(error.sqlMessage));
+                        } else {
+                            resolve(results[0]);
+                        }
+                    });
+                    connection.release();
+                });
+            }
+
+            return user;
+        },
+
+        updatePasswordById: async (id, password) => {
+            const connection = await getConnection();
+
+            const affectedRows = await new Promise((resolve, reject) => {
+                const updateQuery = 'UPDATE `user` SET `password` = ? WHERE `id` = ?';
+                const updateParams = [password, id];
+                connection.query(updateQuery, updateParams, (error, result) => {
+                    if (error) {
+                        if (error.code === 'ER_DUP_ENTRY') {
+                            const duplicateError = new Error();
+                            duplicateError.field = "email";
+                            duplicateError.message = "This email already used."
+                            reject(duplicateError);
+                        } else {
+                            reject(error);
+                        }
+                    } else {
+                        resolve(result.affectedRows);
+                    }
+                });
+            });
+        
+            // connection.release();
 
             if (affectedRows) {
                 return new Promise((resolve, reject) => {

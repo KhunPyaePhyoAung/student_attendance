@@ -35,6 +35,7 @@ const userController = ({userService}) => {
 
                 return res.status(200).json(
                     {
+                        status: 200,
                         data: user
                     }
                 );
@@ -117,6 +118,51 @@ const userController = ({userService}) => {
 
             try {
                 const updatedUser = await userService.updateById(id, user);
+                if (updatedUser) {
+                    const updatedUserUrl = `/api/users/${updatedUser.id}`;
+                    res.location(updatedUserUrl);
+                    return res.status(200).json({
+                        status: 200,
+                        data: updatedUser,
+                        links: {
+                            user: updatedUserUrl
+                        }
+                    });
+                }
+
+                return res.status(200).json({
+                    status: 404,
+                    message: 'No user found.'
+                });
+                
+            } catch (error) {
+                // if (error instanceof ValidationError) {
+                    return res.status(200).json({
+                        status: 400,
+                        errors: [
+                            {
+                                field: error.fieldName,
+                                message: error.message
+                            }
+                        ]
+                    });
+                // }
+
+                // return res.status(200).json(
+                //     {
+                //         status: 500
+                //     }
+                // );
+            }
+        },
+
+        changePassword: async (req, res) => {
+            const id = req.user.id;
+            const oldPassword = req.body.old_password;
+            const newPassword = req.body.new_password;
+
+            try {
+                const updatedUser = await userService.updatePasswordById(id, oldPassword, newPassword);
                 if (updatedUser) {
                     const updatedUserUrl = `/api/users/${updatedUser.id}`;
                     res.location(updatedUserUrl);

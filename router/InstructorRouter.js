@@ -19,7 +19,7 @@ router.get(
 );
 
 router.get(
-    '/:id',
+    '/:id(\\d+)',
     instructorController.findOneById
 );
 
@@ -29,12 +29,12 @@ router.post(
 );
 
 router.put(
-    '/:id',
+    '/:id(\\d+)',
     instructorController.update
 );
 
 router.delete(
-    '/:id',
+    '/:id(\\d+)',
     instructorController.delete
 );
 

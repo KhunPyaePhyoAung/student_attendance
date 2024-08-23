@@ -57,6 +57,34 @@ const userService = ({userRepository, passwordEncryptService}) => {
             }
         },
 
+        updatePasswordById: async (id, oldPassword, newPassword) => {
+            try {
+                const intId = parseInt(id);
+                const hashOldPassword = passwordEncryptService.encrypt(oldPassword);
+
+                const user = await userRepository.findOneById(id);
+                if (!passwordEncryptService.match(oldPassword, user.password)) {
+                    const passwordError = new Error();
+                    passwordError.fieldName = 'old_password';
+                    passwordError.message = 'Incorrect old password';
+                    throw passwordError;
+                }
+
+                if (oldPassword == newPassword) {
+                    const passwordError = new Error();
+                    passwordError.fieldName = 'new_password';
+                    passwordError.message = 'New password cannot be the same as old password.';
+                    throw passwordError;
+                }
+
+                const hashNewPassword = passwordEncryptService.encrypt(newPassword);
+                const updatedUser = await userRepository.updatePasswordById(intId, hashNewPassword);
+                return updatedUser;
+            } catch (error) {
+                throw error;
+            }
+        },
+
         deleteById: async (id) => {
             try {
                 const intId = parseInt(id);
