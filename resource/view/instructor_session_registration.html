@@ -26,6 +26,15 @@
             padding: 0;
         }
 
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        body {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
         .navbar {
             background-color: #1e56a6;
         }
@@ -163,6 +172,10 @@
         .student-table-container .table {
             width: 100%; /* Ensure the table width is 100% of its container */
         }
+
+        .page-header {
+            color: #1e56a6;
+        }
     </style>
 </head>
 <body>
@@ -213,7 +226,7 @@
 
     <section class="main-content">
         <div class="container">
-            <h2 class="text-center mb-4">Attendance Session Registration</h2>
+            <h2 class="text-center mb-4 page-header">Attendance Session Registration</h2>
             <form novalidate id="attendanceForm">
                 <div class="row">
                     <div class="col-md-4">

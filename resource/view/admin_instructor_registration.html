@@ -22,6 +22,15 @@
             padding: 0;
         }
 
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        body {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
         .navbar {
             background-color: #1e56a6;
         }
@@ -116,6 +125,10 @@
             background-color: #e9ecef; /* Background color on hover */
             color: #1e56a6; /* Text color on hover */
         }
+
+        .page-header {
+            color: #1e56a6;
+        }
     </style>
 </head>
 <body>
@@ -163,7 +176,7 @@
 
     <section class="main-content">
         <div class="container">
-            <h2 class="text-center mb-4" id="title">Instructor Registration</h2>
+            <h2 class="text-center mb-4 page-header" id="title">Instructor Registration</h2>
             <form novalidate id="instructorForm">
                 <div class="form-group">
                     <label for="name">Full Name</label>

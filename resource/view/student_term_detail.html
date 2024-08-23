@@ -25,6 +25,15 @@
             padding: 0;
         }
 
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        body {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
         .navbar {
             background-color: #1e56a6;
         }
@@ -166,6 +175,10 @@
         .page-header {
             color: #1e56a6;
         }
+
+        .current-student {
+            color: blueviolet!important;
+        }
     </style>
 </head>
 <body>
@@ -282,6 +295,8 @@
         let selectedStudentIds = [];
         let selectedSubjectIds = [];
 
+        const studentId = $.cookie('user_id');
+
         const totalStudentLabel = $('#totalStudentLabel');
         const totalSubjectLabel = $('#totalSubjectLabel');
         
@@ -363,10 +378,15 @@
             ).always(function (data, status, xhr) {
                     if (data.status === 200) {
                         data.data.forEach((student, i) => {
+                            let className = '';
+                            if (student.id == studentId) {
+                                className = 'current-student';
+                            }
+
                             let row = `<tr id="student${student.id}">`;
-                            row += `<td class="text-center">${i + 1}</td>`;
-                            row += `<td>${student.name}</td>`;
-                            row += `<td>${student.role_no}</td>`;
+                            row += `<td class="text-center ${className}">${i + 1}</td>`;
+                            row += `<td class="${className}">${student.name}</td>`;
+                            row += `<td class="${className}">${student.role_no}</td>`;
                             row += `</tr>`;
 
                             $('#studentTable tbody').append(row);

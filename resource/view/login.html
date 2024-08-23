@@ -33,6 +33,15 @@
             position: relative;
         }
 
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        body {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
         .wrapper {
             width: 100%;
             max-width: 500px;
