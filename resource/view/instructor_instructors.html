@@ -236,6 +236,10 @@
                 if (data.status === 204) {
                     fetchInstructors();
                     swal("Success", "The instructor has been deleted!", "success");
+                } else if (data.status === 400) {
+                    swal(data.errors[0].message, {
+                        icon: "error",
+                    });
                 } else if (data.status === 404) {
                     fetchInstructors();
                     swal("Error", "No instructor found.", "error");

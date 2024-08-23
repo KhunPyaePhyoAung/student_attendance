@@ -190,6 +190,12 @@ const instructorRepository = () => {
                 const deleteParams = [id];
                 connection.query(deleteSql, deleteParams, (error, result) => {
                     if (error) {
+                        if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+                            const deleteError = new Error();
+                            deleteError.message = 'This instructor is in use.'
+                            reject(deleteError);
+                            return;
+                        }
                         reject(error);
                     } else {
                         resolve(result.affectedRows);

@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `student_attendance`.`term_has_subject` (
   CONSTRAINT `fk_term_has_subject_subject1`
     FOREIGN KEY (`subject_id`)
     REFERENCES `student_attendance`.`subject` (`id`)
-    ON DELETE CASCADE
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `student_attendance`.`term_has_student` (
   CONSTRAINT `fk_term_has_student_student1`
     FOREIGN KEY (`student_id`)
     REFERENCES `student_attendance`.`student` (`id`)
-    ON DELETE CASCADE
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -201,5 +201,5 @@ ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=1;
-SET UNIQUE_CHECKS=1;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

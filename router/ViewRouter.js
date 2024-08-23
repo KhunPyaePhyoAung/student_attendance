@@ -202,7 +202,7 @@ router.get(
     ['/attendances'],
     [
         authMiddleware.verifyUserToken,
-        authMiddleware.verifyUserRole('ADMIN', 'INSTRUCTOR')
+        authMiddleware.verifyUserRole('ADMIN', 'INSTRUCTOR', 'STUDENT')
     ],
     viewController.attendances
 );

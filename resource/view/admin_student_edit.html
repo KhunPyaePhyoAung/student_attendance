@@ -165,7 +165,7 @@
         <div class="container">
             <h2 class="text-center mb-4">Update Student Information</h2>
             <form novalidate id="studentForm">
-                <div class="form-group">
+                <div class="form-group d-none">
                     <label for="name">ID</label>
                     <input type="text" class="form-control input" id="id" name="id" placeholder="Enter ID" required readonly>
                     <div class="invalid-feedback" id="idErrorMessage">
@@ -187,21 +187,21 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="nrc">NRC Number</label>
+                    <label for="nrc">NRC</label>
                     <input type="text" class="form-control input" id="nrc" name="nrc" placeholder="Enter your NRC number" required>
                     <div class="invalid-feedback" id="nrcErrorMessage">
                         
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="email">Email Address</label>
+                    <label for="email">Email</label>
                     <input type="email" class="form-control input" id="email" name="email" placeholder="Enter your email address" required>
                     <div class="invalid-feedback" id="emailErrorMessage">
                         
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="phone">Phone Number</label>
+                    <label for="phone">Phone</label>
                     <input type="tel" class="form-control input" id="phone" name="phone" placeholder="Enter your phone number" required>
                     <div class="invalid-feedback" id="phoneErrorMessage">
                         
@@ -320,7 +320,7 @@
             nrc: {
                 presence: {
                     allowEmpty: false,
-                    message: '^NRC NO is required'
+                    message: '^NRC is required'
                 },
                 format: {
                     pattern: /^([1-9]|[1][0-4])\/[A-Z]+\(N\)\d{6}$/,

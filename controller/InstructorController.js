@@ -203,12 +203,15 @@ const instructorController = ({instructorService}) => {
                     message: 'No instructor found.'
                 });
             } catch (error) {
-                return res.status(200).json(
-                    {
-                        status: 500,
-                        message: 'There is a problem with server'
-                    }
-                );
+                return res.status(200).json({
+                    status: 400,
+                    errors: [
+                        {
+                            field: error.fieldName,
+                            message: error.message
+                        }
+                    ]
+                });
             }
         },
     }

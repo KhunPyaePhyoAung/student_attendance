@@ -254,7 +254,11 @@
                         swal("The term has been deleted!", {
                             icon: "success",
                         });
-                    } else if (data.status === 404) {
+                    } else if (data.status === 400) {
+                        swal(data.errors[0].message, {
+                            icon: "error",
+                        });
+                    }else if (data.status === 404) {
                         fetchAttendances();
                         swal("No term found.", {
                             icon: "error",

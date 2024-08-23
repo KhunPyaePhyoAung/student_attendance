@@ -303,7 +303,11 @@
                             danger: 0
                         };
 
-                        console.log(attendances);
+                        if (attendances.length == 0) {
+                            $('.dataCell').text('');
+                            return;
+                        }
+
                         attendances.forEach(att => {
                             subCount[`sub_${att.subject_id}`] = att.total_times;
                             if (!stuCount[`all_${att.student_id}`]) {
@@ -343,7 +347,6 @@
                             $(`#percent_${key}`).addClass(className);
                         });
                         
-                        // console.log(percentType);
                         $(`#all`).text(allCount);
                         successCountLabel.text(percentType.success);
                         warningCountLabel.text(percentType.warning);
@@ -379,11 +382,11 @@
                             row += `<th class="text-center">${i + 1}</th>`;
                             row += `<th class="text-nowrap">${student.role_no}</th>`;
                             row += `<th class="text-nowrap">${student.name}</th>`;
-                            row += `<th id="all_${student.id}" class="text-center bg-gray"></th>`;
-                            row += `<th id="percent_all_${student.id}" class="text-center bg-gray"></th>`;
+                            row += `<th id="all_${student.id}" class="text-center bg-gray dataCell"></th>`;
+                            row += `<th id="percent_all_${student.id}" class="text-center bg-gray dataCell"></th>`;
                             subjects.forEach(subject => {
-                                row += `<th id="data_${student.id}_${subject.id}" class="text-center"></th>`;
-                                row += `<th id="percent_${student.id}_${subject.id}" class="text-center"></th>`;
+                                row += `<th id="data_${student.id}_${subject.id}" class="text-center dataCell"></th>`;
+                                row += `<th id="percent_${student.id}_${subject.id}" class="text-center dataCell"></th>`;
                             });
 
                             row += '</tr>';
@@ -425,9 +428,9 @@
                         attendanceTableHeader.append(row);
 
                         row = '<tr>';
-                        row += `<th id="all" colspan="2" class="text-center bg-gray"></th>`;
+                        row += `<th id="all" colspan="2" class="text-center bg-gray dataCell"></th>`;
                         data.data.forEach((subject, i) => {
-                            row += `<th id="total_${subject.id}" colspan="2" class="text-center"></th>`;
+                            row += `<th id="total_${subject.id}" colspan="2" class="text-center dataCell"></th>`;
                         });
 
                         row += '</tr>';

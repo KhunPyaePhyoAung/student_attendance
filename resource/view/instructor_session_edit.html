@@ -215,7 +215,7 @@
         <div class="container">
             <h2 class="text-center mb-4">Update Session Information</h2>
             <form novalidate id="attendanceForm">
-                <div class="row">
+                <div class="row d-none">
                     <div class="col-12">
                         <div class="form-group">
                             <label for="id">ID</label>
@@ -569,7 +569,7 @@
                 endTimeInput.addClass('is-invalid');
             }
 
-            if (checkResult.term_it) {
+            if (checkResult.term_id) {
                 termErrorMessage.text(checkResult.term_id[0]);
                 termInput.addClass('is-invalid');
             }

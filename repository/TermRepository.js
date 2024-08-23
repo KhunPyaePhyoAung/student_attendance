@@ -6,7 +6,7 @@ const termRepository = () => {
             const connection = await getConnection();
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT t.*, COUNT(DISTINCT tsb.subject_id) AS subject_count, COUNT(DISTINCT tst.student_id) AS student_count FROM term t LEFT JOIN term_has_subject tsb ON t.id = tsb.term_id LEFT JOIN term_has_student tst ON t.id = tst.term_id GROUP BY t.id ORDER BY `start_date`, `end_date`, `created_at` DESC';
+                const sql = 'SELECT t.*, COUNT(DISTINCT tsb.subject_id) AS subject_count, COUNT(DISTINCT tst.student_id) AS student_count FROM term t LEFT JOIN term_has_subject tsb ON t.id = tsb.term_id LEFT JOIN term_has_student tst ON t.id = tst.term_id GROUP BY t.id ORDER BY t.`start_date` DESC, t.`end_date` DESC, t.`created_at` DESC';
                 connection.query(sql, (error, results, fields) => {
                     if (error) {
                         reject(new Error(error.sqlMessage));
@@ -22,7 +22,7 @@ const termRepository = () => {
             const connection = await getConnection();
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT t.*, s.id as sub_id, i.id as instructor_id FROM term t JOIN term_has_subject tsub ON t.id = tsub.term_id JOIN subject s ON tsub.subject_id = s.id JOIN instructor i ON s.instructor_id = i.id WHERE start_date <= NOW() AND end_date >= NOW() AND i.id = ? GROUP BY t.id ORDER BY t.start_date, t.end_date, t.created_at;';
+                const sql = 'SELECT t.*, s.id as sub_id, i.id as instructor_id FROM term t JOIN term_has_subject tsub ON t.id = tsub.term_id JOIN subject s ON tsub.subject_id = s.id JOIN instructor i ON s.instructor_id = i.id WHERE start_date <= NOW() AND end_date >= NOW() AND i.id = ? GROUP BY t.id ORDER BY t.start_date DESC, t.end_date DESC, t.created_at DESC';
                 const params = [instructorId];
                 connection.query(sql, instructorId, (error, results, fields) => {
                     if (error) {
@@ -232,6 +232,12 @@ const termRepository = () => {
                 const deleteParams = [id];
                 connection.query(deleteSql, deleteParams, (error, result) => {
                     if (error) {
+                        if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+                            const deleteError = new Error();
+                            deleteError.message = 'This term is in use.'
+                            reject(deleteError);
+                            return;
+                        }
                         reject(error);
                     } else {
                         resolve(result.affectedRows);

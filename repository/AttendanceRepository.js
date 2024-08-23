@@ -31,7 +31,7 @@ const attendanceRepository = () => {
                     if (error) {
                         if (error.code === 'ER_DUP_ENTRY') {
                             const duplicateError = new Error();
-                            duplicateError.message = 'You have already recorded this attendance';
+                            duplicateError.message = 'Your attendance already recorded.';
                             reject(duplicateError);
                             return;
                         }
@@ -179,7 +179,7 @@ const attendanceRepository = () => {
             const connection = await getConnection();
 
             return new Promise((resolve, reject) => {
-                const sql = 'SELECT r.id as id, t.name as term_name, s.name as subject_name, r.date, r.start_time, r.end_time, r.status FROM roll_call r JOIN term t ON r.term_id = t.id JOIN subject s ON r.subject_id = s.id WHERE r.instructor_id = ? ORDER BY r.created_at DESC';
+                const sql = 'SELECT r.id as id, t.name as term_name, s.name as subject_name, r.date, r.start_time, r.end_time, r.status FROM roll_call r JOIN term t ON r.term_id = t.id JOIN subject s ON r.subject_id = s.id WHERE r.instructor_id = ? ORDER BY r.date DESC, r.start_time DESC, r.end_time DESC, r.created_at DESC';
                 const params = [instructorId];
                 connection.query(sql, params, (error, results, fields) => {
                     if (error) {

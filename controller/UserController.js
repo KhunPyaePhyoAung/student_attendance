@@ -216,11 +216,15 @@ const userController = ({userService}) => {
                     message: 'No User found.'
                 });
             } catch (error) {
-                return res.status(200).json(
-                    {
-                        status: 500
-                    }
-                );
+                return res.status(200).json({
+                    status: 400,
+                    errors: [
+                        {
+                            field: error.fieldName,
+                            message: error.message
+                        }
+                    ]
+                });
             }
         },
     }
