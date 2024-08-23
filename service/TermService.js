@@ -10,6 +10,15 @@ const termService = ({termRepository, subjectService}) => {
             }
         },
 
+        getAllForStudent: async (studentId) => {
+            try {
+                const terms = await termRepository.getAllForStudent(studentId);
+                return terms;
+            } catch (error) {
+                throw error;
+            }
+        },
+
         getActiveTermsForInstructor: async (instructorId) => {
 
             try {

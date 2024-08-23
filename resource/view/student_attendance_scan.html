@@ -140,8 +140,7 @@
         }
 
         #scanImage {
-            width: 100%;
-            margin: 20px;
+            width: 80%;
             object-fit: contain;
         }
     </style>
@@ -196,11 +195,15 @@
     <div class="container mt-4" style="max-width: 400px;">
         
         <div class="card shadow-sm p-3">
-            <!-- Image Inside the Card -->
-            <img id="scanImage" src="/image/qr-scan.png" alt="Your Image" class="img-fluid mb-3">
+            <div class="text-center">
+                <img id="scanImage" src="/image/qr-scan.png" alt="Your Image" class="img-fluid mb-3">
+            </div>
+            
             
             <div id="my-qr-reader" class="mb-3 border"></div>
-            <button id="toggleScannerBtn" state="start" class="btn btn-success w-100">Start Scanning</button>
+            <button id="toggleScannerBtn" state="start" class="btn btn-success w-100">
+                <i class="fas fa-qrcode"></i> Scan
+            </button>
         </div>
     </div>
     <script>
@@ -289,9 +292,11 @@
                 onScanSuccess
             );
 
-            toggleScannerBtn.text('Stop Scanning');
+            toggleScannerBtn.html('<i class="fas fa-stop"></i> Stop');
             toggleScannerBtn.attr('state', 'stop');
             toggleScannerBtn.removeAttr('disabled');
+            toggleScannerBtn.removeClass('btn-success');
+            toggleScannerBtn.addClass('btn-danger');
             scanImage.hide();
             quCodeContainer.show();
         }
@@ -299,9 +304,11 @@
         function stopScanning() {
             html5QrCode.stop()
                 .then((ignore) => {
-                    toggleScannerBtn.text('Start Scanning');
+                    toggleScannerBtn.html('<i class="fas fa-qrcode"></i> Scan');
                     toggleScannerBtn.attr('state', 'start');
                     toggleScannerBtn.removeAttr('disabled');
+                    toggleScannerBtn.removeClass('btn-danger');
+                    toggleScannerBtn.addClass('btn-success');
                     scanImage.show();
                     quCodeContainer.hide();
                 })

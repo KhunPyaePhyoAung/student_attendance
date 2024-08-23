@@ -179,16 +179,16 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/home">Home</a>
+                        <a class="nav-link" href="/home">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/attendances">Attendances</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/attendance_scan">Scan QR</a>
+                        <a class="nav-link" href="/terms">Terms</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/terms">Terms</a>
+                        <a class="nav-link" href="/students">Students</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/instructors">Instructors</a>
@@ -253,6 +253,24 @@
 
                 <div class="form-group text-right mt-5">
                     <i class="fa fa-user text-success"></i> <label id="totalStudentLabel" class="text-success"></label>
+                </div>
+
+                <!-- Student Table -->
+                <div class="form-group mt-3">
+                    <div class="student-table-container">
+                        <table class="table table-bordered" id="studentTable">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Sr</th>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 
                 <a class="btn btn-custom mt-5" href="/terms">Back to Terms</a>
@@ -345,6 +363,13 @@
             ).always(function (data, status, xhr) {
                     if (data.status === 200) {
                         data.data.forEach((student, i) => {
+                            let row = `<tr id="student${student.id}">`;
+                            row += `<td class="text-center">${i + 1}</td>`;
+                            row += `<td>${student.name}</td>`;
+                            row += `<td>${student.role_no}</td>`;
+                            row += `</tr>`;
+
+                            $('#studentTable tbody').append(row);
                             selectedStudentIds.push(student.id);
                             totalStudentLabel.text(`Total students: ${selectedStudentIds.length}`);
                         });

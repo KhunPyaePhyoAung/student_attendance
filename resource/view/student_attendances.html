@@ -103,6 +103,35 @@
             color: green!important;
         }
 
+        .student-name {
+            color: blueviolet!important;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table {
+            width: 100%;
+            min-width: 600px; /* Adjust this based on your table's content */
+        }
+
+        .table-container {
+            max-width: 90%;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            overflow-x: hidden; /* Prevent horizontal scrolling of the body */
+        }
+
+
+
     </style>
 </head>
 <body>
@@ -182,17 +211,22 @@
                 </div>
             </div>
         </div>
-
-        <table class="table table-bordered display">
-            <thead id="attendanceTableHeader">
-            </thead>
-            <tbody id="attendanceTableBody">
-            </tbody>
-        </table>
+    
+        <!-- Scrollable table -->
+        <div class="table-responsive">
+            <table class="table table-bordered display">
+                <thead id="attendanceTableHeader">
+                </thead>
+                <tbody id="attendanceTableBody">
+                </tbody>
+            </table>
+        </div>
     </div>
+    
     <script>
 
         $('#usernameMenuItem').text($.cookie('username'));
+        const studentId = $.cookie('user_id');
         let terms = [];
         let subjectsTotalSessions = {};
         // let fromDate = dateformat(new Date(), 'mm/dd/yyyy');
@@ -244,7 +278,7 @@
         function fetchTerms() {
 
             const settings = {
-                "url": "/api/terms",
+                "url": "/api/terms/student",
                 "method": "GET",
                 "timeout": 0,
             };
@@ -378,10 +412,15 @@
                         attendanceTableBody.empty();
                         
                         data.data.forEach((student, i) => {
+                            let textClass = '';
+                            let icon = '';
+                            if (student.id == studentId) {
+                                textClass = 'student-name';
+                            }
                             let row = '<tr>';
-                            row += `<th class="text-center">${i + 1}</th>`;
-                            row += `<th class="text-nowrap">${student.role_no}</th>`;
-                            row += `<th class="text-nowrap">${student.name}</th>`;
+                            row += `<th class="text-center ${textClass}">${i + 1}</th>`;
+                            row += `<th class="text-nowrap ${textClass}">${student.role_no}</th>`;
+                            row += `<th class="text-nowrap ${textClass}">${student.name}</th>`;
                             row += `<th id="all_${student.id}" class="text-center bg-gray dataCell"></th>`;
                             row += `<th id="percent_all_${student.id}" class="text-center bg-gray dataCell"></th>`;
                             subjects.forEach(subject => {

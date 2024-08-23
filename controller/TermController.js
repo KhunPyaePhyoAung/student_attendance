@@ -22,6 +22,29 @@ const termController = ({termService}) => {
             }
         },
 
+        getAllForStudent: async (req, res) => {
+            const studentId = req.user.id;
+            try {
+                const terms = await termService.getAllForStudent(studentId);
+                return res.status(200).json(
+                    {
+                        status: 200,
+                        meta: {
+                            total: terms.length
+                        },
+                        data: terms
+                    }
+                );
+            } catch (error) {
+                return res.status(200).json(
+                    {
+                        status: 500,
+                        message: error.message
+                    }
+                );
+            }
+        },
+
         getActiveTermsForInstructor: async (req, res) => {
             const instructorId = req.user.id;
             try {

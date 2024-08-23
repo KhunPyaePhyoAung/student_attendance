@@ -25,6 +25,12 @@ router.get(
 );
 
 router.get(
+    '/student',
+    [authMiddleware.verifyUserToken],
+    termController.getAllForStudent
+);
+
+router.get(
     '/:id(\\d+)',
     termController.findOneById
 );

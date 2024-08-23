@@ -18,6 +18,42 @@ const termRepository = () => {
             });
         },
 
+        getAllForStudent: async (studentId) => {
+            const connection = await getConnection();
+
+            return new Promise((resolve, reject) => {
+                const sql = `
+                    SELECT 
+                        t.*, 
+                        COUNT(DISTINCT tsb.subject_id) AS subject_count, 
+                        COUNT(DISTINCT CASE WHEN tst.student_id IS NOT NULL THEN tst.student_id END) AS student_count
+                    FROM 
+                        term t
+                    LEFT JOIN 
+                        term_has_subject tsb ON t.id = tsb.term_id
+                    LEFT JOIN 
+                        term_has_student tst ON t.id = tst.term_id
+                    GROUP BY 
+                        t.id
+                    HAVING 
+                        COUNT(CASE WHEN tst.student_id = ? THEN 1 END) > 0
+                    ORDER BY 
+                        t.start_date DESC, 
+                        t.end_date DESC, 
+                        t.created_at DESC;
+                `;
+                const params = [studentId];
+                connection.query(sql, params, (error, results, fields) => {
+                    if (error) {
+                        reject(new Error(error.sqlMessage));
+                    } else {
+                        resolve(results);
+                    }
+                });
+                connection.release();
+            });
+        },
+
         getActiveTermsForInstructor: async (instructorId) => {
             const connection = await getConnection();
 
