@@ -82,7 +82,7 @@ const termService = ({termRepository, subjectService}) => {
                     uniqueFields.forEach(element => {
                         error.fields.push({
                             field: element,
-                            message: "Unique field"
+                            message: `This ${element} already exists`
                         })
                     });
                     throw error;
@@ -115,7 +115,7 @@ const termService = ({termRepository, subjectService}) => {
                     uniqueFields.forEach(element => {
                         error.fields.push({
                             field: element,
-                            message: "Unique field"
+                            message: `This ${element} already exists`
                         })
                     });
                     throw error;

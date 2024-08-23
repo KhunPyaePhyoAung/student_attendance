@@ -71,7 +71,7 @@ const instructorService = ({ instructorRepository, userService }) => {
                     uniqueFields.forEach(element => {
                         error.fields.push({
                             field: element,
-                            message: "Unique field"
+                            message: `This ${element} already exists`
                         });
                     });
                     throw error;
@@ -114,7 +114,7 @@ const instructorService = ({ instructorRepository, userService }) => {
                     uniqueFields.forEach(element => {
                         error.fields.push({
                             field: element,
-                            message: "Unique field"
+                            message: `This ${element} already exists`
                         });
                     });
                     throw error;

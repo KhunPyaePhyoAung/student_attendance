@@ -119,6 +119,25 @@
             background-color: #e9ecef; /* Background color on hover */
             color: #1e56a6; /* Text color on hover */
         }
+
+        .table-container {
+    max-width: 90%;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-scroll {
+    overflow-x: auto;
+}
+
+.table {
+    min-width: 800px; /* Adjust based on content width */
+}
+
+
     </style>
 </head>
 <body>
@@ -169,22 +188,29 @@
         <div class="header-container">
             <h2>Term List</h2>
         </div>
-        <table class="table table-striped display" id="termTable">
-            <thead>
-                <tr>
-                    <th>Sr</th>
-                    <th>Name</th>
-                    <th class="text-center">Subjects</th>
-                    <th class="text-center">Students</th>
-                    <th class="text-center">Start Date</th>
-                    <th class="text-center">End Date</th>
-                    <th class="text-center">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="termTableBody">
-            </tbody>
-        </table>
+    
+        <!-- Scrollable table -->
+        <div class="table-scroll">
+            <table class="table table-striped display" id="termTable">
+                <thead>
+                    <tr>
+                        <th>Sr</th>
+                        <th>Name</th>
+                        <th class="text-center">Subjects</th>
+                        <th class="text-center">Students</th>
+                        <th class="text-center">Start Date</th>
+                        <th class="text-center">End Date</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="termTableBody">
+                </tbody>
+            </table>
+        </div>
     </div>
+    
+    
+    
     <script>
         $('#usernameMenuItem').text($.cookie('username'));
         const logoutMenuItem = $('#logoutMenuItem');

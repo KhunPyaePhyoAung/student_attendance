@@ -288,6 +288,7 @@
     <!-- Student List -->
     <div class="table-container">
         <div class="header-container">
+            <i class="fa fa-user status-present"></i> <label id="presentCountLabel">0</label> <i class="fa fa-user status-absent"></i> <label id="absentCountLabel">0</label> / <label id="totalCountLabel">0</label>
         </div>
         <table class="table table-striped display" id="studentTable">
             <thead>
@@ -320,6 +321,10 @@
         const dateHeader = $('#dateHeader');
         const startTimeHeader = $('#startTimeHeader');
         const endTimeHeader = $('#endTimeHeader');
+
+        const presentCountLabel = $('#presentCountLabel');
+        const absentCountLabel = $('#absentCountLabel');
+        const totalCountLabel = $('#totalCountLabel');
 
         const logoutMenuItem = $('#logoutMenuItem');
         const studentTableBody = $('#studentTableBody');
@@ -445,43 +450,13 @@
             });
         }
 
-        function deleteStudentById(studentId) {
-            const settings = {
-                "url": "/api/students/" + studentId,
-                "method": "DELETE",
-                "timeout": 0,
-            };
-
-            $.post(
-                settings
-            ).always(function (data, status, xhr) {
-                    console.log(data.status);
-                    if (data.status === 204) {
-                        fetchStudentsForAttendance();
-                        swal("The student has been deleted!", {
-                            icon: "success",
-                        });
-                    } else if (data.status === 400) {
-                        swal(data.errors[0].message, {
-                            icon: "error",
-                        });
-                    } else if (data.status === 404) {
-                        fetchStudentsForAttendance();
-                        swal("No student found.", {
-                            icon: "error",
-                        });
-                    } else if (data.status === 500) {
-                        swal("There is a problem with internal server.", {
-                            icon: "error",
-                        });
-                    }
-                }
-            );
-        }
-
         function showStudentData(students) {
             // $('#studentTable').DataTable().clear().destroy();
             $('#studentTableBody').empty();
+
+            let totalCount = students.length;
+            let presentCount = 0;
+            let absentCount = 0;
 
             // Append new rows
             students.forEach((student, i) => {
@@ -489,7 +464,9 @@
                 let statusClass = '';
                 if (student.status === 'PRESENT') {
                     statusClass = 'status-present';
+                    presentCount++;
                 } else if (student.status === 'ABSENT') {
+                    absentCount++;
                     statusClass = 'status-absent';
                 }
 
@@ -504,7 +481,13 @@
                 $('#studentTableBody').append(row);
             });
 
+            presentCountLabel.text(presentCount);
+            absentCountLabel.text(absentCount);
+            totalCountLabel.text(totalCount);
+
             const changedStudents = [];
+
+           
 
             students.forEach(student => {
                 for (let i = 0; i < previousStudents.length; i++) {

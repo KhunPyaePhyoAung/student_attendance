@@ -91,8 +91,8 @@ const subjectRepository = () => {
                     if (error) {
                         if (error.code === 'ER_DUP_ENTRY') {
                             const duplicateError = new Error();
-                            duplicateError.field = "code";
-                            duplicateError.message = "This code is already used."
+                            duplicateError.fieldName = "code";
+                            duplicateError.message = "This code already exists"
                             reject(duplicateError);
                         } else {
                             reject(error);

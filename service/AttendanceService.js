@@ -15,7 +15,7 @@ const attendanceService = ({attendanceRepository}) => {
 
                 if (!rollCallValidForStudent) {
                     const invalidRollCallError = new Error();
-                    invalidRollCallError.message = 'You are not related to this attendance.';
+                    invalidRollCallError.message = 'You are not enrolled in this session.';
                     throw invalidRollCallError;
                 }
 

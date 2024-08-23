@@ -242,7 +242,7 @@ const attendanceRepository = () => {
                             JOIN 
                                 instructor i ON a.instructor_id = i.id 
                             WHERE 
-                                a.id = ?;
+                                a.id = ?
                             `;
                 const params = [id];
                 connection.query(sql, params, (error, results, fields) => {
