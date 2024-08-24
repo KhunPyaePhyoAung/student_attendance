@@ -204,13 +204,15 @@
                     <div class="invalid-feedback" id="instructorErrorMessage"></div>
                 </div>
                 <button type="submit" class="btn btn-custom" id="registerBtn">Update</button>
-                <a class="btn btn-cancel" href="/subjects">Cancel</a>
+                <a class="btn btn-cancel" href="/subjects">Back To Subjects</a>
             </form>
         </div>
     </section>
     <script>
 
         $('#usernameMenuItem').text($.cookie('username'));
+        $('input').attr('autocomplete','off');
+        $('input').attr('spellcheck', 'false');
         const registerBtn = $('#registerBtn');
         const logoutMenuItem = $('#logoutMenuItem');
         const subjectForm = $('#subjectForm');

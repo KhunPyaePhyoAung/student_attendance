@@ -270,12 +270,14 @@
                     </div>
                 </div>
                 <button type="submit" class="btn btn-custom" id="registerBtn">Update</button>
-                <a class="btn btn-cancel" href="/students">Cancel</a>
+                <a class="btn btn-cancel" href="/students">Back To Students</a>
             </form>
         </div>
     </section>
     <script>
         $('#usernameMenuItem').text($.cookie('username'));
+        $('input').attr('autocomplete','off');
+        $('input').attr('spellcheck', 'false');
         const datePicker = flatpickr('#dateOfBirth', {
                 dateFormat: 'd/m/Y',
                 maxDate: new Date(),

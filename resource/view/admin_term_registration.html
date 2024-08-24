@@ -356,13 +356,17 @@
                 </div>
 
                 <button type="submit" class="btn btn-custom mt-5" id="registerBtn">Register</button>
-                <a class="btn btn-cancel" href="/terms">Cancel</a>
+                <a class="btn btn-cancel" href="/terms">Back To Terms</a>
             </form>
         </div>
     </section>
 
     <script>
         $('#usernameMenuItem').text($.cookie('username'));
+        $('input').attr('autocomplete','off');
+        $('input').attr('spellcheck', 'false');
+        
+        let currentPage = 0;
         let selectedStudentIds = []; // Track selected students
         let selectedSubjectIds = [];
         // const datePicker = flatpickr("#startDate, #endDate", {
@@ -671,7 +675,8 @@
         }
 
         function selectStudent(studentId, studentName, studentRole) {
-            $('#modalStudentTable').DataTable().destroy();
+            // $('#modalStudentTable').DataTable().destroy();
+            $('#modalStudentTable').DataTable().clear();
             $(`#modalStudent${studentId}`).remove();
 
             
@@ -680,7 +685,6 @@
             $('#modalStudentTable').DataTable({
                 pageLength: 50
             });
-
             const studentRow = `
                 <tr id="student${studentId}">
                     <td>${$('#studentTable tbody tr').length + 1}</td>

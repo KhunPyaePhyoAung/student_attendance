@@ -92,6 +92,16 @@ const attendanceService = ({attendanceRepository}) => {
             }
         },
 
+        deleteSessionById: async (id) => {
+            try {
+                const intId = parseInt(id);
+                const deleted = await attendanceRepository.deleteSessionById(intId);
+                return deleted;
+            } catch (error) {
+                throw error;
+            }
+        },
+
     };
 }
 

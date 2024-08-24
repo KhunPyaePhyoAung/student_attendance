@@ -124,9 +124,7 @@
             color: #1e56a6; /* Text color on hover */
         }
 
-        .page-header {
-            color: #1e56a6;
-        }
+        
     </style>
 </head>
 <body>
@@ -174,7 +172,7 @@
 
     <section class="main-content">
         <div class="container">
-            <h2 class="text-center mb-4 page-header>Subject Registration</h2>
+            <h2 class="text-center mb-4 page-header">Subject Registration</h2>
             <form novalidate id="subjectForm">
                 <div class="form-group">
                     <label for="nrc">Code</label>
@@ -198,12 +196,15 @@
                     <div class="invalid-feedback" id="instructorErrorMessage"></div>
                 </div>
                 <button type="submit" class="btn btn-custom" id="registerBtn">Register</button>
-                <a class="btn btn-cancel" href="/subjects">Cancel</a>
+                <a class="btn btn-cancel" href="/subjects">Back To Subjects</a>
             </form>
         </div>
     </section>
     <script>
         $('#usernameMenuItem').text($.cookie('username'));
+        $('input').attr('autocomplete','off');
+        $('input').attr('spellcheck', 'false');
+        
         const logoutMenuItem = $('#logoutMenuItem');
         const subjectForm = $('#subjectForm');
         const codeInput = $('#code');

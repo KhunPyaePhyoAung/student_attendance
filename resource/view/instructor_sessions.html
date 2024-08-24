@@ -247,9 +247,9 @@
             );
         }
 
-        function deleteTermById(termId) {
+        function deleteSessionById(sessionId) {
             const settings = {
-                "url": "/api/terms/" + termId,
+                "url": "/api/attendances/sessions/" + sessionId,
                 "method": "DELETE",
                 "timeout": 0,
             };
@@ -257,10 +257,10 @@
             $.post(
                 settings
             ).always(function (data, status, xhr) {
-                    console.log(data.status);
+                    console.log('success');
                     if (data.status === 204) {
                         fetchAttendances();
-                        swal("The term has been deleted!", {
+                        swal("The session has been deleted!", {
                             icon: "success",
                         });
                     } else if (data.status === 400) {
@@ -269,7 +269,7 @@
                         });
                     }else if (data.status === 404) {
                         fetchAttendances();
-                        swal("No term found.", {
+                        swal("No session found.", {
                             icon: "error",
                         });
                     } else if (data.status === 500) {
@@ -291,7 +291,7 @@
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    deleteTermById(termId);
+                    deleteSessionById(termId);
                 }
             });
         }

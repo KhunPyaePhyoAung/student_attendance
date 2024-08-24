@@ -176,7 +176,7 @@
 
     <section class="main-content">
         <div class="container">
-            <h2 class="text-center mb-4 page-header>Student Registration</h2>
+            <h2 class="text-center mb-4 page-header">Student Registration</h2>
             <form novalidate id="studentForm">
                 <div class="form-group">
                     <label for="name">Full Name</label>
@@ -258,12 +258,14 @@
                     </div>
                 </div>
                 <button type="submit" class="btn btn-custom" id="registerBtn">Register</button>
-                <a class="btn btn-cancel" href="/students">Cancel</a>
+                <a class="btn btn-cancel" href="/students">Back To Students</a>
             </form>
         </div>
     </section>
     <script>
         $('#usernameMenuItem').text($.cookie('username'));
+        $('input').attr('autocomplete','off');
+        $('input').attr('spellcheck', 'false');
         const datePicker = flatpickr('#dateOfBirth', {
                 dateFormat: 'd/m/Y',
                 maxDate: new Date(),

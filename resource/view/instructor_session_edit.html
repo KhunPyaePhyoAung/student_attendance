@@ -286,13 +286,15 @@
                 </div>
                 
                 <button type="submit" class="btn btn-custom mt-3" id="registerBtn">Update</button>
-                <a class="btn btn-cancel" href="/sessions">Cancel</a>
+                <a class="btn btn-cancel" href="/sessions">Back To Session</a>
             </form>            
         </div>
     </section>
 
     <script>
         $('#usernameMenuItem').text($.cookie('username'));
+        $('input').attr('autocomplete','off');
+        $('input').attr('spellcheck', 'false');
         let terms = [];
         let params = new URL(document.location.toString()).searchParams;
         let attendanceId = params.get("id");

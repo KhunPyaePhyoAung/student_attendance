@@ -225,7 +225,7 @@ const attendanceRepository = () => {
                                 a.attendance_code, 
                                 a.status, 
                                 CASE 
-                                    WHEN NOW() BETWEEN CONCAT(a.date, ' ', a.start_time) AND CONCAT(a.date, ' ', a.end_time) 
+                                    WHEN NOW() BETWEEN CONCAT(a.date, ' ', a.start_time) AND CONCAT(a.date, ' ', a.end_time) AND a.status = 'OPENING' 
                                     THEN 'OPENING' 
                                     ELSE 'CLOSED' 
                                 END as conditional_status, 
@@ -325,6 +325,32 @@ const attendanceRepository = () => {
                 });
                 connection.release();
             });
+        },
+
+        deleteSessionById: async (id) => {
+            const connection = await getConnection();
+
+            const affectedRows = await new Promise((resolve, reject) => {
+                const deleteSql = 'DELETE FROM `roll_call` WHERE `id` = ?';
+                const deleteParams = [id];
+                connection.query(deleteSql, deleteParams, (error, result) => {
+                    if (error) {
+                        if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+                            const deleteError = new Error();
+                            deleteError.message = 'This session is in use.';
+                            reject(deleteError);
+                            return;
+                        }
+                        reject(error);
+                    } else {
+                        resolve(result.affectedRows);
+                    }
+                });
+            });
+
+            connection.release();
+
+            return affectedRows === 1;
         },
 
     };

@@ -156,6 +156,34 @@ const attendanceController = ({attendanceService}) => {
                 );
             }
         },
+
+        deleteSessionById: async (req, res) => {
+            const sessionId = req.params.id;
+            try {
+                const deleted = await attendanceService.deleteSessionById(sessionId);
+                if (deleted) {
+                    return res.status(200).json({
+                        status: 204,
+                    });
+                }
+                
+                return res.status(200).json({
+                    status: 404,
+                    message: 'No session found.'
+                });
+            } catch (error) {
+                return res.status(200).json(
+                    {
+                        status: 400,
+                        errors: [
+                            {
+                                message: error.message
+                            }
+                        ]
+                    }
+                );
+            }
+        },
     };
 
     

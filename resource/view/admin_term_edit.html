@@ -370,12 +370,14 @@
                 
 
                 <button type="submit" class="btn btn-custom mt-5" id="registerBtn">Update</button>
-                <a class="btn btn-cancel" href="/terms">Cancel</a>
+                <a class="btn btn-cancel" href="/terms">Back To Terms</a>
             </form>
         </div>
     </section>
     <script>
         $('#usernameMenuItem').text($.cookie('username'));
+        $('input').attr('autocomplete','off');
+        $('input').attr('spellcheck', 'false');
         let selectedStudentIds = [];
         let selectedSubjectIds = [];
 

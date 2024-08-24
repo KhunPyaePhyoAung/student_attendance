@@ -73,8 +73,8 @@ CREATE TABLE IF NOT EXISTS `student_attendance`.`subject` (
   `code` VARCHAR(45) NOT NULL,
   `name` VARCHAR(255) NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `instructor_id` INT UNSIGNED NULL,
-  PRIMARY KEY (`id`, `instructor_id`),
+  `instructor_id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
   UNIQUE INDEX `code_UNIQUE` (`code` ASC),
   INDEX `fk_subject_instructor1_idx` (`instructor_id` ASC),
   CONSTRAINT `fk_subject_instructor1`
@@ -195,11 +195,11 @@ CREATE TABLE IF NOT EXISTS `student_attendance`.`attendance` (
   CONSTRAINT `fk_attendance_student1`
     FOREIGN KEY (`student_id`)
     REFERENCES `student_attendance`.`student` (`id`)
-    ON DELETE CASCADE
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+SET FOREIGN_KEY_CHECKS=1;
+SET UNIQUE_CHECKS=1;

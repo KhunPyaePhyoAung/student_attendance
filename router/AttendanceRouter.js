@@ -48,4 +48,10 @@ router.get(
     attendanceController.filter
 );
 
+router.delete(
+    ['/sessions/:id(\\d+)'],
+    [authMiddleware.verifyUserToken],
+    attendanceController.deleteSessionById
+);
+
 module.exports = router;
