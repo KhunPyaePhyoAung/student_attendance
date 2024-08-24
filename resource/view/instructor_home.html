@@ -6,6 +6,7 @@
     <title>Home Page</title>
     <link type="image/png" rel="icon" href="/icon/icon.png">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/fontawesome.css">
     <link rel="stylesheet" href="/css/main.css">
     <script type="text/javascript" src="/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/jQuery.js"></script>
@@ -58,7 +59,65 @@
             color: #1e56a6; /* Text color on hover */
         }
 
-        
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background-color: #ffffff;
+            margin-top: 50px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero img {
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            color: #1e56a6;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .hero .btn {
+            background-color: #1e56a6;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .hero .btn:hover {
+            background-color: #163d7f;
+            color: #ffffff;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+
+        .icons-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .icon {
+            font-size: 2.5rem;
+            color: #1e56a6;
+        }
     </style>
 </head>
 <body>
@@ -108,9 +167,22 @@
         </div>
     </nav>
 
-    <section class="main-content">
-    
+    <!-- Main Content -->
+    <section class="main-content container">
+        <div class="hero">
+            <img src="/icon/icon.png" alt="University Logo">
+            <h1>University Attendance System</h1>
+            <p>Effortlessly track and manage student attendance.</p>
+            <div class="icons-container">
+                <i class="fas fa-book icon"></i>
+                <i class="fas fa-user-graduate icon"></i>
+                <i class="fas fa-user icon"></i>
+                <i class="fas fa-qrcode icon"></i>
+                <i class="fas fa-chart-line icon"></i>
+            </div>
+        </div>
     </section>
+
     <script>
         $('#usernameMenuItem').text($.cookie('username'));
         const logoutMenuItem = $('#logoutMenuItem');

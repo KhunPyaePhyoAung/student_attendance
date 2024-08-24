@@ -675,8 +675,7 @@
         }
 
         function selectStudent(studentId, studentName, studentRole) {
-            // $('#modalStudentTable').DataTable().destroy();
-            $('#modalStudentTable').DataTable().clear();
+            $('#modalStudentTable').DataTable().destroy();
             $(`#modalStudent${studentId}`).remove();
 
             
