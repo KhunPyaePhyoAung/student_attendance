@@ -330,6 +330,12 @@
                             const className = getRollCallPercentClass(percent);
                             $(`#total_${att.subject_id}`).text(att.total_times);
                             $(`#data_${att.student_id}_${att.subject_id}`).text(att.attendance_times);
+                            $(`#data_${att.student_id}_${att.subject_id}`).removeClass('roll-call-success');
+                            $(`#data_${att.student_id}_${att.subject_id}`).removeClass('roll-call-warning');
+                            $(`#data_${att.student_id}_${att.subject_id}`).removeClass('roll-call-danger');
+                            $(`#percent_${att.student_id}_${att.subject_id}`).removeClass('roll-call-success');
+                            $(`#percent_${att.student_id}_${att.subject_id}`).removeClass('roll-call-warning');
+                            $(`#percent_${att.student_id}_${att.subject_id}`).removeClass('roll-call-danger');
                             $(`#data_${att.student_id}_${att.subject_id}`).addClass(className);
                             $(`#percent_${att.student_id}_${att.subject_id}`).text(percent + '%');
                             $(`#percent_${att.student_id}_${att.subject_id}`).addClass(className);
@@ -352,6 +358,12 @@
                             }
                             
                             const className = getRollCallPercentClass(percent);
+                            $(`#${key}`).removeClass('roll-call-success');
+                            $(`#${key}`).removeClass('roll-call-warning');
+                            $(`#${key}`).removeClass('roll-call-danger');
+                            $(`#percent_${key}`).removeClass('roll-call-success');
+                            $(`#percent_${key}`).removeClass('roll-call-warning');
+                            $(`#percent_${key}`).removeClass('roll-call-danger');
                             $(`#${key}`).text(value);
                             $(`#${key}`).addClass(className);
                             $(`#percent_${key}`).text(percent + '%');
