@@ -105,7 +105,7 @@ const attendanceRepository = () => {
             const connection = await getConnection();
 
             const insertedId = await new Promise((resolve, reject) => {
-                const sql = 'INSERT INTO roll_call (date, start_time, end_time, term_id, subject_id, instructor_id, attendance_code) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+                const sql = 'INSERT INTO roll_call (date, start_time, end_time, term_id, subject_id, instructor_id, attendance_code) VALUES (?, ?, ?, ?, ?, ?, ?)';
                 const params = [date, start_time, end_time, term_id, subject_id, instructor_id, uuidv4()];
                 connection.query(sql, params, (error, results, fields) => {
                     if (error) {
