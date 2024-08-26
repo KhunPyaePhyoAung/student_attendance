@@ -176,6 +176,12 @@
         .page-header {
             color: #1e56a6;
         }
+
+        input[type="checkbox"] {
+            cursor: pointer;
+            width: 1.4em;
+            height: 1.4em;
+        }
     </style>
 </head>
 <body>
@@ -263,7 +269,7 @@
                             
                             <div class="modal-body">
                                 <div class="d-flex justify-content-end align-items-center">
-                                    <button class="btn btn-primary" id="selectSubjectsButton" disabled>Select Subjects</button>
+                                    <button class="btn btn-success" id="selectSubjectsButton" disabled>Select Subjects</button>
                                 </div>
                                 <div class="table-container">
                                     <table class="table table-striped display" id="modalSubjectTable">
@@ -323,7 +329,7 @@
                             </div>
                             <div class="modal-body">
                                 <div class="d-flex justify-content-end align-items-center">
-                                    <button class="btn btn-primary" id="selectStudentsButton" disabled>Select Students</button>
+                                    <button class="btn btn-success" id="selectStudentsButton" disabled>Select Students</button>
                                 </div>
                                 <div class="table-container">
                                     <table class="table table-striped display" id="modalStudentTable">
