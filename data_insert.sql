@@ -282,6 +282,7 @@ INSERT INTO `term_has_student` (`term_id`, `student_id`) VALUES
 
 
 
+
 INSERT INTO `roll_call` (`id`, `date`, `start_time`, `end_time`, `status`, `created_at`, `instructor_id`, `subject_id`, `attendance_code`, `term_id`) VALUES
 (1, '2024-07-01', '09:04:00', '10:00:00', 'CLOSED', '2024-08-24 14:04:47', 60, 1, '84867742-3a1a-4742-981b-563c0b754373', 2),
 (2, '2024-07-02', '13:36:00', '15:00:00', 'CLOSED', '2024-08-24 14:07:06', 60, 1, '1f39479f-b6fb-4838-9bb7-fb098ed04841', 2),
