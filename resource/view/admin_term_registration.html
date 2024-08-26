@@ -260,7 +260,11 @@
                                 <h5 class="modal-title" id="addSubjectModalLabel">Select the Subjects</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            
                             <div class="modal-body">
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <button class="btn btn-primary" id="selectSubjectsButton" disabled>Select Subjects</button>
+                                </div>
                                 <div class="table-container">
                                     <table class="table table-striped display" id="modalSubjectTable">
                                         <thead>
@@ -318,6 +322,9 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <button class="btn btn-primary" id="selectStudentsButton" disabled>Select Students</button>
+                                </div>
                                 <div class="table-container">
                                     <table class="table table-striped display" id="modalStudentTable">
                                         <thead>
@@ -369,6 +376,8 @@
         let currentPage = 0;
         let selectedStudentIds = []; // Track selected students
         let selectedSubjectIds = [];
+        let checkedStudents = [];
+        let checkedSubjects = [];
         // const datePicker = flatpickr("#startDate, #endDate", {
         //     dateFormat: "Y-m-d"
         // });
@@ -385,6 +394,8 @@
         const startDateInput = $('#startDate');
         const endDateInput = $('#endDate');
         const registerBtn = $('#registerBtn');
+        const selectStudentsButton = $('#selectStudentsButton');
+        const selectSubjectsButton = $('#selectSubjectsButton');
 
         const nameErrorMessage = $('#nameErrorMessage');
         const startDateErrorMessage = $('#startDateErrorMessage');
@@ -430,6 +441,50 @@
                 createTerm(term);
             }
             
+        });
+
+        selectStudentsButton.on('click', function(e) {
+            $('#addStudentModal').modal('hide');
+            checkedStudents.forEach(student => {
+                const studentRow = `
+                    <tr id="student${student.id}">
+                        <td>${$('#studentTable tbody tr').length + 1}</td>
+                        <td>${student.name}</td>
+                        <td>${student.roll}</td> <!-- Placeholder for Phone -->
+                        <td><button class="btn btn-danger" onClick="removeStudent(${student.id})"><i class="fas fa-minus-circle"></i></button></td>
+                    </tr>
+                `;
+            
+                $('#studentTable tbody').append(studentRow);
+
+                selectedStudentIds.push(student.id);
+            });
+
+            checkedStudents = [];
+            
+            totalStudentLabel.text(`Total students: ${selectedStudentIds.length}`);
+        });
+
+        selectSubjectsButton.on('click', function() {
+            $('#addSubjectModal').modal('hide');
+            checkedSubjects.forEach(subject => {
+                const subjectRow = `
+                    <tr id="subject${subject.id}">
+                        <td>${$('#subjectTable tbody tr').length + 1}</td>
+                        <td>${subject.code}</td>
+                        <td>${subject.name}</td> <!-- Placeholder for Phone -->
+                        <td><button class="btn btn-danger" onClick="removeSubject(${subject.id})"><i class="fas fa-minus-circle"></i></button></td>
+                    </tr>
+                `;
+            
+                $('#subjectTable tbody').append(subjectRow);
+
+                selectedSubjectIds.push(subject.id);
+            });
+
+            checkedSubjects = [];
+            
+            totalSubjectLabel.text(`Total subjects: ${selectedSubjectIds.length}`);
         });
 
         logoutMenuItem.on('click', function() {
@@ -633,7 +688,8 @@
                     row += `<td>${i + 1}</td>`;
                     row += `<td>${student.name}</td>`;
                     row += `<td>${student.role_no}</td>`;
-                    row += `<td><button class="btn btn-primary" onClick="selectStudent(${student.id}, '${student.name}', '${student.role_no}')"><i class="fas fa-check"></i></button></td>`;
+                    // row += `<td><button class="btn btn-primary" onClick="selectStudent(${student.id}, '${student.name}', '${student.role_no}')"><i class="fas fa-check"></i></button></td>`;
+                    row += `<td><input type="checkbox" onClick="checkStudent(${student.id}, '${student.name}', '${student.role_no}', this)" /></td>`;
                     row += `</tr>`;
 
                     $('#modalStudentTableBody').append(row);
@@ -645,6 +701,7 @@
             $('#modalStudentTable').DataTable({
                 pageLength: 50
             });
+            selectStudentsButton.prop('disabled', checkedStudents.length == 0);
         }
 
         function populateModalSubjectTable(subjects) {
@@ -658,7 +715,8 @@
                     row += `<td>${i + 1}</td>`;
                     row += `<td>${subject.code}</td>`;
                     row += `<td>${subject.name}</td>`;
-                    row += `<td><button class="btn btn-primary" onClick="selectSubject(${subject.id}, '${subject.code}', '${subject.name}')"><i class="fas fa-check"></i></button></td>`;
+                    row += `<td><input type="checkbox" onClick="checkSubject(${subject.id}, '${subject.code}', '${subject.name}', this)" /></td>`;
+                    // row += `<td><button class="btn btn-primary" onClick="selectSubject(${subject.id}, '${subject.code}', '${subject.name}')"><i class="fas fa-check"></i></button></td>`;
                     row += `</tr>`;
 
                     $('#modalSubjectTableBody').append(row);
@@ -672,6 +730,33 @@
             $('#modalSubjectTable').DataTable({
                 pageLength: 10
             });
+            selectSubjectsButton.prop('disabled', checkedSubjects.length == 0);
+        }
+
+        function checkStudent(studentId, studentName, studentRole, input) {
+            if (input.checked) {
+                checkedStudents.push({
+                    id: studentId,
+                    name: studentName,
+                    roll: studentRole
+                });
+            } else {
+                checkedStudents = checkedStudents.filter(s => s.id != studentId);
+            }
+            selectStudentsButton.prop('disabled', checkedStudents.length == 0);
+        }
+
+        function checkSubject(subjectId, subjectCode, subjectName, input) {
+            if (input.checked) {
+                checkedSubjects.push({
+                    id: subjectId,
+                    code: subjectCode,
+                    name: subjectName
+                });
+            } else {
+                checkedSubjects = checkedSubjects.filter(s => s.id != subjectId);
+            }
+            selectSubjectsButton.prop('disabled', checkedSubjects.length == 0);
         }
 
         function selectStudent(studentId, studentName, studentRole) {
