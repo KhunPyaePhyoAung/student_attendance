@@ -443,6 +443,14 @@
             
         });
 
+        startDateInput.on('input', function() {
+            endDateInput.attr('min', startDateInput.val());
+        });
+
+        endDateInput.on('input', function() {
+            startDateInput.attr('max', endDateInput.val());
+        });
+
         selectStudentsButton.on('click', function(e) {
             $('#addStudentModal').modal('hide');
             checkedStudents.forEach(student => {

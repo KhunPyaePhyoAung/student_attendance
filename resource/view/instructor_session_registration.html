@@ -341,6 +341,20 @@
             clearFormErrorMessages(e.target.id);
         });
 
+        startTimeInput.on('change', function() {
+            if (startTimeInput.val() > startTimeInput.attr('max')) {
+                startTimeInput.val('');
+            }
+            endTimeInput.attr('min', startTimeInput.val());
+        });
+
+        endTimeInput.on('change', function() {
+            if (endTimeInput.val() < endTimeInput.attr('min')) {
+                endTimeInput.val('');
+            }
+            startTimeInput.attr('max', endTimeInput.val());
+        });
+
         termInput.on('input', function() {
             const termId = termInput.val();
             

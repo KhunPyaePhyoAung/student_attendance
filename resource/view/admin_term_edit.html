@@ -455,6 +455,14 @@
             
         });
 
+        startDateInput.on('input', function() {
+            endDateInput.attr('min', startDateInput.val());
+        });
+
+        endDateInput.on('input', function() {
+            startDateInput.attr('max', endDateInput.val());
+        });
+
         selectStudentsButton.on('click', function(e) {
             $('#addStudentModal').modal('hide');
             checkedStudents.forEach(student => {
@@ -732,6 +740,8 @@
             nameInput.val(term.name);
             startDateInput.val(term.start_date);
             endDateInput.val(term.end_date);
+            startDateInput.attr('max', endDateInput.val());
+            endDateInput.attr('min', startDateInput.val());
         }
 
         function updateTerm(term) {

@@ -369,6 +369,20 @@
             clearFormErrorMessages(e.target.id);
         });
 
+        startTimeInput.on('change', function() {
+            if (startTimeInput.val() > startTimeInput.attr('max')) {
+                startTimeInput.val('');
+            }
+            endTimeInput.attr('min', startTimeInput.val());
+        });
+
+        endTimeInput.on('change', function() {
+            if (endTimeInput.val() < endTimeInput.attr('min')) {
+                endTimeInput.val('');
+            }
+            startTimeInput.attr('max', endTimeInput.val());
+        });
+
         termInput.on('input', function() {
             const termId = termInput.val();
             console.log(termId);
@@ -507,6 +521,8 @@
             termInput.val(attendance.term_id);
             subjectInput.val(attendance.subject_id);
             statusInput.val(attendance.status);
+            startTimeInput.attr('max', endTimeInput.val());
+            endTimeInput.attr('min', startTimeInput.val());
         }
 
         function getFormData() {

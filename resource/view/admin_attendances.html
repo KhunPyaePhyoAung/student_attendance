@@ -222,6 +222,14 @@
             // toDateInput.val(toDate);
         });
 
+        fromDateInput.on('input', function() {
+            toDateInput.attr('min', fromDateInput.val());
+        });
+
+        toDateInput.on('input', function() {
+            fromDateInput.attr('max', toDateInput.val());
+        });
+
         $('.filter-input').on('input', function(e) {
             const termId = termSelector.val();
 
@@ -231,6 +239,10 @@
                 if (selectedTerm) {
                     fromDateInput.val(selectedTerm.start_date);
                     toDateInput.val(selectedTerm.end_date);
+                    fromDateInput.attr('min', fromDateInput.val());
+                    fromDateInput.attr('max', toDateInput.val());
+                    toDateInput.attr('min', fromDateInput.val());
+                    toDateInput.attr('max', toDateInput.val());
                 }
             }
             fetchAttendance();
@@ -273,6 +285,10 @@
                         if (selectedTerm) {
                             fromDateInput.val(selectedTerm.start_date);
                             toDateInput.val(selectedTerm.end_date);
+                            fromDateInput.attr('min', fromDateInput.val());
+                            fromDateInput.attr('max', toDateInput.val());
+                            toDateInput.attr('min', fromDateInput.val());
+                            toDateInput.attr('max', toDateInput.val());
                         }
                         
                     } else if (data.status === 500) {
