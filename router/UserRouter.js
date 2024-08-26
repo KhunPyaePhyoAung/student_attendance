@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const {
+    userController
+} = require('../Dependencies');
 
-const userRepository = require('../repository/UserRepository')();
-const passwordEncryptService = require('../service/Md5PasswordEncryptService');
-const userService = require('../service/UserService')({userRepository, passwordEncryptService});
-const userController = require('../controller/UserController')({userService});
 const authMiddleware = require('../middleware/AuthMiddleware');
 
 router.get(

@@ -1,11 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const {termController} = require('../Dependencies');
 
-const subjectRepository = require('../repository/SubjectRepository')();
-const subjectService = require('../service/SubjectService')({ subjectRepository });
-const termRepository = require('../repository/TermRepository')();
-const termService = require('../service/TermService')({termRepository, subjectService});
-const termController = require('../controller/TermController')({termService});
 const authMiddleware = require('../middleware/AuthMiddleware');
 
 router.get(

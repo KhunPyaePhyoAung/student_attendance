@@ -1,12 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
-const instructorRepository = require('../repository/InstructorRepository')();
-const userRepository = require('../repository/UserRepository')();
-const passwordEncryptService = require('../service/Md5PasswordEncryptService');
-const userService = require('../service/UserService')({userRepository, passwordEncryptService});
-const instructorService = require('../service/InstructorService')({instructorRepository, userService});
-const instructorController = require('../controller/InstructorController')({instructorService});
+const {instructorController} = require('../Dependencies');
 
 router.get(
     '/',

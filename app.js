@@ -3,7 +3,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const app = express();
-const path = require('path');
 const userRouter = require('./router/UserRouter');
 const studentRouter = require('./router/StudentRouter');
 const instructorRouter = require('./router/InstructorRouter');

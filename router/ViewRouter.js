@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const jwtTokenService = require('../service/JwtTokenService');
-const viewController = require('../controller/ViewController')({jwtTokenService});
+const {viewController} = require('../Dependencies');
 const authMiddleware = require('../middleware/AuthMiddleware');
 
 router.get(

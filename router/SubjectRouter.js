@@ -1,9 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
-const subjectRepository = require('../repository/SubjectRepository')();
-const subjectService = require('../service/SubjectService')({ subjectRepository });
-const subjectController = require('../controller/SubjectController')({ subjectService });
+const {subjectController} = require('../Dependencies');
 
 router.get(
     '/',
