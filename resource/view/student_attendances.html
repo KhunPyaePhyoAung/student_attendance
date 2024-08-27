@@ -189,7 +189,7 @@
     <!-- Attendance List -->
     <div class="table-container">
         <div class="header-container">
-            <h2>Attendances</h2>
+            <h2>Your Attendances</h2>
         </div>
         
         <div class="container-fluid my-4">
@@ -457,24 +457,27 @@
                         attendanceTableBody.empty();
                         
                         data.data.forEach((student, i) => {
-                            let textClass = '';
-                            let icon = '';
                             if (student.id == studentId) {
-                                textClass = 'student-name';
-                            }
-                            let row = '<tr>';
-                            row += `<th class="text-center ${textClass}">${i + 1}</th>`;
-                            row += `<th class="text-nowrap ${textClass}">${student.role_no}</th>`;
-                            row += `<th class="text-nowrap ${textClass}">${student.name}</th>`;
-                            row += `<th id="all_${student.id}" class="text-center bg-gray dataCell"></th>`;
-                            row += `<th id="percent_all_${student.id}" class="text-center bg-gray dataCell"></th>`;
-                            subjects.forEach(subject => {
-                                row += `<th id="data_${student.id}_${subject.id}" class="text-center dataCell"></th>`;
-                                row += `<th id="percent_${student.id}_${subject.id}" class="text-center dataCell"></th>`;
-                            });
+                                let textClass = '';
+                                let icon = '';
+                                if (student.id == studentId) {
+                                    textClass = 'student-name';
+                                }
+                                let row = '<tr>';
+                                row += `<th class="text-center ${textClass}">${i + 1}</th>`;
+                                row += `<th class="text-nowrap ${textClass}">${student.role_no}</th>`;
+                                row += `<th class="text-nowrap ${textClass}">${student.name}</th>`;
+                                row += `<th id="all_${student.id}" class="text-center bg-gray dataCell"></th>`;
+                                row += `<th id="percent_all_${student.id}" class="text-center bg-gray dataCell"></th>`;
+                                subjects.forEach(subject => {
+                                    row += `<th id="data_${student.id}_${subject.id}" class="text-center dataCell"></th>`;
+                                    row += `<th id="percent_${student.id}_${subject.id}" class="text-center dataCell"></th>`;
+                                });
 
-                            row += '</tr>';
-                            attendanceTableBody.append(row);
+                                row += '</tr>';
+                                attendanceTableBody.append(row);
+                            }
+                            
                         });
 
                         fetchAttendance();
