@@ -27,6 +27,12 @@ router.get(
 );
 
 router.get(
+    '/all_for_instructor',
+    [authMiddleware.verifyUserToken],
+    termController.getAllForInstructor
+);
+
+router.get(
     '/:id(\\d+)',
     termController.findOneById
 );

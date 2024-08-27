@@ -54,6 +54,25 @@ const termRepository = () => {
             });
         },
 
+        getAllForInstructor: async (instructorId) => {
+            const connection = await getConnection();
+
+            return new Promise((resolve, reject) => {
+                const sql = `
+                    SELECT t.* FROM term t JOIN term_has_subject tsub ON t.id = tsub.term_id JOIN subject s ON tsub.subject_id = s.id JOIN instructor i ON s.instructor_id = i.id WHERE i.id = ? GROUP BY t.id ORDER BY t.start_date DESC, t.end_date DESC, t.created_at DESC;
+                `;
+                const params = [instructorId];
+                connection.query(sql, params, (error, results, fields) => {
+                    if (error) {
+                        reject(new Error(error.sqlMessage));
+                    } else {
+                        resolve(results);
+                    }
+                });
+                connection.release();
+            });
+        },
+
         getActiveTermsForInstructor: async (instructorId) => {
             const connection = await getConnection();
 

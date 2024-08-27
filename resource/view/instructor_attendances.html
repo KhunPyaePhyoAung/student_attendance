@@ -204,6 +204,7 @@
     </div>
     <script>
         $('#usernameMenuItem').text($.cookie('username'));
+        const instructorId = $.cookie('user_id');
         let terms = [];
         let subjectsTotalSessions = {};
         // let fromDate = dateformat(new Date(), 'mm/dd/yyyy');
@@ -267,7 +268,7 @@
         function fetchTerms() {
 
             const settings = {
-                "url": "/api/terms",
+                "url": "/api/terms/all_for_instructor",
                 "method": "GET",
                 "timeout": 0,
             };
@@ -425,8 +426,11 @@
                             row += `<th id="all_${student.id}" class="text-center bg-gray dataCell"></th>`;
                             row += `<th id="percent_all_${student.id}" class="text-center bg-gray dataCell"></th>`;
                             subjects.forEach(subject => {
-                                row += `<th id="data_${student.id}_${subject.id}" class="text-center dataCell"></th>`;
-                                row += `<th id="percent_${student.id}_${subject.id}" class="text-center dataCell"></th>`;
+                                if (subject.instructor_id == instructorId) {
+                                    row += `<th id="data_${student.id}_${subject.id}" class="text-center dataCell"></th>`;
+                                    row += `<th id="percent_${student.id}_${subject.id}" class="text-center dataCell"></th>`;
+                                }
+                                
                             });
 
                             row += '</tr>';
@@ -461,7 +465,10 @@
                         row += `<th rowspan="2" class="text-center align-middle">Name</th>`;
                         row += `<th colspan="2" class="text-center align-middle bg-gray">Overall</th>`;
                         data.data.forEach((subject, i) => {
-                            row += `<th colspan="2" class="text-center align-middle">${subject.name}</th>`;
+                            if (subject.instructor_id == instructorId) {
+                                row += `<th colspan="2" class="text-center align-middle">${subject.name}</th>`;
+                            }
+                            
                         });
 
                         row += '</tr>';
@@ -470,7 +477,10 @@
                         row = '<tr>';
                         row += `<th id="all" colspan="2" class="text-center bg-gray dataCell"></th>`;
                         data.data.forEach((subject, i) => {
-                            row += `<th id="total_${subject.id}" colspan="2" class="text-center dataCell"></th>`;
+                            if (subject.instructor_id == instructorId) {
+                                row += `<th id="total_${subject.id}" colspan="2" class="text-center dataCell"></th>`;
+                            }
+                            
                         });
 
                         row += '</tr>';
