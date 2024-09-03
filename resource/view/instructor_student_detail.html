@@ -188,6 +188,10 @@
                     <input type="text" class="form-control input" id="role" name="role_no" readonly>
                 </div>
                 <div class="form-group mt-3">
+                    <label for="name">Year</label>
+                    <input type="text" class="form-control input" id="year" name="year" readonly>
+                </div>
+                <div class="form-group mt-3">
                     <label for="phone">Phone</label>
                     <input type="tel" class="form-control input" id="phone" name="phone" readonly>
                 </div>
@@ -224,6 +228,7 @@
         const idInput = $('#id');
         const nameInput = $('#name');
         const roleInput = $('#role');
+        const yearInput = $('#year');
         const phoneInput = $('#phone');
         const familyPhoneInput = $('#familyPhone');
         const genderInput = $('#gender');
@@ -258,12 +263,31 @@
             idInput.val(student.id);
             nameInput.val(student.name);
             roleInput.val(student.role_no);
+            yearInput.val(mapYear(student.year));
             phoneInput.val(student.phone);
             familyPhoneInput.val(student.family_phone);
             genderInput.val(student.gender);
             statusInput.val(student.status);
             dobInput.val(student.date_of_birth);
             addressInput.val(student.address);
+        }
+
+        function mapYear(year) {
+            switch (year) {
+                case 'Y1':
+                    return 'First Year';
+                case 'Y2':
+                    return 'Second Year';
+                case 'Y3':
+                    return 'Third Year';
+                case 'Y4':
+                    return 'Fourth Year';
+                case 'Y5':
+                    return 'Fifth Year';
+                case 'Y6':
+                    return 'Sixth Year';
+            }
+            return '';
         }
 
         function fetchStudentById(id) {

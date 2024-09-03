@@ -74,6 +74,7 @@ const studentService = ({studentRepository, userService}) => {
             const student = {
                 name: data.name,
                 role_no: data.role_no,
+                year: data.year,
                 nrc: data.nrc,
                 phone: data.phone,
                 family_phone: data.family_phone,
@@ -118,6 +119,7 @@ const studentService = ({studentRepository, userService}) => {
                 id: id,
                 name: data.name,
                 role_no: data.role_no,
+                year: data.year,
                 nrc: data.nrc,
                 phone: data.phone,
                 family_phone: data.family_phone,

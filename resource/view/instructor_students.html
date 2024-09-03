@@ -187,7 +187,7 @@
                     <th>Sr</th>
                     <th>Roll</th>
                     <th>Full Name</th>
-                    <!-- <th>NRC</th> -->
+                    <th>Year</th>
                     <th class="text-start">Phone</th>
                     <th class="text-start">Family Phone</th>
                     <th class="text-center">Status</th>
@@ -295,6 +295,24 @@
             });
         }
 
+        function mapYear(year) {
+            switch (year) {
+                case 'Y1':
+                    return 'First Year';
+                case 'Y2':
+                    return 'Second Year';
+                case 'Y3':
+                    return 'Third Year';
+                case 'Y4':
+                    return 'Fourth Year';
+                case 'Y5':
+                    return 'Fifth Year';
+                case 'Y6':
+                    return 'Sixth Year';
+            }
+            return '';
+        }
+
         function showStudentData(students) {
             // Clear the existing data
             $('#studentTable').DataTable().clear().destroy();
@@ -308,7 +326,7 @@
                 row += `<td class="text-right">${i + 1}</td>`;
                 row += `<td>${student.role_no}</td>`;
                 row += `<td>${student.name}</td>`;
-                // row += `<td>${student.nrc}</td>`;
+                row += `<td>${mapYear(student.year)}</td>`;
                 row += `<td class="text-start">${student.phone}</td>`;
                 row += `<td class="text-start">${student.family_phone}</td>`;
                 row += `<td class="text-center">${student.status == 'ACTIVE' ? '<i class="fa fa-circle status-active"></i>' : '<i class="fa fa-circle status-inactive"></i>'}</td>`;

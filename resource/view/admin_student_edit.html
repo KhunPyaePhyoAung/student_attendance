@@ -199,6 +199,23 @@
                         
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label for="year">Year</label>
+                    <select name="year" id="year" class="form-select input">
+                        <option value="">-- select a year --</option>
+                        <option value="Y1">First Year</option>
+                        <option value="Y2">Second Year</option>
+                        <option value="Y3">Third Year</option>
+                        <option value="Y4">Fourth Year</option>
+                        <option value="Y5">Fifth Year</option>
+                        <option value="Y6">Sixth Year</option>
+                    </select>
+                    <div class="invalid-feedback" id="yearErrorMessage">
+                        
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label for="nrc">NRC</label>
                     <input type="text" class="form-control input" id="nrc" name="nrc" placeholder="Enter your NRC number" required>
@@ -288,6 +305,7 @@
         const idInput = $('#id');
         const nameInput = $('#name');
         const roleInput = $('#role');
+        const yearInput = $('#year');
         const nrcInput = $('#nrc');
         const emailInput = $('#email');
         const phoneInput = $('#phone');
@@ -302,6 +320,7 @@
 
         const nameErrorMessage = $('#nameErrorMessage');
         const roleErrorMessage = $('#roleErrorMessage');
+        const yearErrorMessage = $('#yearErrorMessage');
         const nrcErrorMessage = $('#nrcErrorMessage');
         const emailErrorMessage = $('#emailErrorMessage');
         const phoneErrorMessage = $('#phoneErrorMessage');
@@ -330,6 +349,12 @@
                 length: {
                     maximum: 12,
                     message: '^Roll cannot be more than 12 characters'
+                }
+            },
+            year: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Year is required'
                 }
             },
             nrc: {
@@ -458,6 +483,7 @@
             idInput.val(student.id);
             nameInput.val(student.name);
             roleInput.val(student.role_no);
+            yearInput.val(student.year);
             nrcInput.val(student.nrc);
             emailInput.val(student.email);
             phoneInput.val(student.phone);
@@ -514,6 +540,9 @@
                             } else if (field === 'role_no') {
                                 roleErrorMessage.text(message);
                                 roleInput.addClass('is-invalid');
+                            } else if (field === 'year') {
+                                yearErrorMessage.text(message);
+                                yearInput.addClass('is-invalid');
                             } else if (field === 'nrc') {
                                 nrcErrorMessage.text(message);
                                 nrcInput.addClass('is-invalid');
@@ -582,6 +611,9 @@
                 } else if (sourceId === 'role') {
                     roleErrorMessage.text('');
                     roleInput.removeClass('is-invalid');
+                } else if (sourceId === 'year') {
+                    yearErrorMessage.text('');
+                    yearInput.removeClass('is-invalid');
                 } else if (sourceId === 'nrc') {
                     nrcErrorMessage.text('');
                     nrcInput.removeClass('is-invalid');
@@ -610,6 +642,7 @@
             } else {
                 nameErrorMessage.text('');
                 roleErrorMessage.text('');
+                yearErrorMessage.text('');
                 nrcErrorMessage.text('');
                 emailErrorMessage.text('');
                 phoneErrorMessage.text('');
@@ -621,6 +654,7 @@
 
                 nameInput.removeClass('is-invalid');
                 roleInput.removeClass('is-invalid');
+                yearInput.removeClass('is-invalid');
                 nrcInput.removeClass('is-invalid');
                 emailInput.removeClass('is-invalid');
                 phoneInput.removeClass('is-invalid');
@@ -653,6 +687,11 @@
             if (checkResult.role_no) {
                 roleErrorMessage.text(checkResult.role_no[0]);
                 roleInput.addClass('is-invalid');
+            }
+
+            if (checkResult.year) {
+                yearErrorMessage.text(checkResult.year[0]);
+                yearInput.addClass('is-invalid');
             }
 
             if (checkResult.nrc) {

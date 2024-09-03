@@ -189,6 +189,7 @@
                     <th>Sr</th>
                     <th>Roll</th>
                     <th>Full Name</th>
+                    <th>Year</th>
                     <th>NRC</th>
                     <th class="text-start">Phone</th>
                     <th>Email</th>
@@ -297,6 +298,24 @@
             });
         }
 
+        function mapYear(year) {
+            switch (year) {
+                case 'Y1':
+                    return 'First Year';
+                case 'Y2':
+                    return 'Second Year';
+                case 'Y3':
+                    return 'Third Year';
+                case 'Y4':
+                    return 'Fourth Year';
+                case 'Y5':
+                    return 'Fifth Year';
+                case 'Y6':
+                    return 'Sixth Year';
+            }
+            return '';
+        }
+
         function showStudentData(students) {
             // Clear the existing data
             $('#studentTable').DataTable().clear().destroy();
@@ -310,6 +329,7 @@
                 row += `<td class="text-right">${i + 1}</td>`;
                 row += `<td>${student.role_no}</td>`;
                 row += `<td>${student.name}</td>`;
+                row += `<td>${mapYear(student.year)}</td>`;
                 row += `<td>${student.nrc}</td>`;
                 row += `<td class="text-start">${student.phone}</td>`;
                 row += `<td>${student.email}</td>`;
