@@ -240,7 +240,7 @@
                 </div>
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" class="form-control input" id="name" name="name" placeholder="Enter term name" readonly required>
+                    <input type="text" class="form-control input" id="name" name="name" readonly required>
                     <div class="invalid-feedback" id="nameErrorMessage">
                         
                     </div>
@@ -248,11 +248,14 @@
                 <div class="row">
                     <div class="form-group col">
                         <label for="name">From</label>
-                        <input type="text" name="from_year" id="fromYear" class="form-control name-part">
+                        <input type="text" name="from_year" id="fromYear" placeholder="yyyy" class="form-control input name-part">
+                        <div class="invalid-feedback" id="startYearErrorMessage">
+                        
+                        </div>
                     </div>
                     <div class="form-group col">
                         <label for="name">To</label>
-                        <input type="text" name="to_year" id="toYear" class="form-control name-part" readonly>
+                        <input type="text" name="to_year" id="toYear" class="form-control name-part" placeholder="yyyy" readonly>
                     </div>
                     <div class="form-group col">
                         <label for="name">Year</label>
@@ -457,12 +460,19 @@
         const selectSubjectsButton = $('#selectSubjectsButton');
 
         const nameErrorMessage = $('#nameErrorMessage');
+        const startYearErrorMessage = $('#startYearErrorMessage');
         const yearErrorMessage = $('#yearErrorMessage');
         const termErrorMessage = $('#termErrorMessage');
         const startDateErrorMessage = $('#startDateErrorMessage');
         const endDateErrorMessage = $('#endDateErrorMessage');
 
         const termConstraint = {
+            from_year: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Year is required'
+                }
+            },
             year: {
                 presence: {
                     allowEmpty: false,
@@ -1000,6 +1010,9 @@
                 if (sourceId === 'name') {
                     nameErrorMessage.text('');
                     nameInput.removeClass('is-invalid');
+                } else if (sourceId === 'fromYear') {
+                    startYearErrorMessage.text('');
+                    startYearInput.removeClass('is-invalid');
                 } else if (sourceId === 'year') {
                     yearErrorMessage.text('');
                     yearInput.removeClass('is-invalid');
@@ -1016,12 +1029,14 @@
                 }
             } else {
                 nameErrorMessage.text('');
+                startYearErrorMessage.text('');
                 yearErrorMessage.text('');
                 termErrorMessage.text('');
                 startDateErrorMessage.text('');
                 endDateErrorMessage.text('');
 
                 nameInput.removeClass('is-invalid');
+                startYearInput.removeClass('is-invalid');
                 yearInput.removeClass('is-invalid');
                 termInput.removeClass('is-invalid');
                 startDateInput.removeClass('is-invalid');
@@ -1045,6 +1060,11 @@
             if (checkResult.name) {
                 nameErrorMessage.text(checkResult.name[0]);
                 nameInput.addClass('is-invalid');
+            }
+
+            if (checkResult.from_year) {
+                startYearErrorMessage.text(checkResult.from_year[0]);
+                startYearInput.addClass('is-invalid');
             }
 
             if (checkResult.year) {
