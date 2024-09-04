@@ -486,10 +486,10 @@
         };
 
         const currentYear = new Date().getFullYear();
-        startYearInput.on('change paste', function() {
+        startYearInput.on('input change paste', function() {
             const val = startYearInput.val();
             if (val) {
-                if (val > currentYear || val < 1) {
+                if (val < 1) {
                     startYearInput.val(currentYear);
                     endYearInput.val('');
                 }
