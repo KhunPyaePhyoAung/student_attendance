@@ -143,9 +143,9 @@ INSERT INTO `subject` (`id`, `code`, `name`, `instructor_id`, `created_at`) VALU
 (5, 'IT-21011', 'Basic Electricity and Electronics', 63, '2024-08-19 08:38:55');
 
 
-INSERT INTO `term` (`id`, `name`, `start_date`, `end_date`, `created_at`) VALUES
-(1, '2023-2024 Second Year First Term', '2024-05-01', '2024-06-30', '2024-08-24 13:49:35'),
-(2, '2023-2024 Second Year Second Term', '2024-07-01', '2024-08-31', '2024-08-24 13:50:34');
+INSERT INTO `term` (`id`, `name`, `start_date`, `end_date`, `created_at`, `start_year`, `end_year`, `year`, `term`) VALUES
+(1, '2023/2024 - Second Year - First Term', '2024-05-01', '2024-06-30', '2024-09-04 06:34:43', '2023', '2024', 'Y2', 'T1'),
+(2, '2023/2024 - Second Year - Second Term', '2024-07-01', '2024-08-31', '2024-09-04 07:03:12', '2023', '2024', 'Y2', 'T2');
 
 
 

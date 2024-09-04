@@ -233,17 +233,54 @@
             <form novalidate id="termForm">
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" class="form-control input" id="name" name="name" placeholder="Enter term name" required>
+                    <input type="text" class="form-control input" id="name" name="name" readonly required>
                     <div class="invalid-feedback" id="nameErrorMessage"></div>
                 </div>
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="name">From</label>
+                        <input type="number" name="from_year" max="2024" id="fromYear" class="form-control name-part">
+                    </div>
+                    <div class="form-group col">
+                        <label for="name">To</label>
+                        <input type="text" name="to_year" id="toYear" class="form-control name-part" readonly>
+                    </div>
+                    <div class="form-group col">
+                        <label for="name">Year</label>
+                        <select name="year" id="year" class="form-select input name-part">
+                            <option value="">-- select year --</option>
+                            <option value="Y1">First Year</option>
+                            <option value="Y2">Second Year</option>
+                            <option value="Y3">Third Year</option>
+                            <option value="Y4">Fourth Year</option>
+                            <option value="Y5">Fifth Year</option>
+                            <option value="Y6">Sixth Year</option>
+                        </select>
+                        <div class="invalid-feedback" id="yearErrorMessage">
+    
+                        </div>
+                    </div>
+                    <div class="form-group col">
+                        <label for="name">Term</label>
+                        <select name="term" id="term" class="form-select input name-part">
+                            <option value="">-- select term --</option>
+                            <option value="T1">First Term</option>
+                            <option value="T2">Second Term</option>
+                        </select>
+                        <div class="invalid-feedback" id="termErrorMessage">
+    
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="form-group">
                     <label for="startDate">Start Date</label>
-                    <input type="date" class="form-control input" id="startDate" name="start_date" required>
+                    <input type="date" class="form-control input name-part" id="startDate" name="start_date" required>
                     <div class="invalid-feedback" id="startDateErrorMessage"></div>
                 </div>
                 <div class="form-group">
                     <label for="endDate">End Date</label>
-                    <input type="date" class="form-control input" id="endDate" name="end_date" required>
+                    <input type="date" class="form-control input name-part" id="endDate" name="end_date" required>
                     <div class="invalid-feedback" id="endDateErrorMessage"></div>
                 </div>
                 
@@ -397,6 +434,10 @@
         const logoutMenuItem = $('#logoutMenuItem');
         const termForm = $('#termForm');
         const nameInput = $('#name');
+        const startYearInput = $('#fromYear');
+        const endYearInput = $('#toYear');
+        const yearInput = $('#year');
+        const termInput = $('#term');
         const startDateInput = $('#startDate');
         const endDateInput = $('#endDate');
         const registerBtn = $('#registerBtn');
@@ -404,18 +445,22 @@
         const selectSubjectsButton = $('#selectSubjectsButton');
 
         const nameErrorMessage = $('#nameErrorMessage');
+        const yearErrorMessage = $('#yearErrorMessage');
+        const termErrorMessage = $('#termErrorMessage');
         const startDateErrorMessage = $('#startDateErrorMessage');
         const endDateErrorMessage = $('#endDateErrorMessage');
 
         const termConstraint = {
-            name: {
+            year: {
                 presence: {
                     allowEmpty: false,
-                    message: '^Name is required'
-                },
-                length: {
-                    maximum: 200,
-                    message: '^Name cannot be more than 200 characters'
+                    message: '^Year is required'
+                }
+            },
+            term: {
+                presence: {
+                    allowEmpty: false,
+                    message: '^Term is required'
                 }
             },
             start_date: {
@@ -432,6 +477,21 @@
             },
         };
 
+        const currentYear = new Date().getFullYear();
+        startYearInput.on('change paste', function() {
+            const val = startYearInput.val();
+            if (val) {
+                if (val > currentYear || val < 1) {
+                    startYearInput.val(currentYear);
+                    endYearInput.val('');
+                }
+                endYearInput.val(parseInt(startYearInput.val()) + 1);
+                
+            } else {
+                endYearInput.val('');
+            }
+            
+        });
 
         termForm.on('submit', function(e){
             e.preventDefault();
@@ -439,6 +499,15 @@
 
         $('.input').on('input', function(e) {
             clearFormErrorMessages(e.target.id);
+        });
+
+        $('.name-part').on('change keyup paste', function() {
+            const startYear = startYearInput.val();
+            const endYear = endYearInput.val();
+            const year = yearInput.val();
+            const term = termInput.val();
+            const name = `${startYear}/${endYear} - ${mapYear(year)} - ${mapTerm(term)}`;
+            nameInput.val(name);
         });
 
         registerBtn.on('click', function() {
@@ -515,6 +584,34 @@
             });
         });
 
+        function mapYear(year) {
+            switch (year) {
+                case 'Y1':
+                    return 'First Year';
+                case 'Y2':
+                    return 'Second Year';
+                case 'Y3':
+                    return 'Third Year';
+                case 'Y4':
+                    return 'Fourth Year';
+                case 'Y5':
+                    return 'Fifth Year';
+                case 'Y6':
+                    return 'Sixth Year';
+            }
+            return '';
+        }
+
+        function mapTerm(term) {
+            switch (term) {
+                case 'T1':
+                    return 'First Term';
+                case 'T2':
+                    return 'Second Term';
+            }
+            return '';
+        }
+
         function fetchStudentsForModal() {
             $.ajax({
                 url: "/api/students",
@@ -572,6 +669,12 @@
                             if (field === 'name') {
                                 nameErrorMessage.text(message);
                                 nameInput.addClass('is-invalid');
+                            } else if (field === 'year') {
+                                yearErrorMessage.text(message);
+                                yearInput.addClass('is-invalid');
+                            } else if (field === 'term') {
+                                termErrorMessage.text(message);
+                                termInput.addClass('is-invalid');
                             } else if (field === 'start_date') {
                                 startDateErrorMessage.text(message);
                                 startDateInput.addClass('is-invalid');
@@ -601,6 +704,12 @@
                 if (sourceId === 'name') {
                     nameErrorMessage.text('');
                     nameInput.removeClass('is-invalid');
+                } else if (sourceId === 'year') {
+                    yearErrorMessage.text('');
+                    yearInput.removeClass('is-invalid');
+                } else if (sourceId === 'term') {
+                    termErrorMessage.text('');
+                    termInput.removeClass('is-invalid');
                 } else if (sourceId === 'startDate') {
                     startDateErrorMessage.text('');
                     startDateInput.removeClass('is-invalid');
@@ -610,10 +719,14 @@
                 }
             } else {
                 nameErrorMessage.text('');
+                yearErrorMessage.text('');
+                termErrorMessage.text('');
                 startDateErrorMessage.text('');
                 endDateErrorMessage.text('');
 
                 nameInput.removeClass('is-invalid');
+                yearInput.removeClass('is-invalid');
+                termInput.removeClass('is-invalid');
                 startDateInput.removeClass('is-invalid');
                 endDateInput.removeClass('is-invalid');
             }
@@ -637,6 +750,16 @@
                 nameInput.addClass('is-invalid');
             }
 
+            if (checkResult.year) {
+                yearErrorMessage.text(checkResult.year[0]);
+                yearInput.addClass('is-invalid');
+            }
+
+            if (checkResult.term) {
+                termErrorMessage.text(checkResult.term[0]);
+                termInput.addClass('is-invalid');
+            }
+
             if (checkResult.start_date) {
                 startDateErrorMessage.text(checkResult.start_date[0]);
                 startDateInput.addClass('is-invalid');
@@ -652,6 +775,8 @@
 
         function clearTermForm() {
             nameInput.val('');
+            yearInput.val('');
+            termInput.val('');
             startDateInput.val('');
             endDateInput.val('');
             $('#subjectTable tbody').empty();

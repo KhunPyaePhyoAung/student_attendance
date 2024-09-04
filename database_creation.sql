@@ -95,6 +95,10 @@ CREATE TABLE IF NOT EXISTS `student_attendance`.`term` (
   `start_date` DATE NOT NULL,
   `end_date` DATE NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `start_year` YEAR NOT NULL,
+  `end_year` YEAR NOT NULL,
+  `year` ENUM('Y1', 'Y2', 'Y3', 'Y4', 'Y5', 'Y6') NOT NULL,
+  `term` ENUM('T1', 'T2') NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC))
 ENGINE = InnoDB;

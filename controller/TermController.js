@@ -225,8 +225,8 @@ const termController = ({termService}) => {
                         status: 400,
                         errors: [
                             {
-                                field: error.fieldName,
-                                message: error.message
+                                field: error.fields[0].field,
+                                message: error.fields[0].message
                             }
                         ]
                     });

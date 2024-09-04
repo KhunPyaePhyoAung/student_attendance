@@ -159,8 +159,8 @@ const termRepository = () => {
             const connection = await getConnection();
 
             const insertedId = await new Promise((resolve, reject) => {
-                const insertSql = 'INSERT INTO `term` (`name`, `start_date`, `end_date`) VALUES (?, ?, ?)';
-                const insertParams = [term.name, term.start_date, term.end_date];
+                const insertSql = 'INSERT INTO `term` (`name`, `start_year`, `end_year`, `year`, `term`, `start_date`, `end_date`) VALUES (?, ?, ?, ?, ?, ?, ?)';
+                const insertParams = [term.name, term.start_year, term.end_year, term.year, term.term, term.start_date, term.end_date];
                 connection.query(insertSql, insertParams, (error, result) => {
                     if (error) {
                         if (error.code === 'ER_DUP_ENTRY') {
@@ -210,8 +210,8 @@ const termRepository = () => {
             const connection = await getConnection();
 
             const affectedRows = await new Promise((resolve, reject) => {
-                const updateQuery = 'UPDATE `term` SET `name` = ?, `start_date` = ?, `end_date` = ? WHERE `id` = ?';
-                const updateParams = [term.name, term.start_date, term.end_date, id];
+                const updateQuery = 'UPDATE `term` SET `name` = ?, `start_year` = ?, `end_year` = ?, `year` = ?, `term` = ?, `start_date` = ?, `end_date` = ? WHERE `id` = ?';
+                const updateParams = [term.name, term.start_year, term.end_year, term.year, term.term, term.start_date, term.end_date, id];
                 connection.query(updateQuery, updateParams, (error, result) => {
                     if (error) {
                         if (error.code === 'ER_DUP_ENTRY') {

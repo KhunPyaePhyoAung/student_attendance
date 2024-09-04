@@ -76,6 +76,10 @@ const termService = ({termRepository, subjectService}) => {
         create: async (data) => {
             const term = {
                 name: data.name,
+                start_year: data.from_year,
+                end_year: data.to_year,
+                year: data.year,
+                term: data.term,
                 start_date: data.start_date,
                 end_date: data.end_date,
                 students: data.students,
@@ -109,6 +113,10 @@ const termService = ({termRepository, subjectService}) => {
             const term = {
                 id: id,
                 name: data.name,
+                start_year: data.from_year,
+                end_year: data.to_year,
+                year: data.year,
+                term: data.term,
                 start_date: data.start_date,
                 end_date: data.end_date,
                 students: data.students,
