@@ -60,7 +60,7 @@
 
         .search-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             margin-bottom: 15px;
         }
@@ -181,6 +181,17 @@
         <div class="header-container">
             <h2>Student List</h2>
         </div>
+        <div class="search-container">
+            <select id="yearSelector" class="form-select" style="width: auto;cursor: pointer;">
+                <option value="*">All</option>
+                <option value="Y1">First Year</option>
+                <option value="Y2">Second Year</option>
+                <option value="Y3">Third Year</option>
+                <option value="Y4">Fourth Year</option>
+                <option value="Y5">Fifth Year</option>
+                <option value="Y6">Sixth Year</option>
+            </select>
+        </div>
         <table class="table table-striped display" id="studentTable">
             <thead>
                 <tr>
@@ -200,12 +211,18 @@
     </div>
     <script>
         $('#usernameMenuItem').text($.cookie('username'));
+        let students = [];
         const logoutMenuItem = $('#logoutMenuItem');
         const studentTableBody = $('#studentTableBody');
+        const yearSelector = $('#yearSelector');
         let dataTable = null;
 
         $(document).ready(function() {
             fetchStudents();
+        });
+
+        yearSelector.on('input', function() {
+            showStudentData(students);
         });
 
         logoutMenuItem.on('click', function() {
@@ -237,6 +254,7 @@
                     if (data.status === 200) {
                         console.log('Loaded');
                         console.log(data.data);
+                        students = data.data;
                         showStudentData(data.data);
                     } else if (data.status === 500) {
                         const errorMessage = data.message;
@@ -314,6 +332,8 @@
         }
 
         function showStudentData(students) {
+            const selectedYear = yearSelector.val();
+            students = filterStudentYear(selectedYear, students);
             // Clear the existing data
             $('#studentTable').DataTable().clear().destroy();
 
@@ -344,6 +364,17 @@
 
                 $('#studentTableBody').append(row);
             });
+
+            function filterStudentYear(year, students) {
+                switch (year) {
+                    case '*':
+                        return students;
+                        break;
+                    default:
+                        return students.filter(s => s.year === year);
+                        break;
+                }
+            }
 
             // Initialize DataTable again
             const dTable = $('#studentTable').DataTable({
